@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="expandedTitleTextAppearance">
+        <item name="android:textSize">20sp</item>
+        <item name="android:singleLine">false</item>
+        <item name="android:textColor">#FFFFFFFF</item>
+    </style>
+    <style name="collapsedTitleTextAppearance">
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <!--<item name="android:maxWidth">50dp</item>-->
+    </style>
+</resources>

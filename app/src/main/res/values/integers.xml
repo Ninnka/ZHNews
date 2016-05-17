@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer-array name="bg_picture">
+        <item>@drawable/bg1</item>
+        <item>@drawable/bg2</item>
+        <item>@drawable/bg3</item>
+    </integer-array>
+    <integer-array name="recyclerview_iteminfo_type">
+        <item>0x3456</item>
+        <item>0x8764</item>
+    </integer-array>
+</resources>

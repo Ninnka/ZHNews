@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">ZHKUNews</string>
+    <string name="home_activity_content_collapsingtoolbar_title">Home</string>
+    <string name="open_drawer">OpenDrawer</string>
+    <string name="close_drawer">CloseDrawer</string>
+    <string name="testText">这是title之类的！这是title之类的！这是title之类的！这是title之类的！这是title之类的！</string>
+    <string name="bg1_title">this is title about bg1</string>
+    <string name="bg2_title">this is title about bg2</string>
+    <string name="bg3_title">this is title about bg3</string>
+    <string name="imageViewContentDescribtion">pic</string>
+    <string-array name="bg_title">
+        <item>this is title about bg1</item>
+        <item>this is title about bg2</item>
+        <item>this is title about bg3</item>
+    </string-array>
+
+</resources>
