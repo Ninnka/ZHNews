@@ -8,6 +8,7 @@
               android:padding="20dp">
 
     <ImageView
+        android:id="@+id/home_activity_drawer_header_login_info_profile_iv"
         android:padding="5dp"
         android:layout_width="60dp"
         android:layout_height="60dp"
@@ -17,7 +18,7 @@
         android:src="@mipmap/profile_light"/>
 
     <TextView
-        android:id="@+id/home_activity_drawer_header_login_info_tv"
+        android:id="@+id/home_activity_drawer_header_login_info_profile_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"

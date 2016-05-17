@@ -20,11 +20,16 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
-    <style name="HomeANDNewsTheme" parent="AppTheme">
+    <style name="HomeTheme" parent="AppTheme">
 
         <!-- statusbar设置 -->
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowTranslucentNavigation">true</item>
+        <!--<item name="android:windowTranslucentStatus">true</item>-->
+        <!--<item name="android:windowTranslucentNavigation">true</item>-->
+
+    </style>
+
+    <style name="NewsTheme" parent="AppTheme">
+
 
     </style>
 

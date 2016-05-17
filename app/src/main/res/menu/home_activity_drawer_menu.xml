@@ -5,19 +5,18 @@
     <group
         android:id="@+id/group1"
         android:checkableBehavior="single">
+
         <item
             android:id="@+id/drawer_home"
             android:checked="true"
             android:icon="@mipmap/home"
             android:title="主页"/>
-
-
     </group>
-
 
     <!-- 第2个分组子菜单 -->
 
     <group
+        android:visible="false"
         android:id="@+id/group2"
         android:checkableBehavior="single">
 
@@ -34,14 +33,18 @@
             android:id="@+id/drawer_history"
             android:icon="@mipmap/scan_history"
             android:title="历史"/>
+        <item
+            android:id="@+id/drawer_notification"
+            android:icon="@mipmap/notification_dark"
+            android:title="通知"/>
     </group>
-
 
     <!-- 第3个分组子菜单 -->
 
     <group
         android:id="@+id/group3"
         android:checkableBehavior="single">
+
         <item
             android:id="@+id/drawer_theme"
             android:icon="@mipmap/theme_change"
@@ -59,6 +62,7 @@
     <group
         android:id="@+id/group4"
         android:checkableBehavior="single">
+
         <item
             android:id="@+id/drawer_response"
             android:icon="@mipmap/response"
@@ -76,6 +80,7 @@
     <group
         android:id="@+id/group5"
         android:checkableBehavior="single">
+
         <item
             android:id="@+id/drawer_exit"
             android:icon="@mipmap/exit"

@@ -87,8 +87,9 @@ public class NewsActivity extends AppCompatActivity {
 		* */
 		initComponent();
 
-		if (Build.VERSION.SDK_INT <= 19 && Build.VERSION.SDK_INT >= 14) {
+		if (Build.VERSION.SDK_INT == 19) {
 			appBarLayout.setFitsSystemWindows(false);
+
 			CollapsingToolbarLayout.LayoutParams layoutParams = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
 			layoutParams.setMargins(0, LengthTransitionUtility.getStatusBarHeight(this), 0, 0);
 			toolbar.setLayoutParams(layoutParams);

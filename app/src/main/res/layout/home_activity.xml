@@ -4,6 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".HomeActivity">
@@ -17,10 +18,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:fitsSystemWindows="false"
+        android:scrollbars="none"
         app:menu="@menu/home_activity_drawer_menu"
-        app:headerLayout="@layout/home_activity_drawer_header"
-        >
+        app:headerLayout="@layout/home_activity_drawer_header">
 
     </android.support.design.widget.NavigationView>
 

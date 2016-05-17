@@ -21,11 +21,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -52,6 +54,9 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 	protected HomeActivityRecyclerViewIndicator homeActivityRecyclerViewIndicator;
 	protected FloatingActionButton floatingActionButton;
 	protected FrameLayout frameLayout;
+
+	protected ImageView profile_iv;
+	protected TextView profile_tv;
 
 	public HomeActivityViewPagerAdapter homeActivityViewPagerAdapter;
 	public HomeActivityRecyclerViewAdapter homeActivityRecyclerViewAdapter;
@@ -153,10 +158,13 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 		collapsingToolbarLayout.setTitle(homeActivityViewPagerBannerInfo[0].pictureTitle);
 		//添加页面改变事件
 		viewPager.addOnPageChangeListener(this);
-		if (Build.VERSION.SDK_INT <= 19 && Build.VERSION.SDK_INT >= 14) {
+		if (Build.VERSION.SDK_INT == 19) {
 			viewPager.setFitsSystemWindows(false);
 			frameLayout.setFitsSystemWindows(false);
 			appBarLayout.setFitsSystemWindows(false);
+			drawerLayout.setFitsSystemWindows(false);
+			coordinatorLayout.setFitsSystemWindows(false);
+			navigationView.setFitsSystemWindows(false);
 
 			CollapsingToolbarLayout.LayoutParams layoutParams = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
 			layoutParams.setMargins(0, LengthTransitionUtility.getStatusBarHeight(this), 0, 0);
@@ -188,11 +196,7 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 		/*
 		* 设置NavigationView Toggle
 		* */
-		ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this,
-				drawerLayout, toolbar, R.string.open_drawer, R.string
-				.close_drawer);
-		actionBarDrawerToggle.syncState();
-		drawerLayout.addDrawerListener(actionBarDrawerToggle);
+		initActionBarDrawerToggle();
 
 		/*
 		* 准备RecyclerViewAdapter
@@ -268,11 +272,78 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 		* appbar监听事件
 		* */
 		appBarLayout.addOnOffsetChangedListener(this);
+
+		/*
+		* 添加navigationView menu item的点击事件
+		* */
+		navigationView.setNavigationItemSelectedListener(this);
+		/*
+		* 设置单个item可见
+		* */
+		//		navigationView.getMenu().findItem(R.id.drawer_star).setVisible(true);
+		/*
+		* 设置单个group可见
+		* */
+		//		navigationView.getMenu().setGroupVisible(R.id.group2, true);
+
+		/*
+		* 头像点击事件
+		* */
+//		View HeaderView = navigationView.inflateHeaderView(R.layout.home_activity_drawer_header);
+//		profile_iv = (ImageView) HeaderView.findViewById(R.id
+//				.home_activity_drawer_header_login_info_profile_iv);
+		profile_iv = (ImageView) navigationView.getHeaderView(0).findViewById(R.id
+				.home_activity_drawer_header_login_info_profile_iv);
+		profile_tv = (TextView) navigationView.getHeaderView(0).findViewById(R.id
+				.home_activity_drawer_header_login_info_profile_tv);
+		profile_iv.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				drawerLayout.closeDrawer(navigationView);
+				Snackbar.make(coordinatorLayout,"你已经成功登录",Snackbar.LENGTH_SHORT).show();
+				navigationView.getMenu().setGroupVisible(R.id.group2, true);
+				profile_tv.setText("admin(假定账号)");
+			}
+		});
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		mhandler.removeCallbacks(mRunnable);
+		bannerHandler.removeMessages(BANNER_SCROLL_KEY);
+		recyclerRefreshHandler.removeCallbacksAndMessages(null);
+	}
+
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {
+		super.onWindowFocusChanged(hasFocus);
+		bannerStartAutoScroll();
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		//		menu.add(0, 0, Menu.NONE, "").setIcon(R.mipmap.notification_light).setShowAsAction
+		//				(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		//		menu.add(0, 1, Menu.NONE, "设置");
+		//		menu.add(0, 1, Menu.NONE, "关于");
+		getMenuInflater().inflate(R.menu.home_activity_menu, menu);
+		return true;
 	}
 
 	/*
-	* 初始化 线程
-	* */
+		* 初始化 线程
+		* */
 	private void initThreadORRunnable() {
 		mRunnable = new Runnable() {
 			@Override
@@ -303,6 +374,8 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 		floatingActionButton = (FloatingActionButton) findViewById(R.id
 				.homeActivity_Content_main_FAB_anchorInAppBar);
 		frameLayout = (FrameLayout) findViewById(R.id.homeActivity_Content_main_FrameLayout);
+
+
 	}
 
 	/*
@@ -322,29 +395,14 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 		setSupportActionBar(toolbar);
 	}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
+	private void initActionBarDrawerToggle() {
+		ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this,
+				drawerLayout, toolbar, R.string.open_drawer, R.string
+				.close_drawer);
+		actionBarDrawerToggle.syncState();
+		drawerLayout.addDrawerListener(actionBarDrawerToggle);
 	}
 
-	@Override
-	protected void onPause() {
-		super.onPause();
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		mhandler.removeCallbacks(mRunnable);
-		bannerHandler.removeMessages(BANNER_SCROLL_KEY);
-		recyclerRefreshHandler.removeCallbacksAndMessages(null);
-	}
-
-	@Override
-	public void onWindowFocusChanged(boolean hasFocus) {
-		super.onWindowFocusChanged(hasFocus);
-		bannerStartAutoScroll();
-	}
 
 	@Override
 	public void onBackPressed() {
@@ -358,7 +416,6 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 
 		mhandler.postDelayed(mRunnable, 2000);
 	}
-
 
 	@Override
 	public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -405,7 +462,53 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 
 	@Override
 	public boolean onNavigationItemSelected(MenuItem item) {
-		return false;
+		switch (item.getItemId()){
+			case R.id.drawer_home:
+				actionForNavigationItemSelected(item);
+				break;
+			case R.id.drawer_star:
+				actionForNavigationItemSelected(item);
+
+				break;
+			case R.id.drawer_good:
+				actionForNavigationItemSelected(item);
+
+				break;
+			case R.id.drawer_history:
+				actionForNavigationItemSelected(item);
+
+				break;
+			case R.id.drawer_notification:
+				actionForNavigationItemSelected(item);
+
+				break;
+			case R.id.drawer_theme:
+				actionForNavigationItemSelected(item);
+
+				break;
+			case R.id.drawer_setting:
+				actionForNavigationItemSelected(item);
+
+				break;
+			case R.id.drawer_response:
+				actionForNavigationItemSelected(item);
+
+				break;
+			case R.id.drawer_about:
+				actionForNavigationItemSelected(item);
+
+				break;
+			case R.id.drawer_exit:
+				finish();
+				break;
+		}
+		return true;
+	}
+
+	private void actionForNavigationItemSelected(MenuItem item){
+		drawerLayout.closeDrawer(navigationView);
+		Snackbar.make(coordinatorLayout,item.getTitle(),Snackbar.LENGTH_SHORT).show();
+
 	}
 
 	protected void bannerStartAutoScroll() {
