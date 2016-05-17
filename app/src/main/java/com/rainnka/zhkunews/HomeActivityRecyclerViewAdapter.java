@@ -1,7 +1,6 @@
 package com.rainnka.zhkunews;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,23 +16,23 @@ import java.util.List;
  * Created by rainnka on 2016/5/13 11:01
  * Project name is ZHKUNews
  */
-public class HomeActivityRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class HomeActivityRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 	public WeakReference<HomeActivity> homeActivityWeakReference;
 	public HomeActivity homeActivity;
 	public LayoutInflater layoutInflater;
-	public List<HomeActivityRecyclerViewItemInfo> itemInfoList;
+	public List<ZhiHuNewsItemInfo> zhiHuNewsItemInfoList;
 
 	public HomeActivityRecyclerViewAdapterCallback homeActivityRecyclerViewAdapterCallback;
 
-//	public Boolean LOAD_STATUS_FIRST = true;
+	//	public Boolean LOAD_STATUS_FIRST = true;
 
 	public enum ITEM_TYPE {
 		ITEM_DATE,
 		ITEM_CONTENT
 	}
 
-	public int[] iteminfotype;
+	//	public int[] iteminfotype;
 
 	public onRecyclerViewItemClickListener onRecyclerViewItemClickListener;
 
@@ -44,8 +43,7 @@ public class HomeActivityRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 	}
 
 	public interface onRecyclerViewItemClickListener {
-		void onItemClick(String token, HomeActivityRecyclerViewItemInfo
-				homeActivityRecyclerViewItemInfo);
+		void onItemClick(ZhiHuNewsItemInfo zhiHuNewsItemInfo);
 	}
 
 	public interface onRecyclerViewItemLongClickListener {
@@ -73,37 +71,39 @@ public class HomeActivityRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 		this.homeActivityWeakReference = new WeakReference<>(homeActivity);
 		this.homeActivity = this.homeActivityWeakReference.get();
 		layoutInflater = LayoutInflater.from(this.homeActivity);
-		this.iteminfotype = this.homeActivity.getApplicationContext().getResources().getIntArray(R
-				.array.recyclerview_iteminfo_type);
+		//		this.iteminfotype = this.homeActivity.getApplicationContext().getResources().getIntArray(R
+		//				.array.recyclerview_iteminfo_type);
+		//		Log.i("ZRH",this.iteminfotype[0]+"\n"+this.iteminfotype[1]);
 	}
 
-	public void setItemInfoList(List<HomeActivityRecyclerViewItemInfo> itemInfoList) {
-		this.itemInfoList = itemInfoList;
+	public void setZhiHuNewsItemInfoList(List<ZhiHuNewsItemInfo> zhiHuNewsItemInfoList) {
+		this.zhiHuNewsItemInfoList = zhiHuNewsItemInfoList;
+//		Log.i("ZRH", "adapter中setZhiHuNewsItemInfoList");
 	}
 
-	public void addItemIntoFirst(List<HomeActivityRecyclerViewItemInfo> newItemInfoList) {
-		this.itemInfoList.addAll(0, newItemInfoList);
-		notifyItemRangeInserted(0, newItemInfoList.size());
+	public void addItemIntoFirst(List<ZhiHuNewsItemInfo> newItemInfoList) {
+		//		this.zhiHuNewsItemInfoList.addAll(0, newItemInfoList);
+		//		notifyItemRangeInserted(0, newItemInfoList.size());
 	}
 
-	public void addItemIntoLast(List<HomeActivityRecyclerViewItemInfo> newitemInfoList) {
-		this.itemInfoList.addAll(this.itemInfoList.size(), newitemInfoList);
-		notifyItemRangeInserted(this.itemInfoList.size(), newitemInfoList.size());
+	public void addItemIntoLast(List<ZhiHuNewsItemInfo> newitemInfoList) {
+		this.zhiHuNewsItemInfoList.addAll(this.zhiHuNewsItemInfoList.size(), newitemInfoList);
+		notifyItemRangeInserted(this.zhiHuNewsItemInfoList.size(), newitemInfoList.size());
 	}
 
 	@Override
 	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-		if (viewType == ITEM_TYPE.ITEM_DATE.ordinal()) {
+		if (viewType == 0) {
 			return new RecyclerViewDateViewHolder(layoutInflater.inflate(R.layout
 					.home_activity_content_recyclerview_item_date, parent, false));
-		} else if (viewType == ITEM_TYPE.ITEM_CONTENT.ordinal()) {
+		} else if (viewType == 1) {
 			return new RecyclerViewContentViewHolder(layoutInflater.inflate(R.layout
 					.home_activity_content_recyclerview_item_content, parent, false));
 		}
-		Log.i("ZRH","onCreateViewHolder return null");
+//		Log.i("ZRH", "onCreateViewHolder return null");
 		return null;
-//		return new RecyclerViewContentViewHolder(layoutInflater.inflate(R.layout
-//				.home_activity_content_recyclerview_item_content, parent, false));
+		//		return new RecyclerViewContentViewHolder(layoutInflater.inflate(R.layout
+		//				.home_activity_content_recyclerview_item_content, parent, false));
 	}
 
 	@Override
@@ -118,18 +118,16 @@ public class HomeActivityRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 				@Override
 				public void onClick(View v) {
 					if (onRecyclerViewItemClickListener != null) {
-						onRecyclerViewItemClickListener.onItemClick(itemInfoList.get(position)
-								.token, itemInfoList.get(position));
+						onRecyclerViewItemClickListener.onItemClick(zhiHuNewsItemInfoList.get(position));
 					}
 				}
 			});
-			Log.i("ZRH","test: "+1);
-			HomeActivityRecyclerViewItemInfo homeActivityRecyclerViewItemInfo = itemInfoList.get
-					(position);
-			recyclerViewContentViewHolder.content_tv.setText(homeActivityRecyclerViewItemInfo
-					.title);
+//			Log.i("ZRH", "test: " + 1);
+			ZhiHuNewsItemInfo zhiHuNewsItemInfo = zhiHuNewsItemInfoList.get(position);
+//			Log.i("ZRH", "zhiHuNewsItemInfo.title: " + zhiHuNewsItemInfo.title);
+			recyclerViewContentViewHolder.content_tv.setText(zhiHuNewsItemInfo.title);
 			Glide.with(homeActivity)
-					.load(homeActivityRecyclerViewItemInfo.pictureID)
+					.load(zhiHuNewsItemInfo.images.get(0))
 					.placeholder(R.drawable.placeholder)
 					.skipMemoryCache(true)
 					.crossFade(500)
@@ -138,12 +136,12 @@ public class HomeActivityRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 		} else if (holder instanceof RecyclerViewDateViewHolder) {
 			RecyclerViewDateViewHolder recyclerViewDateViewHolder = (RecyclerViewDateViewHolder)
 					holder;
-			HomeActivityRecyclerViewItemInfo homeActivityRecyclerViewItemInfo = itemInfoList.get
-					(position);
-			recyclerViewDateViewHolder.date_tv.setText("xx月xx日 星期x");
+			ZhiHuNewsItemInfo zhiHuNewsItemInfo = zhiHuNewsItemInfoList.get(position);
+//			Log.i("ZRH", zhiHuNewsItemInfo.date_cus + "in bindViewHolder");
+			recyclerViewDateViewHolder.date_tv.setText("" + zhiHuNewsItemInfo.date_cus);
 		}
 
-		if (position == itemInfoList.size() - 1) {
+		if (position == zhiHuNewsItemInfoList.size() - 1) {
 			if (homeActivityRecyclerViewAdapterCallback != null) {
 				homeActivityRecyclerViewAdapterCallback.refreshOldNews();
 			}
@@ -152,42 +150,55 @@ public class HomeActivityRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 		/*
 		* 测试用
 		* */
-//		RecyclerViewContentViewHolder recyclerViewContentViewHolder =
-//				(RecyclerViewContentViewHolder) holder;
-//		HomeActivityRecyclerViewItemInfo homeActivityRecyclerViewItemInfo = itemInfoList.get
-//				(position);
-//		recyclerViewContentViewHolder.content_tv.setText(homeActivityRecyclerViewItemInfo
-//				.title);
-//		Glide.with(homeActivity)
-//				.load(homeActivityRecyclerViewItemInfo.pictureID)
-//				.placeholder(R.drawable.placeholder)
-//				.skipMemoryCache(true)
-//				.crossFade(500)
-//				.fitCenter()
-//				.into(recyclerViewContentViewHolder.picture_iv);
+		//		RecyclerViewContentViewHolder recyclerViewContentViewHolder =
+		//				(RecyclerViewContentViewHolder) holder;
+		//		HomeActivityRecyclerViewItemInfo homeActivityRecyclerViewItemInfo = zhiHuNewsItemInfoList.get
+		//				(position);
+		//		recyclerViewContentViewHolder.content_tv.setText(homeActivityRecyclerViewItemInfo
+		//				.title);
+		//		Glide.with(homeActivity)
+		//				.load(homeActivityRecyclerViewItemInfo.pictureID)
+		//				.placeholder(R.drawable.placeholder)
+		//				.skipMemoryCache(true)
+		//				.crossFade(500)
+		//				.fitCenter()
+		//				.into(recyclerViewContentViewHolder.picture_iv);
 
 	}
 
 	@Override
 	public int getItemViewType(int position) {
 		int return_type = -1;
-		HomeActivityRecyclerViewItemInfo recyclerViewItemInf = itemInfoList.get(position);
-		int item_type = recyclerViewItemInf.type;
-		if (item_type == iteminfotype[0]) {
-			return_type = ITEM_TYPE.ITEM_DATE.ordinal();
+		ZhiHuNewsItemInfo zhiHuNewsItemInfo = zhiHuNewsItemInfoList.get(position);
+		int item_type = zhiHuNewsItemInfo.item_layout;
+		if (item_type == 0) {
+			//			Log.i("ZRH", "adapter中getItemViewType: " + ITEM_TYPE.ITEM_DATE.ordinal());
+			return_type = 0;
 		}
-		if (item_type == iteminfotype[1]) {
-			return_type = ITEM_TYPE.ITEM_CONTENT.ordinal();
+		if (item_type == 1) {
+//			Log.i("ZRH", "item_type: " + item_type);
+			//			Log.i("ZRH", "adapter中getItemViewType: " + ITEM_TYPE.ITEM_CONTENT.ordinal());
+			return_type = 1;
 		}
+//		Log.i("ZRH", "item_type: " + item_type);
+//		Log.i("ZRH", "return_type: " + return_type);
 		return return_type;
-//		return super.getItemViewType(position);
+		//		return super.getItemViewType(position);
 	}
 
 	@Override
 	public int getItemCount() {
-//		Log.i("ZRH",itemInfoList.size()+"");
-//		return 0;
-		return itemInfoList.size();
+		//		Log.i("ZRH",zhiHuNewsItemInfoList.size()+"");
+		//		return 0;
+		//		int count = 0;
+		//		for (int i = 0; i < zhiHuNewsItemInfoList.size(); i++) {
+		//			List<ZhiHuNewsItemInfo> list = zhiHuNewsItemInfoList.get(i).stories;
+		//			Log.i("ZRH","zhiHuNewsItemInfoList.size(): "+ list.size());
+		//			count = count + list.size();
+		//		}
+//		Log.i("ZRH", "adapter中getItemCount, zhiHuNewsItemInfoList.size(): " +
+//				zhiHuNewsItemInfoList.size());
+		return zhiHuNewsItemInfoList.size();
 	}
 
 	/*

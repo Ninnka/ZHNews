@@ -22,7 +22,6 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -47,11 +46,12 @@ public class NewsActivity extends AppCompatActivity {
 	public OkHttpClient okHttpClient;
 	public Request request;
 	public Call call;
-	public FormEncodingBuilder builder = new FormEncodingBuilder();
 
 	public Gson gson;
 
 	public ZhiHuNewsItemInfo zhiHuNewsItemInfo;
+
+	public ZhiHuNewsItemInfo zhiHuNewsItemInfoFormHome;
 
 	public WebViewHandler webViewHandler;
 
@@ -62,15 +62,13 @@ public class NewsActivity extends AppCompatActivity {
 	public Boolean isGood = false;
 	public Boolean isStar = false;
 
+	public static final String getInfoByAPI = "http://news-at.zhihu.com/api/4/news/";
+
 	/*
 	* 用于接收token
 	* */
 	//	String token;
 
-	/*
-	* 用于接收一个信息类
-	* */
-	public HomeActivityRecyclerViewItemInfo homeActivityRecyclerViewItemInfo;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -119,8 +117,10 @@ public class NewsActivity extends AppCompatActivity {
 		* 初始化okhttpclient相关
 		* */
 		okHttpClient = new OkHttpClient();
+		String getInfoUrl = getInfoByAPI + zhiHuNewsItemInfoFormHome.id;
+		Log.i("ZRH","getInfoUrl: "+getInfoUrl);
 		request = new Request.Builder()
-				.url("http://news-at.zhihu.com/api/4/news/8309359")
+				.url(getInfoUrl)
 				.build();
 		call = okHttpClient.newCall(request);
 
@@ -166,7 +166,8 @@ public class NewsActivity extends AppCompatActivity {
 
 	private void getInfomationFromIntent() {
 		Intent intent = getIntent();
-		homeActivityRecyclerViewItemInfo = (HomeActivityRecyclerViewItemInfo) intent.getSerializableExtra(HomeActivity.SER_KEY);
+		//		homeActivityRecyclerViewItemInfo = (HomeActivityRecyclerViewItemInfo) intent.getSerializableExtra(HomeActivity.SER_KEY);
+		zhiHuNewsItemInfoFormHome = (ZhiHuNewsItemInfo) intent.getSerializableExtra(HomeActivity.SER_KEY);
 	}
 
 	/*

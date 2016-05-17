@@ -1,5 +1,6 @@
 package com.rainnka.zhkunews;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +8,11 @@ import java.util.List;
  * Created by rainnka on 2016/5/16 16:16
  * Project name is ZHKUNews
  */
-public class ZhiHuNewsItemInfo {
+public class ZhiHuNewsItemInfo implements Serializable {
+
+	public int item_layout;
+
+	public int date_cus;
 
 	public String body;
 
