@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,7 +73,6 @@ public class HomeActivityRecyclerViewIndicator extends LinearLayout {
 
 	public void setColorForStart() {
 		if (viewList.get(0) != null) {
-			Log.i("ZRH","not null");
 			viewList.get(0).setBackgroundColor(Color.WHITE);
 			viewList.get(1).setBackgroundColor(Color.GRAY);
 			viewList.get(2).setBackgroundColor(Color.GRAY);
