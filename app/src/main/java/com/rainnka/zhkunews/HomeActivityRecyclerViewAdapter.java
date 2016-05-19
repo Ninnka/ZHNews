@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
@@ -32,10 +33,10 @@ public class HomeActivityRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 
 	//	public Boolean LOAD_STATUS_FIRST = true;
 
-	public enum ITEM_TYPE {
-		ITEM_DATE,
-		ITEM_CONTENT
-	}
+//	public enum ITEM_TYPE {
+//		ITEM_DATE,
+//		ITEM_CONTENT
+//	}
 
 	//	public int[] iteminfotype;
 
@@ -105,10 +106,7 @@ public class HomeActivityRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 			return new RecyclerViewContentViewHolder(layoutInflater.inflate(R.layout
 					.home_activity_content_recyclerview_item_content, parent, false));
 		}
-		//		Log.i("ZRH", "onCreateViewHolder return null");
 		return null;
-		//		return new RecyclerViewContentViewHolder(layoutInflater.inflate(R.layout
-		//				.home_activity_content_recyclerview_item_content, parent, false));
 	}
 
 	@Override
@@ -135,6 +133,7 @@ public class HomeActivityRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 					.load(zhiHuNewsItemInfo.images.get(0))
 					.placeholder(R.drawable.placeholder)
 					.skipMemoryCache(true)
+					.diskCacheStrategy(DiskCacheStrategy.RESULT)
 					.crossFade(500)
 					.fitCenter()
 					.into(recyclerViewContentViewHolder.picture_iv);

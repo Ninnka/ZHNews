@@ -4,8 +4,8 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
-    <color name="homeActivityBannerIndicatorSelected">#FFFFFFFF</color>
-    <color name="homeActivityBannerIndicatorUnSelected">#779E9E9E</color>
+    <color name="homeActivityBannerIndicatorSelected">#FFE9E9E9</color>
+    <color name="homeActivityBannerIndicatorUnSelected">#999E9E9E</color>
     <color name="homeActivityRecyclerViewBackgroud">#BBF8F8F8</color>
 
     <color name="statusBarInsteadDefaultColor">#00FFFFFF</color>

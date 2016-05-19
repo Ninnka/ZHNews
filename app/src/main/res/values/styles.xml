@@ -33,6 +33,10 @@
 
     </style>
 
+    <style name="WelcomeTheme" parent="Theme.AppCompat.Light.NoActionBar">
+
+    </style>
+
     <!--<style name="fab_menu_labels_style">-->
     <!--<item name="android:textColor">#515151</item>-->
     <!--<item name="android:background">#33888888</item>-->

@@ -6,15 +6,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeActivity"
     android:fitsSystemWindows="true"
+    tools:context=".HomeActivity"
     tools:showIn="@layout/home_activity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/homeActivity_Content_main_AppBarLayout"
         android:layout_width="match_parent"
-        android:fitsSystemWindows="true"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/homeActivity_Content_main_CollapsingToolbarLayout"
@@ -44,7 +44,7 @@
 
                 </android.support.v4.view.ViewPager>
 
-                <com.rainnka.zhkunews.HomeActivityRecyclerViewIndicator
+                <com.rainnka.zhkunews.HomeActivityViewPagerIndicator
                     android:id="@+id/homeActivity_Content_main_HomeActivityRecyclerViewIndicator"
                     android:layout_width="match_parent"
                     android:layout_height="22dp"
@@ -54,7 +54,7 @@
                     android:gravity="center"
                     android:padding="8dp">
 
-                </com.rainnka.zhkunews.HomeActivityRecyclerViewIndicator>
+                </com.rainnka.zhkunews.HomeActivityViewPagerIndicator>
 
             </FrameLayout>
 
@@ -105,13 +105,14 @@
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
         android:clickable="true"
-        android:src="@android:drawable/ic_dialog_dialer"
+        android:src="@mipmap/star_fab"
+        app:backgroundTint="#607D8B"
         app:elevation="5dp"
         app:fabSize="normal"
         app:layout_anchor="@id/homeActivity_Content_main_AppBarLayout"
         app:layout_anchorGravity="end|bottom"
         app:pressedTranslationZ="12dp"
-        app:rippleColor="#FF3333"/>
+        app:rippleColor="#7C4DFF"/>
 
 
 </android.support.design.widget.CoordinatorLayout>

@@ -40,7 +40,6 @@ public class NewsActivity extends AppCompatActivity {
 	protected CollapsingToolbarLayout collapsingToolbarLayout;
 	protected Toolbar toolbar;
 	protected ImageView imageView;
-	//	protected TextView textView;
 	protected WebView webView;
 
 	public OkHttpClient okHttpClient;
@@ -63,11 +62,6 @@ public class NewsActivity extends AppCompatActivity {
 	public Boolean isStar = false;
 
 	public static final String getInfoByAPI = "http://news-at.zhihu.com/api/4/news/";
-
-	/*
-	* 用于接收token
-	* */
-	//	String token;
 
 
 	@Override
@@ -118,7 +112,7 @@ public class NewsActivity extends AppCompatActivity {
 		* */
 		okHttpClient = new OkHttpClient();
 		String getInfoUrl = getInfoByAPI + zhiHuNewsItemInfoFormHome.id;
-		Log.i("ZRH","getInfoUrl: "+getInfoUrl);
+//		Log.i("ZRH","getInfoUrl: "+getInfoUrl);
 		request = new Request.Builder()
 				.url(getInfoUrl)
 				.build();
@@ -149,7 +143,6 @@ public class NewsActivity extends AppCompatActivity {
 				.newsActivity_CollapsingToolbarLayout);
 		toolbar = (Toolbar) findViewById(R.id.newsActivity_Toolbar);
 		imageView = (ImageView) findViewById(R.id.newsActivity_ImageView_InCollapsingToolbarLayout);
-		//		textView = (TextView) findViewById(R.id.newsActivity_TextView_InContent);
 		webView = (WebView) findViewById(R.id.newsActivity_WebView);
 	}
 
@@ -223,6 +216,11 @@ public class NewsActivity extends AppCompatActivity {
 
 	@Override
 	protected void onDestroy() {
+		if(webView != null){
+			webView.removeAllViews();
+			webView.onPause();
+			webView.destroy();
+		}
 		super.onDestroy();
 		webViewHandler.removeMessages(0x123);
 	}

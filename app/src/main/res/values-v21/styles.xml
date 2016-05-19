@@ -32,7 +32,7 @@
 
         <!-- statusbar设置 -->
         <item name="android:windowTranslucentStatus">false</item>
-        <!--<item name="android:windowTranslucentNavigation">true</item>-->
+        <item name="android:windowTranslucentNavigation">true</item>
 
         <!--以下属性用于控制NavigationView的全屏显示-->
         <!--<item name="android:windowTranslucentStatus">true</item>-->
@@ -41,6 +41,15 @@
     </style>
 
     <style name="NewsTheme" parent="AppTheme">
+
+        <item name="android:statusBarColor">@android:color/transparent</item>
+
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+
+    </style>
+
+    <style name="WelcomeTheme" parent="Theme.AppCompat.Light.NoActionBar">
 
         <item name="android:statusBarColor">@android:color/transparent</item>
 
