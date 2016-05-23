@@ -1,4 +1,4 @@
-package com.rainnka.zhkunews;
+package com.rainnka.zhkunews.Bean;
 
 import java.io.Serializable;
 import java.util.ArrayList;

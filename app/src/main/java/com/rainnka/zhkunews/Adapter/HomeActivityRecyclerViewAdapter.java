@@ -1,4 +1,4 @@
-package com.rainnka.zhkunews;
+package com.rainnka.zhkunews.Adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,6 +9,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.rainnka.zhkunews.Activity.HomeActivity;
+import com.rainnka.zhkunews.R;
+import com.rainnka.zhkunews.Bean.ZhiHuNewsItemInfo;
 
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
@@ -31,29 +34,13 @@ public class HomeActivityRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
 	String cd;
 
-	//	public Boolean LOAD_STATUS_FIRST = true;
-
 //	public enum ITEM_TYPE {
 //		ITEM_DATE,
 //		ITEM_CONTENT
 //	}
 
-	//	public int[] iteminfotype;
-
-	public onRecyclerViewItemClickListener onRecyclerViewItemClickListener;
-
-	public onRecyclerViewItemLongClickListener onRecyclerViewItemLongClickListener;
-
 	public interface HomeActivityRecyclerViewAdapterCallback {
 		void refreshOldNews();
-	}
-
-	public interface onRecyclerViewItemClickListener {
-		void onItemClick(ZhiHuNewsItemInfo zhiHuNewsItemInfo);
-	}
-
-	public interface onRecyclerViewItemLongClickListener {
-		void onItemLongClick();
 	}
 
 	public void setHomeActivityRecyclerViewAdapterCallback
@@ -61,26 +48,11 @@ public class HomeActivityRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 		this.homeActivityRecyclerViewAdapterCallback = homeActivityRecyclerViewAdapterCallback;
 	}
 
-	public void setOnRecyclerViewItemClickListener(HomeActivityRecyclerViewAdapter
-														   .onRecyclerViewItemClickListener
-														   onRecyclerViewItemClickListener) {
-		this.onRecyclerViewItemClickListener = onRecyclerViewItemClickListener;
-	}
-
-	public void setOnRecyclerViewItemLongClickListener(HomeActivityRecyclerViewAdapter
-															   .onRecyclerViewItemLongClickListener
-															   onRecyclerViewItemLongClickListener) {
-		this.onRecyclerViewItemLongClickListener = onRecyclerViewItemLongClickListener;
-	}
-
 	public HomeActivityRecyclerViewAdapter(HomeActivity homeActivity) {
 		this.homeActivityWeakReference = new WeakReference<>(homeActivity);
 		this.homeActivity = this.homeActivityWeakReference.get();
 		layoutInflater = LayoutInflater.from(this.homeActivity);
 		cd = simpleDateFormat.format(new Date());
-		//		this.iteminfotype = this.homeActivity.getApplicationContext().getResources().getIntArray(R
-		//				.array.recyclerview_iteminfo_type);
-		//		Log.i("ZRH",this.iteminfotype[0]+"\n"+this.iteminfotype[1]);
 	}
 
 	public void setZhiHuNewsItemInfoList(List<ZhiHuNewsItemInfo> zhiHuNewsItemInfoList) {
@@ -114,17 +86,6 @@ public class HomeActivityRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 		if (holder instanceof RecyclerViewContentViewHolder) {
 			RecyclerViewContentViewHolder recyclerViewContentViewHolder =
 					(RecyclerViewContentViewHolder) holder;
-			/*
-			* 添加点击事件
-			* */
-			recyclerViewContentViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					if (onRecyclerViewItemClickListener != null) {
-						onRecyclerViewItemClickListener.onItemClick(zhiHuNewsItemInfoList.get(position));
-					}
-				}
-			});
 			//			Log.i("ZRH", "test: " + 1);
 			ZhiHuNewsItemInfo zhiHuNewsItemInfo = zhiHuNewsItemInfoList.get(position);
 			//			Log.i("ZRH", "zhiHuNewsItemInfo.title: " + zhiHuNewsItemInfo.title);
@@ -143,8 +104,6 @@ public class HomeActivityRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 			ZhiHuNewsItemInfo zhiHuNewsItemInfo = zhiHuNewsItemInfoList.get(position);
 
 			if (String.valueOf(zhiHuNewsItemInfo.date_cus).equals(cd)) {
-				//				Log.i("ZRH", "cd: " + cd);
-				//				Log.i("ZRH", "zhiHuNewsItemInfo.date_cus: "+String.valueOf(zhiHuNewsItemInfo.date_cus));
 				recyclerViewDateViewHolder.date_tv.setText("今日新闻");
 			} else {
 				String date_month = String.valueOf(zhiHuNewsItemInfo.date_cus).substring(4, 6);
@@ -160,23 +119,6 @@ public class HomeActivityRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 			}
 		}
 
-		/*
-		* 测试用
-		* */
-		//		RecyclerViewContentViewHolder recyclerViewContentViewHolder =
-		//				(RecyclerViewContentViewHolder) holder;
-		//		HomeActivityRecyclerViewItemInfo homeActivityRecyclerViewItemInfo = zhiHuNewsItemInfoList.get
-		//				(position);
-		//		recyclerViewContentViewHolder.content_tv.setText(homeActivityRecyclerViewItemInfo
-		//				.title);
-		//		Glide.with(homeActivity)
-		//				.load(homeActivityRecyclerViewItemInfo.pictureID)
-		//				.placeholder(R.drawable.placeholder)
-		//				.skipMemoryCache(true)
-		//				.crossFade(500)
-		//				.fitCenter()
-		//				.into(recyclerViewContentViewHolder.picture_iv);
-
 	}
 
 	@Override
@@ -185,32 +127,16 @@ public class HomeActivityRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 		ZhiHuNewsItemInfo zhiHuNewsItemInfo = zhiHuNewsItemInfoList.get(position);
 		int item_type = zhiHuNewsItemInfo.item_layout;
 		if (item_type == 0) {
-			//			Log.i("ZRH", "adapter中getItemViewType: " + ITEM_TYPE.ITEM_DATE.ordinal());
 			return_type = 0;
 		}
 		if (item_type == 1) {
-			//			Log.i("ZRH", "item_type: " + item_type);
-			//			Log.i("ZRH", "adapter中getItemViewType: " + ITEM_TYPE.ITEM_CONTENT.ordinal());
 			return_type = 1;
 		}
-		//		Log.i("ZRH", "item_type: " + item_type);
-		//		Log.i("ZRH", "return_type: " + return_type);
 		return return_type;
-		//		return super.getItemViewType(position);
 	}
 
 	@Override
 	public int getItemCount() {
-		//		Log.i("ZRH",zhiHuNewsItemInfoList.size()+"");
-		//		return 0;
-		//		int count = 0;
-		//		for (int i = 0; i < zhiHuNewsItemInfoList.size(); i++) {
-		//			List<ZhiHuNewsItemInfo> list = zhiHuNewsItemInfoList.get(i).stories;
-		//			Log.i("ZRH","zhiHuNewsItemInfoList.size(): "+ list.size());
-		//			count = count + list.size();
-		//		}
-		//		Log.i("ZRH", "adapter中getItemCount, zhiHuNewsItemInfoList.size(): " +
-		//				zhiHuNewsItemInfoList.size());
 		return zhiHuNewsItemInfoList.size();
 	}
 

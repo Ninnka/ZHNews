@@ -2,6 +2,7 @@
           xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -10,7 +11,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".HomeActivity"
+            android:name=".Activity.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/HomeTheme">
 
@@ -21,7 +22,7 @@
         </activity>
 
         <activity
-            android:name=".NewsActivity"
+            android:name=".Activity.NewsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/NewsTheme">
 
@@ -31,8 +32,20 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".WelcomeActivity"
-                  android:theme="@style/WelcomeTheme">
+        <activity
+            android:name=".Activity.Star_History_PraiseActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
+
+            <intent-filter>
+                <action android:name="android.intent.action.Star_History_Praise"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".Activity.WelcomeActivity"
+            android:theme="@style/WelcomeTheme">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

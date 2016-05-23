@@ -16,7 +16,6 @@
         android:icon="@drawable/unstared"
         android:title="">
 
-
     </item>
 
 </menu>

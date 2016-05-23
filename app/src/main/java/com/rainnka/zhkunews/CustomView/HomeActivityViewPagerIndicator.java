@@ -1,4 +1,4 @@
-package com.rainnka.zhkunews;
+package com.rainnka.zhkunews.CustomView;
 
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.rainnka.zhkunews.R;
+import com.rainnka.zhkunews.Utility.LengthTransitionUtility;
 
 import java.util.ArrayList;
 import java.util.List;

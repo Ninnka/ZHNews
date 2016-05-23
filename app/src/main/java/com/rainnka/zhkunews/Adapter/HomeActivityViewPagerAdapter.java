@@ -1,16 +1,18 @@
-package com.rainnka.zhkunews;
+package com.rainnka.zhkunews.Adapter;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.rainnka.zhkunews.Activity.HomeActivity;
+import com.rainnka.zhkunews.Bean.ZhiHuNewsItemInfo;
+import com.rainnka.zhkunews.R;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -44,17 +46,21 @@ public class HomeActivityViewPagerAdapter extends PagerAdapter {
 				Glide.with(appCompatActivity)
 						.load(zhiHuNewsTopItemInfoList.get(zhiHuNewsTopItemInfoList.size() - 1).image)
 						.into(imageView);
-				Log.i("ZRH", "更新 i==0 图片");
+				//				Log.i("ZRH", "更新i==0 标题：" + zhiHuNewsTopItemInfoList.get(zhiHuNewsTopItemInfoList
+				//						.size() - 1).title);
+				//				Log.i("ZRH", "更新 i==0 图片: " + zhiHuNewsTopItemInfoList.get(zhiHuNewsTopItemInfoList.size() - 1).image);
 			} else if (i == zhiHuNewsTopItemInfoList.size() + 1) {
 				Glide.with(appCompatActivity)
 						.load(zhiHuNewsTopItemInfoList.get(0).image)
 						.into(imageView);
-				Log.i("ZRH", "更新 i==homeActivity.zhiHuNewsTopItemInfoList.size() + 1 图片");
+				//				Log.i("ZRH", "更新i== 标题:" + zhiHuNewsTopItemInfoList.get(0).title);
+				//				Log.i("ZRH", "更新 i==homeActivity.zhiHuNewsTopItemInfoList.size() + 1 图片: " + zhiHuNewsTopItemInfoList.get(0).image);
 			} else {
 				Glide.with(appCompatActivity)
 						.load(zhiHuNewsTopItemInfoList.get(i - 1).image)
 						.into(imageView);
-				Log.i("ZRH", "更新图片");
+				//				Log.i("ZRH", "更新标题: " + zhiHuNewsTopItemInfoList.get(i - 1).title);
+				//				Log.i("ZRH", "更新图片: " + zhiHuNewsTopItemInfoList.get(i - 1).image);
 			}
 		}
 	}

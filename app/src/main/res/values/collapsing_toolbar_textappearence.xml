@@ -9,6 +9,5 @@
         <item name="android:ellipsize">marquee</item>
         <item name="android:textSize">15sp</item>
         <item name="android:textColor">#FFFFFF</item>
-        <!--<item name="android:maxWidth">50dp</item>-->
     </style>
 </resources>

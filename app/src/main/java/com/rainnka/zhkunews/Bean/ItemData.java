@@ -1,19 +1,21 @@
-package com.rainnka.zhkunews;
+package com.rainnka.zhkunews.Bean;
 
 import android.content.Context;
 import android.content.res.Resources;
+
+import com.rainnka.zhkunews.R;
 
 /**
  * Created by rainnka on 2016/5/14 13:24
  * Project name is ZHKUNews
  */
-public class HomeActivityViewPagerBannerData {
+public class ItemData {
 
 	Resources resources;
 	public int[] pictureID;
 	public String[] pictureTitle;
 
-	public HomeActivityViewPagerBannerData(Context context) {
+	public ItemData(Context context) {
 		this.resources = context.getApplicationContext().getResources();
 		pictureID = new int[]{R.drawable.bg_1, R.drawable.bg_2, R.drawable.bg_3};
 		pictureTitle = new String[]{resources.getString(R.string.bg1_title), resources.getString

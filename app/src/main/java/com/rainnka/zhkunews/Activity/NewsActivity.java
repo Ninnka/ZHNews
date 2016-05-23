@@ -1,4 +1,4 @@
-package com.rainnka.zhkunews;
+package com.rainnka.zhkunews.Activity;
 
 import android.content.Intent;
 import android.os.Build;
@@ -20,6 +20,9 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.rainnka.zhkunews.R;
+import com.rainnka.zhkunews.Utility.LengthTransitionUtility;
+import com.rainnka.zhkunews.Bean.ZhiHuNewsItemInfo;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;

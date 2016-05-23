@@ -1,6 +1,9 @@
-package com.rainnka.zhkunews;
+package com.rainnka.zhkunews.Activity;
 
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,7 +35,17 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.gson.Gson;
+import com.rainnka.zhkunews.Callback_Listener.onHARecyclerItemClickListener;
+import com.rainnka.zhkunews.Adapter.HomeActivityRecyclerViewAdapter;
+import com.rainnka.zhkunews.Adapter.HomeActivityViewPagerAdapter;
+import com.rainnka.zhkunews.Bean.ZhiHuNewsItemInfo;
+import com.rainnka.zhkunews.Bean.ZhiHuNewsLatestItemInfo;
+import com.rainnka.zhkunews.CustomView.HomeActivityViewPagerIndicator;
+import com.rainnka.zhkunews.R;
+import com.rainnka.zhkunews.Utility.LengthTransitionUtility;
+import com.rainnka.zhkunews.Utility.SnackbarUtility;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
@@ -47,14 +60,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by rainnka on 2016/5/12 20:45
  * Project name is ZHKUNews
  */
 public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener,
-		HomeActivityRecyclerViewAdapter.HomeActivityRecyclerViewAdapterCallback,
-		HomeActivityRecyclerViewAdapter.onRecyclerViewItemClickListener, SwipeRefreshLayout
+		HomeActivityRecyclerViewAdapter.HomeActivityRecyclerViewAdapterCallback, SwipeRefreshLayout
 				.OnRefreshListener, AppBarLayout.OnOffsetChangedListener, NavigationView.OnNavigationItemSelectedListener {
 
 	protected Toolbar toolbar;
@@ -69,6 +82,10 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 	protected HomeActivityViewPagerIndicator homeActivityViewPagerIndicator;
 	protected FloatingActionButton floatingActionButton;
 	protected FrameLayout frameLayout;
+	protected com.getbase.floatingactionbutton.FloatingActionButton floatingActionButton_quickUp;
+	protected com.getbase.floatingactionbutton.FloatingActionButton
+			floatingActionButton_quickDown;
+	protected FloatingActionsMenu floatingActionsMenu;
 
 	protected ImageView profile_iv;
 	protected TextView profile_tv;
@@ -80,24 +97,19 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 	public BannerHandler bannerHandler;
 	public RecyclerRefreshHandler recyclerRefreshHandler;
 
-	public int[] mRecyclerViewItemPicture;
-	public String[] mRecyclerViewItemContent;
-
 	public int viewPagerStatusPosition = 1;
 	public final static int BANNER_SCROLL_INTERVAL = 4000;
 	public final static int BANNER_SCROLL_KEY = 0x123;
 
 	public final static int RECYCLER_REFRESH_NEW = 0x111111;
+	public final static int RECYCLER_REFRESH_NEW_FAILURE = 0x111222;
 	public final static int RECYCLER_REFRESH_OLD = 0x222222;
+	public final static int RECYCLER_REFRESH_OLD_FAILURE = 0x222333;
 	public final static int RECYCLER_REFRESH_LATEST = 0x333333;
 
 	public boolean BACKPRESS_STATUS = false;
 
 	public Runnable mRunnable;
-
-	public int date_year;
-	public int date_month;
-	public int date_day;
 
 	public Date date;
 	public String current_simple_date_format;
@@ -113,15 +125,15 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 
 	public Gson gson;
 
-	//	public HomeActivityViewPagerBannerData homeActivityViewPagerBannerData;
-	//	public final HomeActivityViewPagerBannerInfo[] homeActivityViewPagerBannerInfo = new
-	//			HomeActivityViewPagerBannerInfo[3];
-
-	//	public int[] item_layout;
-
 	public final static String INTENT_TO_NEWS_KEY = "android.intent.action.NewsActivity";
+	public final static String INTENT_TO_STAR_HISTORY_PRAISE_KEY = "android.intent.action" +
+			".Star_History_Praise";
 
-	public static String TOKEN_KEY = "TOKEN";
+	public final static String INTENT_STRING_DATA_KEY = "STRING_DATA_KEY";
+	public final static String STAR_KEY = "star";
+	public final static String HISTORY_KEY = "history";
+	public final static String PRAISE_KEY = "praise";
+
 	public static String SER_KEY = "SER";
 
 	public static String ZHIHUAPI_LATEST = "http://news-at.zhihu.com/api/4/news/latest";
@@ -130,7 +142,6 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 	private Boolean isLoadBanner = false;
 
 	protected OkHttpClient okHttpClient;
-	//	protected Request request;
 
 	public ZhiHuNewsLatestItemInfo zhiHuNewsLatestItemInfo;
 	public ZhiHuNewsLatestItemInfo zhiHuNewsLatestItemInfo_old;
@@ -138,14 +149,26 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 
 	public List<ZhiHuNewsItemInfo> zhiHuNewsTopItemInfoList;
 
-	//	public ZhiHuNewsLatestItemInfo zhiHuNewsLatestItemInfo_store;
-	//	public List<ZhiHuNewsItemInfo> zhiHuNewsItemInfoList;
+	private ConnectivityManager connectivityManager;
 
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.home_activity);
+
+		//		ViewStubCompat viewStubCompat = (ViewStubCompat) findViewById(R.id.home_activity_content_viewstub);
+		//		viewStubCompat.setVisibility(View.VISIBLE);
+
+		/*
+		* 初始化网络连接管理器
+		* */
+		initConnectivityManager();
+
+		/*
+		* 初始化网络连接客户端
+		* */
+		initOkhttpClient();
 
 		/*
 		* 初始化组件
@@ -212,6 +235,11 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 		* */
 		initRecyclerViewAdapter();
 
+		/*
+		* 添加recyclerview的clicklistener
+		* */
+		addRecyclerViewOnItemClickListener();
+
 
 		/*
 		* 首次启动时加载最新的内容
@@ -229,6 +257,11 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 		* 设置appbar下的fab按钮的点击事件
 		* */
 		addFABAnchorInAppBarOnClickListener();
+
+		/*
+		* 设置floatingactionbutton的快速向下和快速向上功能
+		* */
+		addFABInMenuOnClickListener();
 
 		/*
 		* appbar监听事件
@@ -256,6 +289,7 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 
 	}
 
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -269,6 +303,9 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 	protected void onPause() {
 		super.onPause();
 		bannerStopAutoScroll();
+		if (floatingActionsMenu.isExpanded()) {
+			floatingActionsMenu.collapse();
+		}
 		//		Log.i("ZRH","onPause");
 	}
 
@@ -302,6 +339,52 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 	}
 
 
+	private void addRecyclerViewOnItemClickListener() {
+		recyclerView.addOnItemTouchListener(new onHARecyclerItemClickListener(recyclerView) {
+			@Override
+			public void onItemClickListener(RecyclerView.ViewHolder viewHolder) {
+				Intent intent = new Intent();
+				intent.setAction(INTENT_TO_NEWS_KEY);
+				Bundle bundle = new Bundle();
+				bundle.putSerializable(SER_KEY, homeActivityRecyclerViewAdapter
+						.zhiHuNewsItemInfoList.get(viewHolder.getAdapterPosition()));
+				intent.putExtras(bundle);
+				startActivity(intent);
+			}
+
+			@Override
+			public void onItemLongClickListener(RecyclerView.ViewHolder viewHolder) {
+
+			}
+		});
+	}
+
+	/*
+	* 添加FAB menu中两个fab的点击事件
+	* */
+	private void addFABInMenuOnClickListener() {
+		floatingActionButton_quickUp.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (homeActivityRecyclerViewAdapter.getItemCount() != 0) {
+					recyclerView.scrollToPosition(0);
+					appBarLayout.setExpanded(true);
+				}
+			}
+		});
+
+		floatingActionButton_quickDown.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (homeActivityRecyclerViewAdapter.getItemCount() != 0) {
+					recyclerView.scrollToPosition(homeActivityRecyclerViewAdapter.getItemCount()
+							- 1);
+					appBarLayout.setExpanded(false, true);
+				}
+			}
+		});
+	}
+
 	/*
 	* 设置appbar下的fab按钮的点击事件
 	* */
@@ -310,11 +393,6 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 			@Override
 			public void onClick(View v) {
 				/* nothing */
-				//				zhiHuNewsTopItemInfoList.get(0).title = "test";
-				//				Log.i("ZRH", "addFABAnchorInAppBarOnClickListener(): "+zhiHuNewsTopItemInfoList
-				//						.get(0).title);
-				//				homeActivityViewPagerAdapter.updateZhiHuNewsTopItemInfoList();
-
 			}
 		});
 	}
@@ -340,7 +418,6 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 	private void initRecyclerViewAdapter() {
 		homeActivityRecyclerViewAdapter = new HomeActivityRecyclerViewAdapter(this);
 		homeActivityRecyclerViewAdapter.setHomeActivityRecyclerViewAdapterCallback(this);
-		homeActivityRecyclerViewAdapter.setOnRecyclerViewItemClickListener(this);
 	}
 
 	/*
@@ -411,44 +488,103 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 	}
 
 	/*
+	* 初始化网络连接客户端
+	* */
+	private void initOkhttpClient() {
+		okHttpClient = new OkHttpClient();
+		okHttpClient.setReadTimeout(10, TimeUnit.SECONDS);
+	}
+
+	/*
+	* 获取网络连接管理器
+	* */
+	private void initConnectivityManager() {
+		connectivityManager = (ConnectivityManager) this.getApplicationContext().getSystemService
+				(CONNECTIVITY_SERVICE);
+	}
+
+	/*
+	* 获取网络连接相关状况
+	* */
+	private boolean getConnectivityCondition() {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			Network[] networks = connectivityManager.getAllNetworks();
+			if (networks != null && networks.length > 0) {
+				for (int i = 0; i < networks.length; i++) {
+					Log.i("ZRH", "network status: " + connectivityManager.getNetworkInfo
+							(networks[i]).getState());
+					Log.i("ZRH", "network tyoe: " + connectivityManager.getNetworkInfo(networks[i]
+					).getType());
+					if (connectivityManager.getNetworkInfo(networks[i]).getState() == NetworkInfo
+							.State.CONNECTED) {
+						return true;
+					}
+				}
+			} else {
+				Snackbar snackbar = SnackbarUtility.getSnackbarDefault(coordinatorLayout,
+						"咦，没有可用的网络吔", 3000);
+				snackbar.show();
+				//				Log.i("ZRH", "无可用网络");
+				return false;
+			}
+		} else {
+			NetworkInfo[] networkInfos = connectivityManager.getAllNetworkInfo();
+			if (networkInfos != null && networkInfos.length > 0) {
+				for (int i = 0; i < networkInfos.length; i++) {
+					Log.i("ZRH", "network status: " + networkInfos[i].getState());
+					Log.i("ZRH", "network type: " + networkInfos[i].getType());
+					if (networkInfos[i].getState() == NetworkInfo.State.CONNECTED) {
+						return true;
+					}
+				}
+			} else {
+				Snackbar snackbar = SnackbarUtility.getSnackbarDefault(coordinatorLayout,
+						"咦，没有可用的网络吔", 3000);
+				snackbar.show();
+				//				Log.i("ZRH", "无可用网络");
+				return false;
+			}
+		}
+		return false;
+	}
+
+	/*
 	* 首次启动时加载最新的内容
 	* */
 	private void initRecyclerViewFirstZhiHuContent() {
-		okHttpClient = new OkHttpClient();
-		Request request = new Request.Builder()
-				.url(ZHIHUAPI_LATEST)
-				.build();
+		if (getConnectivityCondition()) {
+			Request request = new Request.Builder()
+					.url(ZHIHUAPI_LATEST)
+					.build();
 
-		Call call = okHttpClient.newCall(request);
-		call.enqueue(new Callback() {
-			@Override
-			public void onFailure(Request request, IOException e) {
-
-			}
-
-			@Override
-			public void onResponse(Response response) throws IOException {
-				if (response.code() == 200) {
-					Log.i("ZRH", "success in access url: " + response.request().urlString());
-					zhiHuNewsLatestItemInfo = gson.fromJson(response.body().string(),
-							ZhiHuNewsLatestItemInfo.class);
-					zhiHuNewsTopItemInfoList = zhiHuNewsLatestItemInfo
-							.top_stories;
-					//					Log.i("ZRH", zhiHuNewsLatestItemInfo.date + "");
-					current_date_from_zhihu = zhiHuNewsLatestItemInfo.date + "";
-					current_date_year = current_date_from_zhihu.substring(0, 4);
-					current_date_month = current_date_from_zhihu.substring(4, 6);
-					current_date_day = current_date_from_zhihu.substring(6, 8);
-					//					Log.i("ZRH", "current_date_from_zhihu: " + current_date_from_zhihu);
-					//					Log.i("ZRH", "current_date_from_zhihu: " + current_date_year);
-					//					Log.i("ZRH", "current_date_from_zhihu: " + current_date_month);
-					//					Log.i("ZRH", "current_date_from_zhihu: " + current_date_day);
-					Message message = new Message();
-					message.what = RECYCLER_REFRESH_LATEST;
-					recyclerRefreshHandler.sendMessage(message);
+			Call call = okHttpClient.newCall(request);
+			call.enqueue(new Callback() {
+				@Override
+				public void onFailure(Request request, IOException e) {
+					Snackbar snackbar = SnackbarUtility.getSnackbarDefault(coordinatorLayout,
+							"咦，网络不太顺畅吔", 3000);
+					snackbar.show();
 				}
-			}
-		});
+
+				@Override
+				public void onResponse(Response response) throws IOException {
+					if (response.code() == 200) {
+						//						Log.i("ZRH", "success in access url: " + response.request().urlString());
+						zhiHuNewsLatestItemInfo = gson.fromJson(response.body().string(),
+								ZhiHuNewsLatestItemInfo.class);
+						zhiHuNewsTopItemInfoList = zhiHuNewsLatestItemInfo
+								.top_stories;
+						current_date_from_zhihu = zhiHuNewsLatestItemInfo.date + "";
+						current_date_year = current_date_from_zhihu.substring(0, 4);
+						current_date_month = current_date_from_zhihu.substring(4, 6);
+						current_date_day = current_date_from_zhihu.substring(6, 8);
+						Message message = new Message();
+						message.what = RECYCLER_REFRESH_LATEST;
+						recyclerRefreshHandler.sendMessage(message);
+					}
+				}
+			});
+		}
 	}
 
 	/*
@@ -512,7 +648,12 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 		floatingActionButton = (FloatingActionButton) findViewById(R.id
 				.homeActivity_Content_main_FAB_anchorInAppBar);
 		frameLayout = (FrameLayout) findViewById(R.id.homeActivity_Content_main_FrameLayout);
-
+		floatingActionButton_quickUp = (com.getbase.floatingactionbutton.FloatingActionButton)
+				findViewById(R.id.homeActivity_Content_main_FABMenu_item_FAB_quickUp);
+		floatingActionButton_quickDown = (com.getbase.floatingactionbutton.FloatingActionButton) findViewById(R.id
+				.homeActivity_Content_main_FABMenu_item_FAB_quickDown);
+		floatingActionsMenu = (FloatingActionsMenu) findViewById(R.id
+				.homeActivity_Content_main_FABMenu);
 	}
 
 	/*
@@ -540,6 +681,9 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 		drawerLayout.addDrawerListener(actionBarDrawerToggle);
 	}
 
+	/*
+	* 获取前一天的时间
+	* */
 	public String getPrecedingDate(String currentDate) {
 		Calendar calendar = Calendar.getInstance();
 
@@ -566,11 +710,6 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 		}
 		if (!BACKPRESS_STATUS) {
 			BACKPRESS_STATUS = true;
-			//			Snackbar snackbar = Snackbar.make(coordinatorLayout, "再次点击退出键退出", Snackbar
-			//					.LENGTH_SHORT);
-			//			snackbar.getView().setBackgroundColor(Color.argb(220, 233, 233, 233));
-			//			((TextView) snackbar.getView().findViewById(R.id.snackbar_text)).setTextColor(Color.GRAY);
-			//			snackbar.show();
 			Snackbar snackbar = SnackbarUtility.getSnackbarLight(coordinatorLayout, "再次点击退出键退出",
 					Snackbar.LENGTH_SHORT);
 			snackbar.show();
@@ -614,82 +753,107 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 
 	@Override
 	public void onRefresh() {
-		Request request = new Request.Builder()
-				.url(ZHIHUAPI_LATEST)
-				.build();
+		if (getConnectivityCondition()) {
+			Request request = new Request.Builder()
+					.url(ZHIHUAPI_LATEST)
+					.build();
 
-		Call call = okHttpClient.newCall(request);
+			Call call = okHttpClient.newCall(request);
 
-		call.enqueue(new Callback() {
-			@Override
-			public void onFailure(Request request, IOException e) {
-				Log.i("ZRH", "onFailure in onRefresh for latest");
-			}
-
-			@Override
-			public void onResponse(Response response) throws IOException {
-				if (response.code() == 200) {
-					Log.i("ZRH", "success in access url: " + response.request().urlString());
-
-					zhiHuNewsLatestItemInfo_new = gson.fromJson(response.body().string(),
-							ZhiHuNewsLatestItemInfo.class);
-
-					Message message = new Message();
-					message.what = RECYCLER_REFRESH_NEW;
-					recyclerRefreshHandler.sendMessage(message);
+			call.enqueue(new Callback() {
+				@Override
+				public void onFailure(Request request, IOException e) {
+					//					Log.i("ZRH", "onFailure in onRefresh for latest");
+					Snackbar snackbar = SnackbarUtility.getSnackbarDefault(coordinatorLayout,
+							"咦，网络不太顺畅吔", 3000);
+					snackbar.show();
+					recyclerRefreshHandler.sendEmptyMessage(RECYCLER_REFRESH_NEW_FAILURE);
 				}
-			}
-		});
+
+				@Override
+				public void onResponse(Response response) throws IOException {
+					if (response.code() == 200) {
+						//						Log.i("ZRH", "success in access url: " + response.request().urlString());
+						zhiHuNewsLatestItemInfo_new = gson.fromJson(response.body().string(),
+								ZhiHuNewsLatestItemInfo.class);
+						Message message = new Message();
+						message.what = RECYCLER_REFRESH_NEW;
+						recyclerRefreshHandler.sendMessage(message);
+					}
+				}
+			});
+		}
 	}
 
 	@Override
 	public void refreshOldNews() {
 		swipeRefreshLayout.setRefreshing(true);
-		refressh_old_date = current_simple_date_format;
 
-		String oldUrl = ZHIHUAPI_BEFORE + refressh_old_date;
-		Request request = new Request.Builder()
-				.url(oldUrl)
-				.build();
-		Call call = okHttpClient.newCall(request);
-		call.enqueue(new Callback() {
-			@Override
-			public void onFailure(Request request, IOException e) {
-				Log.i("ZRH", "failure in oldurl");
-			}
-
-			@Override
-			public void onResponse(Response response) throws IOException {
-				if (response.code() == 200) {
-					Log.i("ZRH", "success in access url: " + response.request().urlString());
-					zhiHuNewsLatestItemInfo_old = gson.fromJson(response.body
-							().string(), ZhiHuNewsLatestItemInfo.class);
-					Message message = new Message();
-					message.what = RECYCLER_REFRESH_OLD;
-					recyclerRefreshHandler.sendMessage(message);
+		if (getConnectivityCondition()) {
+			refressh_old_date = current_simple_date_format;
+			String oldUrl = ZHIHUAPI_BEFORE + refressh_old_date;
+			Request request = new Request.Builder()
+					.url(oldUrl)
+					.build();
+			Call call = okHttpClient.newCall(request);
+			call.enqueue(new Callback() {
+				@Override
+				public void onFailure(Request request, IOException e) {
+					//				Log.i("ZRH", "failure in oldurl");
+					Snackbar snackbar = SnackbarUtility.getSnackbarDefault(coordinatorLayout,
+							"咦，网络不太顺畅吔", 3000);
+					snackbar.show();
+					recyclerRefreshHandler.sendEmptyMessage(RECYCLER_REFRESH_OLD_FAILURE);
 				}
-			}
-		});
+
+				@Override
+				public void onResponse(Response response) throws IOException {
+					if (response.code() == 200) {
+						//					Log.i("ZRH", "success in access url: " + response.request().urlString());
+						zhiHuNewsLatestItemInfo_old = gson.fromJson(response.body
+								().string(), ZhiHuNewsLatestItemInfo.class);
+						Message message = new Message();
+						message.what = RECYCLER_REFRESH_OLD;
+						recyclerRefreshHandler.sendMessage(message);
+					}
+				}
+			});
+		}
 	}
 
 	@Override
 	public boolean onNavigationItemSelected(MenuItem item) {
+		Intent intent;
 		switch (item.getItemId()) {
 			case R.id.drawer_home:
-				actionForNavigationItemSelected(item);
+				onRefresh();
+
 				break;
+
 			case R.id.drawer_star:
-				actionForNavigationItemSelected(item);
+				intent = new Intent();
+				intent.setAction(INTENT_TO_STAR_HISTORY_PRAISE_KEY);
+				intent.putExtra(INTENT_STRING_DATA_KEY, STAR_KEY);
+				startActivity(intent);
 
 				break;
+
 			case R.id.drawer_good:
-				actionForNavigationItemSelected(item);
+				intent = new Intent();
+				intent.setAction(INTENT_TO_STAR_HISTORY_PRAISE_KEY);
+				intent.putExtra(INTENT_STRING_DATA_KEY, PRAISE_KEY);
+				startActivity(intent);
 
 				break;
+
 			case R.id.drawer_history:
-				actionForNavigationItemSelected(item);
+				intent = new Intent();
+				intent.setAction(INTENT_TO_STAR_HISTORY_PRAISE_KEY);
+				intent.putExtra(INTENT_STRING_DATA_KEY, HISTORY_KEY);
+				startActivity(intent);
 
 				break;
+
 			case R.id.drawer_notification:
 				actionForNavigationItemSelected(item);
 
@@ -714,29 +878,41 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 				finish();
 				break;
 		}
+		drawerLayout.closeDrawers();
 		return true;
 	}
 
 	private void actionForNavigationItemSelected(MenuItem item) {
 		drawerLayout.closeDrawer(navigationView);
 		Snackbar.make(coordinatorLayout, item.getTitle(), Snackbar.LENGTH_SHORT).show();
-
 	}
 
+	/*
+	* 首页顶部banner开始自动轮播
+	* */
 	protected void bannerStartAutoScroll() {
 		bannerHandler.sendEmptyMessageDelayed(BANNER_SCROLL_KEY, BANNER_SCROLL_INTERVAL);
 	}
 
+	/*
+	* 发送自动滚动的消息
+	* */
 	protected void sendScrollMessage() {
 		bannerHandler.removeMessages(BANNER_SCROLL_KEY);
 		bannerHandler.sendEmptyMessageDelayed(BANNER_SCROLL_KEY,
 				BANNER_SCROLL_INTERVAL);
 	}
 
+	/*
+	* banner滚动到下一个页面
+	* */
 	protected void bannerScrollToNext() {
 		viewPager.setCurrentItem(viewPagerStatusPosition + 1, true);
 	}
 
+	/*
+	* 手动停止轮播图的自动滚动
+	* */
 	protected void bannerStopAutoScroll() {
 		bannerHandler.removeMessages(BANNER_SCROLL_KEY);
 	}
@@ -778,16 +954,6 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 		if (verticalOffset != 0) {
 
 		}
-	}
-
-	@Override
-	public void onItemClick(ZhiHuNewsItemInfo zhiHuNewsItemInfo) {
-		Intent intent = new Intent();
-		intent.setAction(INTENT_TO_NEWS_KEY);
-		Bundle bundle = new Bundle();
-		bundle.putSerializable(SER_KEY, zhiHuNewsItemInfo);
-		intent.putExtras(bundle);
-		startActivity(intent);
 	}
 
 	/*
@@ -832,17 +998,12 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
-			List<HomeActivityRecyclerViewItemInfo> itemInfoList;
 			switch (msg.what) {
 				case RECYCLER_REFRESH_LATEST:
 
 					/*
 					* 加载顶部banner的内容
 					* */
-					//					homeActivity.zhiHuNewsTopItemInfoList = homeActivity.zhiHuNewsLatestItemInfo
-					//							.top_stories;
-					//					Log.i("ZRH", "homeActivity.zhiHuNewsTopItemInfoList.size(): " + homeActivity
-					//							.zhiHuNewsTopItemInfoList.size());
 
 					//					Log.i("ZRH", "准备数据");
 					List<View> viewList = new ArrayList<>();
@@ -863,16 +1024,14 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 									.skipMemoryCache(true)
 									.diskCacheStrategy(DiskCacheStrategy.RESULT)
 									.into(imageView);
-							//							Log.i("ZRH", "加载i==0图片: " + homeActivity.zhiHuNewsTopItemInfoList.get
-							//									(homeActivity.zhiHuNewsTopItemInfoList.size() - 1).image);
+							//							Log.i("ZRH", "首次加载：" + homeActivity.zhiHuNewsTopItemInfoList.get(homeActivity.zhiHuNewsTopItemInfoList.size() - 1).image);
 						} else if (i == homeActivity.zhiHuNewsTopItemInfoList.size() + 1) {
 							Glide.with(homeActivity)
 									.load(homeActivity.zhiHuNewsTopItemInfoList.get(0).image)
 									.skipMemoryCache(true)
 									.diskCacheStrategy(DiskCacheStrategy.RESULT)
 									.into(imageView);
-							//							Log.i("ZRH", "加载i==homeActivity.zhiHuNewsTopItemInfoList.size() + 1 " +
-							//									"图片: " + homeActivity.zhiHuNewsTopItemInfoList.get(0).image);
+							//							Log.i("ZRH", "首次加载: " + homeActivity.zhiHuNewsTopItemInfoList.get(0).image);
 						} else {
 							Glide.with(homeActivity)
 									.load(homeActivity.zhiHuNewsTopItemInfoList.get(i - 1)
@@ -880,8 +1039,7 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 									.skipMemoryCache(true)
 									.diskCacheStrategy(DiskCacheStrategy.RESULT)
 									.into(imageView);
-							//							Log.i("ZRH", "加载图片: " + homeActivity.zhiHuNewsTopItemInfoList.get(i -
-							//									1).image);
+							//							Log.i("ZRH", "首次加载: " + homeActivity.zhiHuNewsTopItemInfoList.get(i - 1).image);
 						}
 						viewList.add(convertView);
 					}
@@ -955,10 +1113,12 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 							.zhiHuNewsLatestItemInfo_new.top_stories.get(0).id) {
 						homeActivity.zhiHuNewsTopItemInfoList = homeActivity
 								.zhiHuNewsLatestItemInfo_new.top_stories;
-						Log.i("ZRH", "更新完banner数据");
+						homeActivity.homeActivityViewPagerAdapter.setZhiHuNewsTopItemInfoList
+								(homeActivity.zhiHuNewsLatestItemInfo_new.top_stories);
+						//						Log.i("ZRH", "更新完banner数据");
 						homeActivity.homeActivityViewPagerAdapter.updateViewImage();
-						Log.i("ZRH", "调用完homeActivity.homeActivityViewPagerAdapter.updateViewImage" +
-								"()");
+						//						Log.i("ZRH", "调用完homeActivity.homeActivityViewPagerAdapter.updateViewImage" +
+						//								"()");
 					}
 
 					/*
@@ -983,6 +1143,8 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 						* 加载完后滚动到新的最高那一列
 						* */
 						homeActivity.recyclerView.scrollToPosition(0);
+						SnackbarUtility.getSnackbarDefault(homeActivity.coordinatorLayout,
+								"成功更新" + tempList.size() + "条日报", 2000).show();
 					} else {
 						//						Snackbar.make(homeActivity.coordinatorLayout, "已经是最新日报", Snackbar
 						//								.LENGTH_SHORT).show();
@@ -991,6 +1153,10 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 					}
 					homeActivity.swipeRefreshLayout.setRefreshing(false);
 
+					break;
+
+				case RECYCLER_REFRESH_NEW_FAILURE:
+					homeActivity.swipeRefreshLayout.setRefreshing(false);
 					break;
 
 				case RECYCLER_REFRESH_OLD:
@@ -1019,6 +1185,10 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 							.homeActivityRecyclerViewAdapter.getItemCount() - homeActivity
 							.zhiHuNewsLatestItemInfo_old.stories.size() + 1);
 
+					break;
+
+				case RECYCLER_REFRESH_OLD_FAILURE:
+					homeActivity.swipeRefreshLayout.setRefreshing(false);
 					break;
 			}
 		}

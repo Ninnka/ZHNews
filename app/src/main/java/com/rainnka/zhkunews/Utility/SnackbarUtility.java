@@ -1,9 +1,11 @@
-package com.rainnka.zhkunews;
+package com.rainnka.zhkunews.Utility;
 
 import android.graphics.Color;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.TextView;
+
+import com.rainnka.zhkunews.R;
 
 /**
  * Created by rainnka on 2016/5/20 0:15

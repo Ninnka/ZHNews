@@ -1,4 +1,4 @@
-package com.rainnka.zhkunews;
+package com.rainnka.zhkunews.Activity;
 
 import android.graphics.Color;
 import android.os.Build;

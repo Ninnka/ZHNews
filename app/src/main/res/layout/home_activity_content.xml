@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".HomeActivity"
+    tools:context=".Activity.HomeActivity"
     tools:showIn="@layout/home_activity">
 
     <android.support.design.widget.AppBarLayout
@@ -44,7 +44,7 @@
 
                 </android.support.v4.view.ViewPager>
 
-                <com.rainnka.zhkunews.HomeActivityViewPagerIndicator
+                <com.rainnka.zhkunews.CustomView.HomeActivityViewPagerIndicator
                     android:id="@+id/homeActivity_Content_main_HomeActivityRecyclerViewIndicator"
                     android:layout_width="match_parent"
                     android:layout_height="22dp"
@@ -54,7 +54,7 @@
                     android:gravity="center"
                     android:padding="8dp">
 
-                </com.rainnka.zhkunews.HomeActivityViewPagerIndicator>
+                </com.rainnka.zhkunews.CustomView.HomeActivityViewPagerIndicator>
 
             </FrameLayout>
 
@@ -69,7 +69,6 @@
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
-
     </android.support.design.widget.AppBarLayout>
 
     <LinearLayout
@@ -83,14 +82,14 @@
             android:id="@+id/homeActivity_Content_main_SwipeRefreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="5dp"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            android:layout_marginTop="5dp">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/homeActivity_Content_main_RecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/homeActivityRecyclerViewBackgroud"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 android:scrollbars="none">
 
             </android.support.v7.widget.RecyclerView>
@@ -113,6 +112,39 @@
         app:layout_anchorGravity="end|bottom"
         app:pressedTranslationZ="12dp"
         app:rippleColor="#7C4DFF"/>
+
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/homeActivity_Content_main_FABMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="36dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginEnd="24dp"
+        app:fab_labelStyle="@style/fab_menu_labels_style"
+        app:fab_labelsPosition="left"
+        app:layout_anchor="@id/homeActivity_Content_main_RecyclerView"
+        app:layout_anchorGravity="end|bottom"
+        app:layout_behavior="com.rainnka.zhkunews.Behavior.FABScrollToHaWBehavior">
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/homeActivity_Content_main_FABMenu_item_FAB_quickUp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_icon="@mipmap/up"
+            app:fab_size="normal"
+            app:fab_stroke_visible="true"
+            app:fab_title="快速顶部"/>
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/homeActivity_Content_main_FABMenu_item_FAB_quickDown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_icon="@mipmap/down"
+            app:fab_size="normal"
+            app:fab_stroke_visible="true"
+            app:fab_title="快速底部"/>
+
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
 
 </android.support.design.widget.CoordinatorLayout>
