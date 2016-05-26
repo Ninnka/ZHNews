@@ -37,11 +37,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.gson.Gson;
-import com.rainnka.zhkunews.Callback_Listener.onHARecyclerItemClickListener;
 import com.rainnka.zhkunews.Adapter.HomeActivityRecyclerViewAdapter;
 import com.rainnka.zhkunews.Adapter.HomeActivityViewPagerAdapter;
+import com.rainnka.zhkunews.Animation_Transformer.DepthPageTransformer;
 import com.rainnka.zhkunews.Bean.ZhiHuNewsItemInfo;
 import com.rainnka.zhkunews.Bean.ZhiHuNewsLatestItemInfo;
+import com.rainnka.zhkunews.Callback_Listener.onHARecyclerItemClickListener;
 import com.rainnka.zhkunews.CustomView.HomeActivityViewPagerIndicator;
 import com.rainnka.zhkunews.R;
 import com.rainnka.zhkunews.Utility.LengthTransitionUtility;
@@ -211,10 +212,14 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 		changeUIBySDK_VER();
 
 		/*
+		* 添加viewPager的切换效果
+		* */
+		addViewPagerTransformer();
+
+		/*
 		* 为viewpager 添加 OnPageChangeListener
 		* */
 		addViewPagerOnPageChangeListener();
-
 
 		/*
 		* viewPager添加触控事件
@@ -458,6 +463,14 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 		swipeRefreshLayout.setOnRefreshListener(this);
 		swipeRefreshLayout.setDistanceToTriggerSync(800);
 		swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorAccent);
+	}
+
+	/*
+	* 添加viewPager的切换动画
+	* */
+	private void addViewPagerTransformer() {
+		viewPager.setPageTransformer(false, new DepthPageTransformer());
+		//		viewPager.setPageTransformer(false, new ZoomOutPageTransformer());
 	}
 
 	/*

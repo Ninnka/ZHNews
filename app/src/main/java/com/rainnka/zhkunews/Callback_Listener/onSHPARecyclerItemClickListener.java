@@ -17,7 +17,7 @@ public abstract class onSHPARecyclerItemClickListener implements RecyclerView.On
 
 	public onSHPARecyclerItemClickListener(RecyclerView recyclerView) {
 		this.recyclerView = recyclerView;
-		gestureDetectorCompat = new GestureDetectorCompat(recyclerView.getContext(), new
+		gestureDetectorCompat = new GestureDetectorCompat(recyclerView.getContext().getApplicationContext(), new
 				ItemTouchHelperGestureListener());
 	}
 

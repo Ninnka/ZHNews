@@ -20,6 +20,7 @@
             android:id="@+id/homeActivity_Content_main_CollapsingToolbarLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="#F8F8F8"
             app:collapsedTitleTextAppearance="@style/collapsedTitleTextAppearance"
             app:contentScrim="@color/colorPrimary"
             app:expandedTitleGravity="center"
