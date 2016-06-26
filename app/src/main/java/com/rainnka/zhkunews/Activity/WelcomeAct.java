@@ -22,7 +22,7 @@ import java.lang.ref.WeakReference;
  * Created by rainnka on 2016/5/18 20:58
  * Project name is MaterialDesign
  */
-public class WelcomeActivity extends AppCompatActivity {
+public class WelcomeAct extends AppCompatActivity {
 
 	WelcomeHandler welcomeHandler;
 	CallResponseHandler callResponseHandler;
@@ -58,7 +58,7 @@ public class WelcomeActivity extends AppCompatActivity {
 //				callResponseHandler.sendEmptyMessage(0x234);
 //			}
 //		});
-		setContentView(R.layout.welcome_activity);
+		setContentView(R.layout.welcome_act);
 		linearLayout = (LinearLayout) findViewById(R.id.welCome_Activity_welcomeBackgroud);
 		welcomeHandler.sendEmptyMessageDelayed(0x123, 3500);
 	}
@@ -72,12 +72,12 @@ public class WelcomeActivity extends AppCompatActivity {
 
 	static class WelcomeHandler extends Handler {
 
-		WeakReference<WelcomeActivity> welcomeActivityWeakReference;
-		WelcomeActivity welcomeActivity;
+		WeakReference<WelcomeAct> welcomeActivityWeakReference;
+		WelcomeAct welcomeAct;
 
-		public WelcomeHandler(WelcomeActivity welcomeActivity) {
-			this.welcomeActivityWeakReference = new WeakReference<>(welcomeActivity);
-			this.welcomeActivity = this.welcomeActivityWeakReference.get();
+		public WelcomeHandler(WelcomeAct welcomeAct) {
+			this.welcomeActivityWeakReference = new WeakReference<>(welcomeAct);
+			this.welcomeAct = this.welcomeActivityWeakReference.get();
 		}
 
 		@Override
@@ -85,39 +85,39 @@ public class WelcomeActivity extends AppCompatActivity {
 			super.handleMessage(msg);
 			Intent intent = new Intent();
 			intent.setAction("android.intent.action.Home");
-			welcomeActivity.startActivity(intent);
-			welcomeActivity.finish();
+			welcomeAct.startActivity(intent);
+			welcomeAct.finish();
 		}
 	}
 
 	static class CallResponseHandler extends Handler {
 
-		WeakReference<WelcomeActivity> welcomeActivityWeakReference;
-		WelcomeActivity welcomeActivity;
+		WeakReference<WelcomeAct> welcomeActivityWeakReference;
+		WelcomeAct welcomeAct;
 
-		public CallResponseHandler(WelcomeActivity welcomeActivity) {
-			this.welcomeActivityWeakReference = new WeakReference<>(welcomeActivity);
-			this.welcomeActivity = this.welcomeActivityWeakReference.get();
+		public CallResponseHandler(WelcomeAct welcomeAct) {
+			this.welcomeActivityWeakReference = new WeakReference<>(welcomeAct);
+			this.welcomeAct = this.welcomeActivityWeakReference.get();
 		}
 
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 			ViewTarget<LinearLayout, GlideDrawable> viewTarget = new ViewTarget<LinearLayout,
-					GlideDrawable>(welcomeActivity.linearLayout) {
+					GlideDrawable>(welcomeAct.linearLayout) {
 				@Override
 				public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
 					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
 						this.view.setBackground(resource);
-						welcomeActivity.welcomeHandler.sendEmptyMessageDelayed(0x123, 3500);
+						welcomeAct.welcomeHandler.sendEmptyMessageDelayed(0x123, 3500);
 					} else {
 						this.view.setBackgroundDrawable(resource);
-						welcomeActivity.welcomeHandler.sendEmptyMessageDelayed(0x123, 3500);
+						welcomeAct.welcomeHandler.sendEmptyMessageDelayed(0x123, 3500);
 					}
 				}
 			};
-			Glide.with(welcomeActivity)
-					.load(welcomeActivity.zhiHuStartItemInfo.img)
+			Glide.with(welcomeAct)
+					.load(welcomeAct.zhiHuStartItemInfo.img)
 					.skipMemoryCache(true)
 					.into(viewTarget);
 //			Log.i("ZRH","loading viewTarget");

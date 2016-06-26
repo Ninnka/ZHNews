@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.NewsActivity">
+    tools:context=".Activity.NewsAct">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/newsActivity_AppBarLayout"
@@ -58,10 +58,10 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
-            android:background="#FFFFFF"
-
             android:layout_width="match_parent"
+
             android:layout_height="match_parent"
+            android:background="#FFFFFF"
             android:orientation="vertical">
 
             <!--<TextView-->
@@ -86,7 +86,7 @@
                 android:layout_marginTop="-200dp">
 
             </WebView>
-            
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="46dp"/>
@@ -94,5 +94,21 @@
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
+
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/newsActivity_FAB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:clickable="true"
+        android:src="@mipmap/star_fab"
+        android:transitionName="transition"
+        app:elevation="5dp"
+        app:fabSize="normal"
+        app:fab_addButtonColorNormal="#607D8B"
+        app:layout_anchor="@id/newsActivity_AppBarLayout"
+        app:layout_anchorGravity="end|bottom"
+        app:pressedTranslationZ="12dp"
+        app:rippleColor="#7C4DFF"/>
 
 </android.support.design.widget.CoordinatorLayout>

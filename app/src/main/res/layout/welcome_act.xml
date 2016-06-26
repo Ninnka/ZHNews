@@ -8,6 +8,6 @@
     android:background="@drawable/welcome_bg"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context=".Activity.WelcomeActivity">
+    tools:context=".Activity.WelcomeAct">
 
 </LinearLayout>

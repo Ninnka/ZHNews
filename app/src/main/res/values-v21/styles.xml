@@ -15,6 +15,12 @@
         <!-- navigationview toggle 的颜色 -->
         <item name="colorControlNormal">#FFFFFF</item>
 
+        <!-- 开启transition -->
+        <!--<item name="android:windowActivityTransitions">true</item>-->
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">false</item>
+        <item name="android:windowAllowReturnTransitionOverlap">false</item>
+
     </style>
 
     <style name="AppTheme.NoActionBar" parent="AppTheme">

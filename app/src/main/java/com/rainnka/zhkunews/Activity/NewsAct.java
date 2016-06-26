@@ -11,6 +11,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.transition.Fade;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,9 +21,9 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.rainnka.zhkunews.Bean.ZhiHuNewsItemInfo;
 import com.rainnka.zhkunews.R;
 import com.rainnka.zhkunews.Utility.LengthTransitionUtility;
-import com.rainnka.zhkunews.Bean.ZhiHuNewsItemInfo;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
@@ -36,7 +37,7 @@ import java.lang.ref.WeakReference;
  * Created by rainnka on 2016/5/15 16:19
  * Project name is ZHKUNews
  */
-public class NewsActivity extends AppCompatActivity {
+public class NewsAct extends AppCompatActivity {
 
 	protected CoordinatorLayout coordinatorLayout;
 	protected AppBarLayout appBarLayout;
@@ -70,7 +71,20 @@ public class NewsActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.news_activity);
+
+		setContentView(R.layout.news_act);
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			Fade enterTransition = new Fade();
+			enterTransition.setDuration(600);
+			//			enterTransition.excludeTarget(R.id.newsActivity_WebView, true);
+
+			Fade returnTransition = new Fade();
+			returnTransition.setDuration(500);
+
+			getWindow().setEnterTransition(enterTransition);
+			getWindow().setReturnTransition(returnTransition);
+		}
 
 		/*
 		* 获取intent中的数据
@@ -115,12 +129,11 @@ public class NewsActivity extends AppCompatActivity {
 		* */
 		okHttpClient = new OkHttpClient();
 		String getInfoUrl = getInfoByAPI + zhiHuNewsItemInfoFormHome.id;
-//		Log.i("ZRH","getInfoUrl: "+getInfoUrl);
+		//		Log.i("ZRH","getInfoUrl: "+getInfoUrl);
 		request = new Request.Builder()
 				.url(getInfoUrl)
 				.build();
 		call = okHttpClient.newCall(request);
-
 
 		/*
 		* 根据获取的信息类加载头布局实际信息
@@ -157,13 +170,13 @@ public class NewsActivity extends AppCompatActivity {
 	}
 
 	private void initHandler() {
-		webViewHandler = new WebViewHandler(NewsActivity.this);
+		webViewHandler = new WebViewHandler(NewsAct.this);
 	}
 
 	private void getInfomationFromIntent() {
 		Intent intent = getIntent();
 		//		homeActivityRecyclerViewItemInfo = (HomeActivityRecyclerViewItemInfo) intent.getSerializableExtra(HomeActivity.SER_KEY);
-		zhiHuNewsItemInfoFormHome = (ZhiHuNewsItemInfo) intent.getSerializableExtra(HomeActivity.SER_KEY);
+		zhiHuNewsItemInfoFormHome = (ZhiHuNewsItemInfo) intent.getSerializableExtra(HomeAct.SER_KEY);
 	}
 
 	/*
@@ -171,7 +184,7 @@ public class NewsActivity extends AppCompatActivity {
 	* */
 	private void loadCollapsingToolbarContent() {
 		//		imageView.setImageResource();
-		Glide.with(NewsActivity.this)
+		Glide.with(NewsAct.this)
 				.load(zhiHuNewsItemInfo.image)
 				.into(imageView);
 		collapsingToolbarLayout.setTitle(zhiHuNewsItemInfo.title);
@@ -219,7 +232,7 @@ public class NewsActivity extends AppCompatActivity {
 
 	@Override
 	protected void onDestroy() {
-		if(webView != null){
+		if (webView != null) {
 			webView.removeAllViews();
 			webView.onPause();
 			webView.destroy();
@@ -232,7 +245,16 @@ public class NewsActivity extends AppCompatActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
+
 				finish();
+
+				//				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+				//					Log.i("ZRH", "finishAfterTransition");
+				//					finishAfterTransition();
+				//				} else {
+				//					Log.i("ZRH", "finish");
+				//					finish();
+				//				}
 				break;
 			case R.id.news_activity_menu_good:
 				if (!isGood) {
@@ -257,31 +279,44 @@ public class NewsActivity extends AppCompatActivity {
 	}
 
 	@Override
+	public void onBackPressed() {
+		finish();
+
+		//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+		//			Log.i("ZRH", "finishAfterTransition");
+		//			finishAfterTransition();
+		//		} else {
+		//			Log.i("ZRH", "finish");
+		//			finish();
+		//		}
+	}
+
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.news_activity_menu, menu);
+		getMenuInflater().inflate(R.menu.news_act_menu, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 
 	static class WebViewHandler extends Handler {
 
-		WeakReference<NewsActivity> newsActivityWeakReference;
-		NewsActivity newsActivity;
+		WeakReference<NewsAct> newsActivityWeakReference;
+		NewsAct newsAct;
 
-		public WebViewHandler(NewsActivity newsActivity) {
-			this.newsActivityWeakReference = new WeakReference<>(newsActivity);
-			this.newsActivity = this.newsActivityWeakReference.get();
+		public WebViewHandler(NewsAct newsAct) {
+			this.newsActivityWeakReference = new WeakReference<>(newsAct);
+			this.newsAct = this.newsActivityWeakReference.get();
 		}
 
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
-			newsActivity.loadCollapsingToolbarContent();
+			newsAct.loadCollapsingToolbarContent();
 			StringBuilder stringBuilder = new StringBuilder();
-			stringBuilder.append(String.format(newsActivity.header, newsActivity
+			stringBuilder.append(String.format(newsAct.header, newsAct
 					.zhiHuNewsItemInfo.css.get(0)));
-			stringBuilder.append(newsActivity.zhiHuNewsItemInfo.body);
-			stringBuilder.append(newsActivity.footer);
-			this.newsActivity.webView.loadData(stringBuilder.toString(), "text/html; " +
+			stringBuilder.append(newsAct.zhiHuNewsItemInfo.body);
+			stringBuilder.append(newsAct.footer);
+			this.newsAct.webView.loadData(stringBuilder.toString(), "text/html; " +
 					"charset=UTF-8", null);
 		}
 	}

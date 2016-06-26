@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.rainnka.zhkunews.Activity.HomeActivity;
+import com.rainnka.zhkunews.Activity.HomeAct;
 import com.rainnka.zhkunews.Bean.ZhiHuNewsItemInfo;
 import com.rainnka.zhkunews.R;
 
@@ -114,9 +114,9 @@ public class HomeActivityViewPagerAdapter extends PagerAdapter {
 			public void onClick(View v) {
 				//				Snackbar.make(v, "test click", Snackbar.LENGTH_SHORT).show();
 				Intent intent = new Intent();
-				intent.setAction(HomeActivity.INTENT_TO_NEWS_KEY);
+				intent.setAction(HomeAct.INTENT_TO_NEWS_KEY);
 				Bundle bundle = new Bundle();
-				bundle.putSerializable(HomeActivity.SER_KEY, zhiHuNewsTopItemInfoList.get
+				bundle.putSerializable(HomeAct.SER_KEY, zhiHuNewsTopItemInfoList.get
 						(position - 1));
 				intent.putExtras(bundle);
 				appCompatActivity.startActivity(intent);

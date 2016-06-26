@@ -11,7 +11,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".Activity.HomeActivity"
+            android:name=".Activity.HomeAct"
             android:screenOrientation="portrait"
             android:theme="@style/HomeTheme">
 
@@ -22,7 +22,7 @@
         </activity>
 
         <activity
-            android:name=".Activity.NewsActivity"
+            android:name=".Activity.NewsAct"
             android:screenOrientation="portrait"
             android:theme="@style/NewsTheme">
 
@@ -33,7 +33,7 @@
         </activity>
 
         <activity
-            android:name=".Activity.Star_History_PraiseActivity"
+            android:name=".Activity.Star_History_PraiseAct"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
 
@@ -44,7 +44,7 @@
         </activity>
 
         <activity
-            android:name=".Activity.WelcomeActivity"
+            android:name=".Activity.WelcomeAct"
             android:theme="@style/WelcomeTheme">
 
             <intent-filter>

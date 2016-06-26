@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.rainnka.zhkunews.Activity.HomeActivity;
+import com.rainnka.zhkunews.Activity.HomeAct;
 import com.rainnka.zhkunews.R;
 import com.rainnka.zhkunews.Bean.ZhiHuNewsItemInfo;
 
@@ -24,8 +24,8 @@ import java.util.List;
  */
 public class HomeActivityRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-	public WeakReference<HomeActivity> homeActivityWeakReference;
-	public HomeActivity homeActivity;
+	public WeakReference<HomeAct> homeActivityWeakReference;
+	public HomeAct homeAct;
 	public LayoutInflater layoutInflater;
 	public List<ZhiHuNewsItemInfo> zhiHuNewsItemInfoList;
 
@@ -48,10 +48,10 @@ public class HomeActivityRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 		this.homeActivityRecyclerViewAdapterCallback = homeActivityRecyclerViewAdapterCallback;
 	}
 
-	public HomeActivityRecyclerViewAdapter(HomeActivity homeActivity) {
-		this.homeActivityWeakReference = new WeakReference<>(homeActivity);
-		this.homeActivity = this.homeActivityWeakReference.get();
-		layoutInflater = LayoutInflater.from(this.homeActivity);
+	public HomeActivityRecyclerViewAdapter(HomeAct homeAct) {
+		this.homeActivityWeakReference = new WeakReference<>(homeAct);
+		this.homeAct = this.homeActivityWeakReference.get();
+		layoutInflater = LayoutInflater.from(this.homeAct);
 		cd = simpleDateFormat.format(new Date());
 	}
 
@@ -73,10 +73,10 @@ public class HomeActivityRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		if (viewType == 0) {
 			return new RecyclerViewDateViewHolder(layoutInflater.inflate(R.layout
-					.home_activity_content_recyclerview_item_date, parent, false));
+					.home_act_content_recyclerview_item_date, parent, false));
 		} else if (viewType == 1) {
 			return new RecyclerViewContentViewHolder(layoutInflater.inflate(R.layout
-					.home_activity_content_recyclerview_item_content, parent, false));
+					.home_act_content_recyclerview_item_content, parent, false));
 		}
 		return null;
 	}
@@ -90,7 +90,7 @@ public class HomeActivityRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 			ZhiHuNewsItemInfo zhiHuNewsItemInfo = zhiHuNewsItemInfoList.get(position);
 			//			Log.i("ZRH", "zhiHuNewsItemInfo.title: " + zhiHuNewsItemInfo.title);
 			recyclerViewContentViewHolder.content_tv.setText(zhiHuNewsItemInfo.title);
-			Glide.with(homeActivity)
+			Glide.with(homeAct)
 					.load(zhiHuNewsItemInfo.images.get(0))
 					.placeholder(R.drawable.placeholder)
 					.skipMemoryCache(true)

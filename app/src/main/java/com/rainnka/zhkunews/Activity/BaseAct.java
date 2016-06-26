@@ -12,7 +12,7 @@ import android.view.ViewGroup;
  * Created by rainnka on 2016/5/17 14:11
  * Project name is ZHKUNews
  */
-public class BaseActivity extends AppCompatActivity {
+public class BaseAct extends AppCompatActivity {
 
 	private View statusBarInstead;
 

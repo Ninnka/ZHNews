@@ -7,8 +7,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".Activity.HomeActivity"
-    tools:showIn="@layout/home_activity">
+    tools:context=".Activity.HomeAct"
+    tools:showIn="@layout/home_act">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/homeActivity_Content_main_AppBarLayout"
@@ -90,8 +90,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/homeActivityRecyclerViewBackgroud"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                android:scrollbars="none">
+                android:scrollbars="none"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             </android.support.v7.widget.RecyclerView>
 
@@ -119,8 +119,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="36dp"
-        android:layout_marginRight="24dp"
         android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
+        android:transitionName="transition"
+        app:fab_addButtonColorNormal="#607D8B"
         app:fab_labelStyle="@style/fab_menu_labels_style"
         app:fab_labelsPosition="left"
         app:layout_anchor="@id/homeActivity_Content_main_RecyclerView"

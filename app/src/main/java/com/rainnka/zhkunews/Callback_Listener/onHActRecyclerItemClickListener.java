@@ -10,12 +10,12 @@ import android.view.View;
  * Created by rainnka on 2016/5/20 23:18
  * Project name is ZHKUNews
  */
-public abstract class onHARecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
+public abstract class onHActRecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
 
 	private GestureDetectorCompat gestureDetectorCompat;
 	private RecyclerView recyclerView;
 
-	public onHARecyclerItemClickListener(RecyclerView recyclerView) {
+	public onHActRecyclerItemClickListener(RecyclerView recyclerView) {
 		this.recyclerView = recyclerView;
 		this.gestureDetectorCompat = new GestureDetectorCompat(recyclerView.getContext(), new
 				ItemTouchHelperGestureListener());

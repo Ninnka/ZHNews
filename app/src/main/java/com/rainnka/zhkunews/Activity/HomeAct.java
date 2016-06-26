@@ -23,6 +23,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.transition.Fade;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -42,7 +43,7 @@ import com.rainnka.zhkunews.Adapter.HomeActivityViewPagerAdapter;
 import com.rainnka.zhkunews.Animation_Transformer.DepthPageTransformer;
 import com.rainnka.zhkunews.Bean.ZhiHuNewsItemInfo;
 import com.rainnka.zhkunews.Bean.ZhiHuNewsLatestItemInfo;
-import com.rainnka.zhkunews.Callback_Listener.onHARecyclerItemClickListener;
+import com.rainnka.zhkunews.Callback_Listener.onHActRecyclerItemClickListener;
 import com.rainnka.zhkunews.CustomView.HomeActivityViewPagerIndicator;
 import com.rainnka.zhkunews.R;
 import com.rainnka.zhkunews.Utility.LengthTransitionUtility;
@@ -67,7 +68,7 @@ import java.util.concurrent.TimeUnit;
  * Created by rainnka on 2016/5/12 20:45
  * Project name is ZHKUNews
  */
-public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener,
+public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChangeListener,
 		HomeActivityRecyclerViewAdapter.HomeActivityRecyclerViewAdapterCallback, SwipeRefreshLayout
 				.OnRefreshListener, AppBarLayout.OnOffsetChangedListener, NavigationView.OnNavigationItemSelectedListener {
 
@@ -156,7 +157,15 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.home_activity);
+
+		setContentView(R.layout.home_act);
+
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+			Fade slideTransition = new Fade();
+			slideTransition.setDuration(400);
+			getWindow().setReenterTransition(slideTransition);
+			getWindow().setExitTransition(slideTransition);
+		}
 
 		//		ViewStubCompat viewStubCompat = (ViewStubCompat) findViewById(R.id.home_activity_content_viewstub);
 		//		viewStubCompat.setVisibility(View.VISIBLE);
@@ -292,6 +301,7 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 		* */
 		//		navigationView.getMenu().setGroupVisible(R.id.group2, true);
 
+
 	}
 
 
@@ -334,7 +344,7 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 		//				(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		//		menu.add(0, 1, Menu.NONE, "设置");
 		//		menu.add(0, 1, Menu.NONE, "关于");
-		getMenuInflater().inflate(R.menu.home_activity_menu, menu);
+		getMenuInflater().inflate(R.menu.home_act_menu, menu);
 		return true;
 	}
 
@@ -345,7 +355,7 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 
 
 	private void addRecyclerViewOnItemClickListener() {
-		recyclerView.addOnItemTouchListener(new onHARecyclerItemClickListener(recyclerView) {
+		recyclerView.addOnItemTouchListener(new onHActRecyclerItemClickListener(recyclerView) {
 			@Override
 			public void onItemClickListener(RecyclerView.ViewHolder viewHolder) {
 				Intent intent = new Intent();
@@ -354,7 +364,22 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 				bundle.putSerializable(SER_KEY, homeActivityRecyclerViewAdapter
 						.zhiHuNewsItemInfoList.get(viewHolder.getAdapterPosition()));
 				intent.putExtras(bundle);
+
 				startActivity(intent);
+
+//				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//					Pair<View, String> pair = new Pair<View, String>
+//							(floatingActionsMenu,
+//									"transition");
+//					ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat
+//							.makeSceneTransitionAnimation(HomeActivity.this, pair);
+//					Log.i("ZRH", "startActivity(intent, activityOptionsCompat.toBundle())");
+//					startActivity(intent, activityOptionsCompat.toBundle());
+//				} else {
+//					Log.i("ZRH", "startActivity(intent)");
+//					startActivity(intent);
+//				}
+
 			}
 
 			@Override
@@ -667,6 +692,7 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 				.homeActivity_Content_main_FABMenu_item_FAB_quickDown);
 		floatingActionsMenu = (FloatingActionsMenu) findViewById(R.id
 				.homeActivity_Content_main_FABMenu);
+		floatingActionButton.setVisibility(View.GONE);
 	}
 
 	/*
@@ -975,12 +1001,12 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 	* */
 	static class BannerHandler extends Handler {
 
-		WeakReference<HomeActivity> homeActivityWeakReference;
-		HomeActivity homeActivity;
+		WeakReference<HomeAct> homeActivityWeakReference;
+		HomeAct homeAct;
 
-		public BannerHandler(HomeActivity homeActivity) {
-			this.homeActivityWeakReference = new WeakReference<>(homeActivity);
-			this.homeActivity = this.homeActivityWeakReference.get();
+		public BannerHandler(HomeAct homeAct) {
+			this.homeActivityWeakReference = new WeakReference<>(homeAct);
+			this.homeAct = this.homeActivityWeakReference.get();
 		}
 
 		@Override
@@ -988,8 +1014,8 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 			super.handleMessage(msg);
 			switch (msg.what) {
 				case BANNER_SCROLL_KEY:
-					homeActivity.bannerScrollToNext();
-					homeActivity.sendScrollMessage();
+					homeAct.bannerScrollToNext();
+					homeAct.sendScrollMessage();
 			}
 		}
 	}
@@ -1000,12 +1026,12 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 	* */
 	static class RecyclerRefreshHandler extends Handler {
 
-		WeakReference<HomeActivity> homeActivityWeakReference;
-		HomeActivity homeActivity;
+		WeakReference<HomeAct> homeActivityWeakReference;
+		HomeAct homeAct;
 
-		public RecyclerRefreshHandler(HomeActivity homeActivity) {
-			this.homeActivityWeakReference = new WeakReference<>(homeActivity);
-			this.homeActivity = this.homeActivityWeakReference.get();
+		public RecyclerRefreshHandler(HomeAct homeAct) {
+			this.homeActivityWeakReference = new WeakReference<>(homeAct);
+			this.homeAct = this.homeActivityWeakReference.get();
 		}
 
 		@Override
@@ -1024,30 +1050,30 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 					/*
 					* 加载图片
 					* */
-					for (int i = 0; i < homeActivity.zhiHuNewsTopItemInfoList.size() + 2; i++) {
-						View convertView = LayoutInflater.from(homeActivity).inflate(R.layout
-								.home_activity_content_viewpager_item, null);
+					for (int i = 0; i < homeAct.zhiHuNewsTopItemInfoList.size() + 2; i++) {
+						View convertView = LayoutInflater.from(homeAct).inflate(R.layout
+								.home_act_content_viewpager_item, null);
 						ImageView imageView = (ImageView) convertView.findViewById(R.id
 								.homeActivity_Content_ViewPager_CustomItem_ImageView);
 						if (i == 0) {
-							Glide.with(homeActivity)
-									.load(homeActivity.zhiHuNewsTopItemInfoList.get
-											(homeActivity.zhiHuNewsTopItemInfoList
+							Glide.with(homeAct)
+									.load(homeAct.zhiHuNewsTopItemInfoList.get
+											(homeAct.zhiHuNewsTopItemInfoList
 													.size() - 1).image)
 									.skipMemoryCache(true)
 									.diskCacheStrategy(DiskCacheStrategy.RESULT)
 									.into(imageView);
 							//							Log.i("ZRH", "首次加载：" + homeActivity.zhiHuNewsTopItemInfoList.get(homeActivity.zhiHuNewsTopItemInfoList.size() - 1).image);
-						} else if (i == homeActivity.zhiHuNewsTopItemInfoList.size() + 1) {
-							Glide.with(homeActivity)
-									.load(homeActivity.zhiHuNewsTopItemInfoList.get(0).image)
+						} else if (i == homeAct.zhiHuNewsTopItemInfoList.size() + 1) {
+							Glide.with(homeAct)
+									.load(homeAct.zhiHuNewsTopItemInfoList.get(0).image)
 									.skipMemoryCache(true)
 									.diskCacheStrategy(DiskCacheStrategy.RESULT)
 									.into(imageView);
 							//							Log.i("ZRH", "首次加载: " + homeActivity.zhiHuNewsTopItemInfoList.get(0).image);
 						} else {
-							Glide.with(homeActivity)
-									.load(homeActivity.zhiHuNewsTopItemInfoList.get(i - 1)
+							Glide.with(homeAct)
+									.load(homeAct.zhiHuNewsTopItemInfoList.get(i - 1)
 											.image)
 									.skipMemoryCache(true)
 									.diskCacheStrategy(DiskCacheStrategy.RESULT)
@@ -1061,42 +1087,42 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 					/*
 					* 设置viewPager的indicator
 					* */
-					homeActivity.homeActivityViewPagerIndicator.setRecyclerViewIndicatorAttribute
-							(homeActivity.zhiHuNewsTopItemInfoList.size(), homeActivity);
-					homeActivity.homeActivityViewPagerIndicator.setColorForStart();
+					homeAct.homeActivityViewPagerIndicator.setRecyclerViewIndicatorAttribute
+							(homeAct.zhiHuNewsTopItemInfoList.size(), homeAct);
+					homeAct.homeActivityViewPagerIndicator.setColorForStart();
 					//					Log.i("ZRH", "设置viewPager的indicator");
 
 					/*
 					* 实例化viewPagerAdapter
 					* 初始化viewPager的参数
 					* */
-					homeActivity.homeActivityViewPagerAdapter = new HomeActivityViewPagerAdapter
-							(homeActivity, viewList);
-					homeActivity.homeActivityViewPagerAdapter.setZhiHuNewsTopItemInfoList
-							(homeActivity.zhiHuNewsTopItemInfoList);
+					homeAct.homeActivityViewPagerAdapter = new HomeActivityViewPagerAdapter
+							(homeAct, viewList);
+					homeAct.homeActivityViewPagerAdapter.setZhiHuNewsTopItemInfoList
+							(homeAct.zhiHuNewsTopItemInfoList);
 					//					Log.i("ZRH", "实例化viewPagerAdapter");
 
 					/*
 					* 设置viewPager的adapter
 					* viewPager状态初始化
 					* */
-					homeActivity.viewPager.setAdapter(homeActivity.homeActivityViewPagerAdapter);
+					homeAct.viewPager.setAdapter(homeAct.homeActivityViewPagerAdapter);
 					//					Log.i("ZRH", "设置viewPager的adapter");
-					homeActivity.viewPager.setCurrentItem(1);
+					homeAct.viewPager.setCurrentItem(1);
 					//					Log.i("ZRH", "viewPager状态初始化");
 
 					/*
 					* 设置标题
 					* */
-					homeActivity.collapsingToolbarLayout.setTitle
-							(homeActivity.zhiHuNewsTopItemInfoList.get(0).title);
+					homeAct.collapsingToolbarLayout.setTitle
+							(homeAct.zhiHuNewsTopItemInfoList.get(0).title);
 					//					Log.i("ZRH", "设置标题");
 
 					/*
 					* 开始自动滚动
 					* */
-					homeActivity.bannerStartAutoScroll();
-					homeActivity.isLoadBanner = true;
+					homeAct.bannerStartAutoScroll();
+					homeAct.isLoadBanner = true;
 					//					Log.i("ZRH", "开始自动滚动");
 
 					/*
@@ -1104,17 +1130,17 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 					* */
 					ZhiHuNewsItemInfo zhiHuNewsItemInfo = new ZhiHuNewsItemInfo();
 					zhiHuNewsItemInfo.item_layout = 0;
-					zhiHuNewsItemInfo.date_cus = homeActivity.zhiHuNewsLatestItemInfo.date;
-					homeActivity.zhiHuNewsLatestItemInfo.stories.add(0, zhiHuNewsItemInfo);
-					for (int i = 0; i < homeActivity.zhiHuNewsLatestItemInfo.stories.size(); i++) {
+					zhiHuNewsItemInfo.date_cus = homeAct.zhiHuNewsLatestItemInfo.date;
+					homeAct.zhiHuNewsLatestItemInfo.stories.add(0, zhiHuNewsItemInfo);
+					for (int i = 0; i < homeAct.zhiHuNewsLatestItemInfo.stories.size(); i++) {
 						if (i != 0) {
-							homeActivity.zhiHuNewsLatestItemInfo.stories.get(i).item_layout = 1;
+							homeAct.zhiHuNewsLatestItemInfo.stories.get(i).item_layout = 1;
 						}
 					}
-					homeActivity.homeActivityRecyclerViewAdapter.setZhiHuNewsItemInfoList
-							(homeActivity.zhiHuNewsLatestItemInfo.stories);
-					homeActivity.recyclerView.setAdapter(homeActivity.homeActivityRecyclerViewAdapter);
-					homeActivity.recyclerView.setLayoutManager(homeActivity.linearLayoutManager);
+					homeAct.homeActivityRecyclerViewAdapter.setZhiHuNewsItemInfoList
+							(homeAct.zhiHuNewsLatestItemInfo.stories);
+					homeAct.recyclerView.setAdapter(homeAct.homeActivityRecyclerViewAdapter);
+					homeAct.recyclerView.setLayoutManager(homeAct.linearLayoutManager);
 					break;
 
 				case RECYCLER_REFRESH_NEW:
@@ -1122,14 +1148,14 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 					/*
 					* 更新顶部banner的内容
 					* */
-					if (homeActivity.zhiHuNewsTopItemInfoList.get(0).id != homeActivity
+					if (homeAct.zhiHuNewsTopItemInfoList.get(0).id != homeAct
 							.zhiHuNewsLatestItemInfo_new.top_stories.get(0).id) {
-						homeActivity.zhiHuNewsTopItemInfoList = homeActivity
+						homeAct.zhiHuNewsTopItemInfoList = homeAct
 								.zhiHuNewsLatestItemInfo_new.top_stories;
-						homeActivity.homeActivityViewPagerAdapter.setZhiHuNewsTopItemInfoList
-								(homeActivity.zhiHuNewsLatestItemInfo_new.top_stories);
+						homeAct.homeActivityViewPagerAdapter.setZhiHuNewsTopItemInfoList
+								(homeAct.zhiHuNewsLatestItemInfo_new.top_stories);
 						//						Log.i("ZRH", "更新完banner数据");
-						homeActivity.homeActivityViewPagerAdapter.updateViewImage();
+						homeAct.homeActivityViewPagerAdapter.updateViewImage();
 						//						Log.i("ZRH", "调用完homeActivity.homeActivityViewPagerAdapter.updateViewImage" +
 						//								"()");
 					}
@@ -1138,70 +1164,70 @@ public class HomeActivity extends AppCompatActivity implements ViewPager.OnPageC
 					* 加载新的列表内容
 					* */
 					List<ZhiHuNewsItemInfo> tempList = new ArrayList<>();
-					int id = homeActivity.zhiHuNewsLatestItemInfo.stories.get(1).id;
-					for (int i = 0; i < homeActivity.zhiHuNewsLatestItemInfo_new.stories.size(); i++) {
-						if (homeActivity.zhiHuNewsLatestItemInfo_new.stories.get(i).id == id) {
+					int id = homeAct.zhiHuNewsLatestItemInfo.stories.get(1).id;
+					for (int i = 0; i < homeAct.zhiHuNewsLatestItemInfo_new.stories.size(); i++) {
+						if (homeAct.zhiHuNewsLatestItemInfo_new.stories.get(i).id == id) {
 							break;
 						} else {
-							homeActivity.zhiHuNewsLatestItemInfo_new.stories.get(i).item_layout = 1;
-							tempList.add(homeActivity.zhiHuNewsLatestItemInfo_new.stories.get
+							homeAct.zhiHuNewsLatestItemInfo_new.stories.get(i).item_layout = 1;
+							tempList.add(homeAct.zhiHuNewsLatestItemInfo_new.stories.get
 									(i));
 						}
 					}
 					if (tempList.size() != 0) {
 						//						Log.i("ZRH", "tempList.size(): " + tempList.size());
-						homeActivity.homeActivityRecyclerViewAdapter.addItemIntoFirst(tempList);
+						homeAct.homeActivityRecyclerViewAdapter.addItemIntoFirst(tempList);
 
 						/*
 						* 加载完后滚动到新的最高那一列
 						* */
-						homeActivity.recyclerView.scrollToPosition(0);
-						SnackbarUtility.getSnackbarDefault(homeActivity.coordinatorLayout,
+						homeAct.recyclerView.scrollToPosition(0);
+						SnackbarUtility.getSnackbarDefault(homeAct.coordinatorLayout,
 								"成功更新" + tempList.size() + "条日报", 2000).show();
 					} else {
 						//						Snackbar.make(homeActivity.coordinatorLayout, "已经是最新日报", Snackbar
 						//								.LENGTH_SHORT).show();
-						SnackbarUtility.getSnackbarLight(homeActivity.coordinatorLayout,
+						SnackbarUtility.getSnackbarLight(homeAct.coordinatorLayout,
 								"已经是最新日报", Snackbar.LENGTH_SHORT);
 					}
-					homeActivity.swipeRefreshLayout.setRefreshing(false);
+					homeAct.swipeRefreshLayout.setRefreshing(false);
 
 					break;
 
 				case RECYCLER_REFRESH_NEW_FAILURE:
-					homeActivity.swipeRefreshLayout.setRefreshing(false);
+					homeAct.swipeRefreshLayout.setRefreshing(false);
 					break;
 
 				case RECYCLER_REFRESH_OLD:
 
-					homeActivity.current_simple_date_format = homeActivity.getPrecedingDate
-							(homeActivity.current_simple_date_format);
+					homeAct.current_simple_date_format = homeAct.getPrecedingDate
+							(homeAct.current_simple_date_format);
 					ZhiHuNewsItemInfo zhiHuNewsItemInfo_old = new ZhiHuNewsItemInfo();
 					zhiHuNewsItemInfo_old.item_layout = 0;
-					zhiHuNewsItemInfo_old.date_cus = homeActivity.zhiHuNewsLatestItemInfo_old.date;
-					homeActivity.zhiHuNewsLatestItemInfo_old.stories.add(0, zhiHuNewsItemInfo_old);
-					for (int i = 0; i < homeActivity.zhiHuNewsLatestItemInfo_old.stories.size(); i++) {
+					zhiHuNewsItemInfo_old.date_cus = homeAct.zhiHuNewsLatestItemInfo_old.date;
+					homeAct.zhiHuNewsLatestItemInfo_old.stories.add(0, zhiHuNewsItemInfo_old);
+					for (int i = 0; i < homeAct.zhiHuNewsLatestItemInfo_old.stories.size(); i++) {
 						if (i != 0) {
-							homeActivity.zhiHuNewsLatestItemInfo_old.stories.get(i).item_layout = 1;
+							homeAct.zhiHuNewsLatestItemInfo_old.stories.get(i).item_layout = 1;
 						}
 					}
 
-					homeActivity.homeActivityRecyclerViewAdapter.addItemIntoLast(homeActivity
+					homeAct.homeActivityRecyclerViewAdapter.addItemIntoLast(homeAct
 							.zhiHuNewsLatestItemInfo_old.stories);
 
-					homeActivity.swipeRefreshLayout.setRefreshing(false);
+					homeAct.swipeRefreshLayout.setRefreshing(false);
 
 					/*
 					* 加载完后滚动到加载出的那一行
 					* */
-					homeActivity.recyclerView.scrollToPosition(homeActivity
-							.homeActivityRecyclerViewAdapter.getItemCount() - homeActivity
+					homeAct.recyclerView.scrollToPosition(homeAct
+							.homeActivityRecyclerViewAdapter.getItemCount() - homeAct
 							.zhiHuNewsLatestItemInfo_old.stories.size() + 1);
 
 					break;
 
 				case RECYCLER_REFRESH_OLD_FAILURE:
-					homeActivity.swipeRefreshLayout.setRefreshing(false);
+					homeAct.swipeRefreshLayout.setRefreshing(false);
 					break;
 			}
 		}

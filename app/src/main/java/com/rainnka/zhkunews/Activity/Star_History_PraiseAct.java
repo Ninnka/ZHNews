@@ -22,7 +22,7 @@ import com.rainnka.zhkunews.Adapter.Star_History_PraiseActivityRecyclerViewAdapt
 import com.rainnka.zhkunews.Bean.ZhiHuNewsItemInfo;
 import com.rainnka.zhkunews.Bean.ZhiHuNewsLatestItemInfo;
 import com.rainnka.zhkunews.Callback_Listener.SimpleItemTouchHelperCallback;
-import com.rainnka.zhkunews.Callback_Listener.onSHPARecyclerItemClickListener;
+import com.rainnka.zhkunews.Callback_Listener.onSHPActRecyclerItemClickListener;
 import com.rainnka.zhkunews.R;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
@@ -39,7 +39,7 @@ import java.util.List;
  * Created by rainnka on 2016/5/21 14:10
  * Project name is ZHKUNews
  */
-public class Star_History_PraiseActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class Star_History_PraiseAct extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
 	protected CoordinatorLayout coordinatorLayout;
 	protected AppBarLayout appBarLayout;
@@ -67,7 +67,7 @@ public class Star_History_PraiseActivity extends AppCompatActivity implements Sw
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.star_history_praise_activity);
+		setContentView(R.layout.star_history_praise_act);
 
 		/*
 		* 获取Intent中的信息
@@ -177,13 +177,13 @@ public class Star_History_PraiseActivity extends AppCompatActivity implements Sw
 
 	private void initToolbar() {
 		switch (title) {
-			case HomeActivity.STAR_KEY:
+			case HomeAct.STAR_KEY:
 				toolbar.setTitle("收藏");
 				break;
-			case HomeActivity.HISTORY_KEY:
+			case HomeAct.HISTORY_KEY:
 				toolbar.setTitle("浏览历史");
 				break;
-			case HomeActivity.PRAISE_KEY:
+			case HomeAct.PRAISE_KEY:
 				toolbar.setTitle("点赞");
 				break;
 		}
@@ -194,11 +194,11 @@ public class Star_History_PraiseActivity extends AppCompatActivity implements Sw
 
 	private void initRecyclerViewAdapter() {
 		star_history_praiseActivityRecyclerViewAdapter = new
-				Star_History_PraiseActivityRecyclerViewAdapter(Star_History_PraiseActivity.this);
+				Star_History_PraiseActivityRecyclerViewAdapter(Star_History_PraiseAct.this);
 	}
 
 	private void intiLinearLayoutManager() {
-		linearLayoutManager = new LinearLayoutManager(Star_History_PraiseActivity.this);
+		linearLayoutManager = new LinearLayoutManager(Star_History_PraiseAct.this);
 		linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 	}
 
@@ -222,13 +222,13 @@ public class Star_History_PraiseActivity extends AppCompatActivity implements Sw
 		/*
 		* 添加点击和长控事件
 		* */
-		recyclerView.addOnItemTouchListener(new onSHPARecyclerItemClickListener(recyclerView) {
+		recyclerView.addOnItemTouchListener(new onSHPActRecyclerItemClickListener(recyclerView) {
 			@Override
 			public void onItemClick(RecyclerView.ViewHolder viewHolder) {
 				Intent intent = new Intent();
-				intent.setAction(HomeActivity.INTENT_TO_NEWS_KEY);
+				intent.setAction(HomeAct.INTENT_TO_NEWS_KEY);
 				Bundle bundle = new Bundle();
-				bundle.putSerializable(HomeActivity.SER_KEY,
+				bundle.putSerializable(HomeAct.SER_KEY,
 						star_history_praiseActivityRecyclerViewAdapter.zhiHuNewsItemInfoList.get
 								(viewHolder.getAdapterPosition()));
 				intent.putExtras(bundle);
@@ -237,7 +237,7 @@ public class Star_History_PraiseActivity extends AppCompatActivity implements Sw
 
 			@Override
 			public void onItemLongClick(RecyclerView.ViewHolder viewHolder) {
-				if (!title.equals(HomeActivity.HISTORY_KEY)) {
+				if (!title.equals(HomeAct.HISTORY_KEY)) {
 					itemTouchHelper.startSwipe(viewHolder);
 				}
 			}
@@ -245,11 +245,11 @@ public class Star_History_PraiseActivity extends AppCompatActivity implements Sw
 	}
 
 	public String getInentInfo() {
-		return getIntent().getStringExtra(HomeActivity.INTENT_STRING_DATA_KEY);
+		return getIntent().getStringExtra(HomeAct.INTENT_STRING_DATA_KEY);
 	}
 
 	private void initHandler() {
-		starZhiHuNewsItemHandler = new StarZhiHuNewsItemHandler(Star_History_PraiseActivity.this);
+		starZhiHuNewsItemHandler = new StarZhiHuNewsItemHandler(Star_History_PraiseAct.this);
 	}
 
 	private void initGson() {
@@ -266,37 +266,37 @@ public class Star_History_PraiseActivity extends AppCompatActivity implements Sw
 	* */
 	static class StarZhiHuNewsItemHandler extends Handler {
 
-		public WeakReference<Star_History_PraiseActivity> star_history_praiseActivityWeakReference;
-		public Star_History_PraiseActivity star_history_praiseActivity;
+		public WeakReference<Star_History_PraiseAct> star_history_praiseActivityWeakReference;
+		public Star_History_PraiseAct star_history_praiseAct;
 
-		public StarZhiHuNewsItemHandler(Star_History_PraiseActivity star_history_praiseActivity) {
+		public StarZhiHuNewsItemHandler(Star_History_PraiseAct star_history_praiseAct) {
 			this.star_history_praiseActivityWeakReference = new WeakReference<>
-					(star_history_praiseActivity);
-			this.star_history_praiseActivity = this.star_history_praiseActivityWeakReference.get();
+					(star_history_praiseAct);
+			this.star_history_praiseAct = this.star_history_praiseActivityWeakReference.get();
 		}
 
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
-			if (star_history_praiseActivity.zhiHuNewsLatestItemInfo.stories.size() >= 6) {
+			if (star_history_praiseAct.zhiHuNewsLatestItemInfo.stories.size() >= 6) {
 				for (int i = 0; i < 10; i++) {
-					star_history_praiseActivity.zhiHuNewsItemInfoList.add
-							(star_history_praiseActivity.zhiHuNewsLatestItemInfo.stories.get(i));
+					star_history_praiseAct.zhiHuNewsItemInfoList.add
+							(star_history_praiseAct.zhiHuNewsLatestItemInfo.stories.get(i));
 					//					Log.i("ZRH", star_history_praiseActivity.zhiHuNewsLatestItemInfo.stories.get
 					//							(i).title);
 				}
 			} else {
-				for (int i = 0; i < star_history_praiseActivity.zhiHuNewsLatestItemInfo.stories
+				for (int i = 0; i < star_history_praiseAct.zhiHuNewsLatestItemInfo.stories
 						.size(); i++) {
-					star_history_praiseActivity.zhiHuNewsItemInfoList.add
-							(star_history_praiseActivity.zhiHuNewsLatestItemInfo.stories.get(i));
+					star_history_praiseAct.zhiHuNewsItemInfoList.add
+							(star_history_praiseAct.zhiHuNewsLatestItemInfo.stories.get(i));
 				}
 			}
-			star_history_praiseActivity.star_history_praiseActivityRecyclerViewAdapter
-					.setZhiHuNewsItemInfoList(star_history_praiseActivity.zhiHuNewsItemInfoList);
-			star_history_praiseActivity.recyclerView.setAdapter(star_history_praiseActivity
+			star_history_praiseAct.star_history_praiseActivityRecyclerViewAdapter
+					.setZhiHuNewsItemInfoList(star_history_praiseAct.zhiHuNewsItemInfoList);
+			star_history_praiseAct.recyclerView.setAdapter(star_history_praiseAct
 					.star_history_praiseActivityRecyclerViewAdapter);
-			star_history_praiseActivity.swipeRefreshLayout.setRefreshing(false);
+			star_history_praiseAct.swipeRefreshLayout.setRefreshing(false);
 		}
 	}
 }
