@@ -130,6 +130,8 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 	public final static String INTENT_TO_NEWS_KEY = "android.intent.action.NewsActivity";
 	public final static String INTENT_TO_STAR_HISTORY_PRAISE_KEY = "android.intent.action" +
 			".Star_History_Praise";
+	public final static String INTENT_TO_LOGIN_KEY = "android.intent.action.Login";
+	public final static int ITENT_TO_LOGIN_REQUESTCODE = 0x1234;
 
 	public final static String INTENT_STRING_DATA_KEY = "STRING_DATA_KEY";
 	public final static String STAR_KEY = "star";
@@ -349,6 +351,14 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 	}
 
 	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if(requestCode == ITENT_TO_LOGIN_REQUESTCODE){
+			Log.i("ZRH","Login result");
+		}
+	}
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		return super.onOptionsItemSelected(item);
 	}
@@ -470,15 +480,24 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 				.home_activity_drawer_header_login_info_profile_iv);
 		profile_tv = (TextView) navigationView.getHeaderView(0).findViewById(R.id
 				.home_activity_drawer_header_login_info_profile_tv);
+
 		profile_iv.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				drawerLayout.closeDrawer(navigationView);
-				Snackbar.make(coordinatorLayout, "你已经成功登录", Snackbar.LENGTH_SHORT).show();
-				navigationView.getMenu().setGroupVisible(R.id.group2, true);
-				profile_tv.setText("admin(假定账号)");
+				Intent intent_to_login = new Intent();
+				intent_to_login.setAction(INTENT_TO_LOGIN_KEY);
+				startActivityForResult(intent_to_login, ITENT_TO_LOGIN_REQUESTCODE);
 			}
 		});
+//		profile_iv.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				drawerLayout.closeDrawer(navigationView);
+//				Snackbar.make(coordinatorLayout, "你已经成功登录", Snackbar.LENGTH_SHORT).show();
+//				navigationView.getMenu().setGroupVisible(R.id.group2, true);
+//				profile_tv.setText("admin(假定账号)");
+//			}
+//		});
 	}
 
 	/*

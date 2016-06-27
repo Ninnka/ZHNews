@@ -1,19 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
+    android:id="@+id/login_activity_CoordinatorLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".Activity.LoginAct">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/login_activity_AppBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
 
-        
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/login_activity_Toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?android:actionBarSize"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
+        </android.support.v7.widget.Toolbar>
 
 
     </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:background="@color/md_grey_100"
+        android:orientation="vertical"
+        android:fitsSystemWindows="true"
+        android:gravity="center_horizontal"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        
+        <ImageView
+            android:scaleType="fitXY"
+            android:id="@+id/login_activity_ImageView"
+            android:src="@drawable/bg2"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"/>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/login_activity_UserName_TextInputLayout"
+            android:layout_margin="12dp"
+            android:layout_width="match_parent"
+            app:counterEnabled="true"
+            app:hintEnabled="true"
+            app:hintAnimationEnabled="true"
+            app:counterMaxLength="50"
+            android:hint="enter your email-address"
+            android:gravity="center"
+            android:layout_height="wrap_content">
+            
+            <android.support.design.widget.TextInputEditText
+                android:drawablePadding="15dp"
+                android:padding="5dp"
+                
+                android:drawableLeft="@mipmap/login_username"
+                android:id="@+id/login_activity_UserName_TextInputEditText"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"/>
+
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/login_activity_UserPassword_TextInputLayout"
+            android:layout_margin="12dp"
+            android:layout_width="match_parent"
+            app:counterEnabled="true"
+            app:hintEnabled="true"
+            app:hintAnimationEnabled="true"
+            app:counterMaxLength="50"
+            android:hint="enter your password"
+            android:gravity="center"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.TextInputEditText
+                android:drawablePadding="15dp"
+                android:padding="5dp"
+                android:drawableLeft="@mipmap/login_password"
+                android:id="@+id/login_activity_UserPassword_TextInputEditText"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"/>
+
+
+        </android.support.design.widget.TextInputLayout>
+
+    </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>
