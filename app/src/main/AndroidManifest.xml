@@ -43,7 +43,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".Activity.LoginAct">
+        <activity android:name=".Activity.LoginAct"
+                  android:theme="@style/LoginTheme"
+                  android:screenOrientation="portrait">
 
             <intent-filter>
                 <action android:name="android.intent.action.Login"/>

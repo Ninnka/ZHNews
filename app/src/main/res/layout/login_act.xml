@@ -6,14 +6,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
+    android:background="@color/md_grey_100"
     tools:context=".Activity.LoginAct">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/login_activity_AppBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
+        android:layout_height="wrap_content">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/login_activity_Toolbar"
@@ -21,73 +20,116 @@
             android:layout_height="?android:actionBarSize"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
-        </android.support.v7.widget.Toolbar>
+            <TextView
+                android:gravity="center"
+                android:layout_gravity="end"
+                android:layout_marginRight="12dp"
+                android:textColor="@color/md_white_1000"
+                android:text="Forget PW?"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
+        </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
 
     <LinearLayout
-        android:background="@color/md_grey_100"
-        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
         android:gravity="center_horizontal"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
         <ImageView
-            android:scaleType="fitXY"
             android:id="@+id/login_activity_ImageView"
-            android:src="@drawable/bg2"
             android:layout_width="match_parent"
-            android:layout_height="120dp"/>
+            android:layout_height="120dp"
+            android:layout_marginBottom="16dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/login_bg"/>
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/login_activity_UserName_TextInputLayout"
-            android:layout_margin="12dp"
             android:layout_width="match_parent"
-            app:counterEnabled="true"
-            app:hintEnabled="true"
-            app:hintAnimationEnabled="true"
-            app:counterMaxLength="50"
-            android:hint="enter your email-address"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="4dp"
             android:gravity="center"
-            android:layout_height="wrap_content">
-            
+            android:hint="enter your email-address"
+            app:counterEnabled="true"
+            app:counterMaxLength="32"
+            app:hintAnimationEnabled="true"
+            app:hintEnabled="true">
+
             <android.support.design.widget.TextInputEditText
-                android:drawablePadding="15dp"
-                android:padding="5dp"
-                
-                android:drawableLeft="@mipmap/login_username"
                 android:id="@+id/login_activity_UserName_TextInputEditText"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"/>
-
+                android:layout_height="50dp"
+                android:drawableLeft="@mipmap/login_username"
+                android:drawablePadding="18dp"
+                android:padding="5dp"/>
 
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/login_activity_UserPassword_TextInputLayout"
-            android:layout_margin="12dp"
             android:layout_width="match_parent"
-            app:counterEnabled="true"
-            app:hintEnabled="true"
-            app:hintAnimationEnabled="true"
-            app:counterMaxLength="50"
-            android:hint="enter your password"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="4dp"
             android:gravity="center"
-            android:layout_height="wrap_content">
+            android:hint="enter your password"
+            app:counterEnabled="true"
+            app:counterMaxLength="14"
+            app:hintAnimationEnabled="true"
+            app:hintEnabled="true">
 
             <android.support.design.widget.TextInputEditText
-                android:drawablePadding="15dp"
-                android:padding="5dp"
-                android:drawableLeft="@mipmap/login_password"
                 android:id="@+id/login_activity_UserPassword_TextInputEditText"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"/>
-
+                android:layout_height="50dp"
+                android:backgroundTint="#dadada"
+                android:drawableLeft="@mipmap/login_password"
+                android:drawablePadding="18dp"
+                android:padding="5dp"/>
 
         </android.support.design.widget.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal"
+            android:padding="6dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_weight="1"
+                android:background="@drawable/login_act_normal_button"
+                android:gravity="center"
+                android:text="SIGN UP"
+                android:textColor="@color/md_blue_grey_300"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_weight="1"
+                android:background="@drawable/login_act_unuseful_button"
+                android:gravity="center"
+                android:text="LOGIN IN"
+                android:textColor="@color/md_white_1000"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 

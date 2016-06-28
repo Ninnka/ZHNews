@@ -1,9 +1,13 @@
 package com.rainnka.zhkunews.Activity;
 
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import com.rainnka.zhkunews.R;
 
@@ -14,6 +18,8 @@ import com.rainnka.zhkunews.R;
 public class LoginAct extends AppCompatActivity {
 
 	Toolbar toolbar;
+	TextInputEditText usernameTextInputEditText;
+	TextInputEditText passwordTextInputEditText;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -24,17 +30,51 @@ public class LoginAct extends AppCompatActivity {
 		initComponent();
 
 		//设置toolbar
-		settingToolbar();
+		initSettingToolbar();
+
+		//设置输入框中的左图像
+		initDrawableTextInputEditText();
 	}
 
-	private void settingToolbar() {
+	private void initDrawableTextInputEditText() {
+		Drawable[] drawableUsernames = usernameTextInputEditText.getCompoundDrawables();
+		drawableUsernames[0].setBounds(0, 0, 70, 70);
+		usernameTextInputEditText.setCompoundDrawables(drawableUsernames[0], null, null, null);
+		//		drawableUsername.setBounds(LengthTransitionUtility.dip2px(getApplicationContext(), 5),
+		//				LengthTransitionUtility.dip2px(getApplicationContext(), 5), LengthTransitionUtility
+		//						.dip2px(getApplicationContext(), 5), LengthTransitionUtility.dip2px
+		//						(getApplicationContext(), 5));
+		//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+		//			passwordTextInputEditText.setCompoundDrawablesRelativeWithIntrinsicBounds
+		//					(drawableUsername, null, null, null);
+		//		}
+		Drawable[] drawablePasswords = passwordTextInputEditText.getCompoundDrawables();
+		drawablePasswords[0].setBounds(0, 0, 60, 60);
+		passwordTextInputEditText.setCompoundDrawables(drawablePasswords[0], null, null, null);
+	}
+
+	private void initSettingToolbar() {
+		toolbar.setTitleTextColor(Color.WHITE);
 		toolbar.setTitle("Login");
 		setSupportActionBar(toolbar);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
-	private void initComponent(){
+	private void initComponent() {
 		toolbar = (Toolbar) findViewById(R.id.login_activity_Toolbar);
+		usernameTextInputEditText = (TextInputEditText) findViewById(R.id
+				.login_activity_UserName_TextInputEditText);
+		passwordTextInputEditText = (TextInputEditText) findViewById(R.id
+				.login_activity_UserPassword_TextInputEditText);
+	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				finish();
+		}
+		return true;
 	}
 
 	@Override
