@@ -1,6 +1,7 @@
 package com.rainnka.zhkunews.Activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
@@ -72,6 +73,8 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 		HomeActivityRecyclerViewAdapter.HomeActivityRecyclerViewAdapterCallback, SwipeRefreshLayout
 				.OnRefreshListener, AppBarLayout.OnOffsetChangedListener, NavigationView.OnNavigationItemSelectedListener {
 
+	protected SharedPreferences sharedPreferences;
+
 	protected Toolbar toolbar;
 	protected DrawerLayout drawerLayout;
 	protected NavigationView navigationView;
@@ -126,6 +129,9 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 	public LinearLayoutManager linearLayoutManager;
 
 	public Gson gson;
+
+	String username = "";
+	String password = "";
 
 	public final static String INTENT_TO_NEWS_KEY = "android.intent.action.NewsActivity";
 	public final static String INTENT_TO_STAR_HISTORY_PRAISE_KEY = "android.intent.action" +
@@ -186,6 +192,11 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 		* 初始化组件
 		* */
 		initComponent();
+
+		/*
+		* 获取已登录的用户
+		* */
+		initUser();
 
 		/*
 		* 用toolBar代替actionBar
@@ -353,8 +364,10 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if(requestCode == ITENT_TO_LOGIN_REQUESTCODE){
-			Log.i("ZRH","Login result");
+		if (requestCode == ITENT_TO_LOGIN_REQUESTCODE && resultCode == LoginAct.RESULTCODE) {
+//			Log.i("ZRH", "Login result");
+			profile_tv.setText("admin");
+			navigationView.getMenu().setGroupVisible(R.id.group2, true);
 		}
 	}
 
@@ -377,18 +390,18 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 
 				startActivity(intent);
 
-//				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//					Pair<View, String> pair = new Pair<View, String>
-//							(floatingActionsMenu,
-//									"transition");
-//					ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat
-//							.makeSceneTransitionAnimation(HomeActivity.this, pair);
-//					Log.i("ZRH", "startActivity(intent, activityOptionsCompat.toBundle())");
-//					startActivity(intent, activityOptionsCompat.toBundle());
-//				} else {
-//					Log.i("ZRH", "startActivity(intent)");
-//					startActivity(intent);
-//				}
+				//				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+				//					Pair<View, String> pair = new Pair<View, String>
+				//							(floatingActionsMenu,
+				//									"transition");
+				//					ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat
+				//							.makeSceneTransitionAnimation(HomeActivity.this, pair);
+				//					Log.i("ZRH", "startActivity(intent, activityOptionsCompat.toBundle())");
+				//					startActivity(intent, activityOptionsCompat.toBundle());
+				//				} else {
+				//					Log.i("ZRH", "startActivity(intent)");
+				//					startActivity(intent);
+				//				}
 
 			}
 
@@ -398,6 +411,24 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 			}
 		});
 	}
+
+	/*
+	*
+	* */
+	private void initUser() {
+		sharedPreferences = getSharedPreferences("up", MODE_PRIVATE);
+		if (sharedPreferences.getString("isLogin", " ").equals("Y")) {
+			username = sharedPreferences.getString("username", " ");
+			password = sharedPreferences.getString("password", " ");
+			if(username.equals("admin") && password.equals("root")){
+				profile_tv.setText("admin");
+				navigationView.getMenu().setGroupVisible(R.id.group2, true);
+				username = "";
+				password = "";
+			}
+		}
+	}
+
 
 	/*
 	* 添加FAB menu中两个fab的点击事件
@@ -476,28 +507,29 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 		//		View HeaderView = navigationView.inflateHeaderView(R.layout.home_activity_drawer_header);
 		//		profile_iv = (ImageView) HeaderView.findViewById(R.id
 		//				.home_activity_drawer_header_login_info_profile_iv);
-		profile_iv = (ImageView) navigationView.getHeaderView(0).findViewById(R.id
-				.home_activity_drawer_header_login_info_profile_iv);
-		profile_tv = (TextView) navigationView.getHeaderView(0).findViewById(R.id
-				.home_activity_drawer_header_login_info_profile_tv);
+
+		drawerLayout.closeDrawer(navigationView);
 
 		profile_iv.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent_to_login = new Intent();
-				intent_to_login.setAction(INTENT_TO_LOGIN_KEY);
-				startActivityForResult(intent_to_login, ITENT_TO_LOGIN_REQUESTCODE);
+				if(sharedPreferences.getString("isLogin","N").equals("N")){
+					Log.i("ZRH","isLogin"+sharedPreferences.getString("isLogin",""));
+					Intent intent_to_login = new Intent();
+					intent_to_login.setAction(INTENT_TO_LOGIN_KEY);
+					startActivityForResult(intent_to_login, ITENT_TO_LOGIN_REQUESTCODE);
+				}
 			}
 		});
-//		profile_iv.setOnClickListener(new View.OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				drawerLayout.closeDrawer(navigationView);
-//				Snackbar.make(coordinatorLayout, "你已经成功登录", Snackbar.LENGTH_SHORT).show();
-//				navigationView.getMenu().setGroupVisible(R.id.group2, true);
-//				profile_tv.setText("admin(假定账号)");
-//			}
-//		});
+		//		profile_iv.setOnClickListener(new View.OnClickListener() {
+		//			@Override
+		//			public void onClick(View v) {
+		//				drawerLayout.closeDrawer(navigationView);
+		//				Snackbar.make(coordinatorLayout, "你已经成功登录", Snackbar.LENGTH_SHORT).show();
+		//				navigationView.getMenu().setGroupVisible(R.id.group2, true);
+		//				profile_tv.setText("admin(假定账号)");
+		//			}
+		//		});
 	}
 
 	/*
@@ -712,6 +744,10 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 		floatingActionsMenu = (FloatingActionsMenu) findViewById(R.id
 				.homeActivity_Content_main_FABMenu);
 		floatingActionButton.setVisibility(View.GONE);
+		profile_iv = (ImageView) navigationView.getHeaderView(0).findViewById(R.id
+				.home_activity_drawer_header_login_info_profile_iv);
+		profile_tv = (TextView) navigationView.getHeaderView(0).findViewById(R.id
+				.home_activity_drawer_header_login_info_profile_tv);
 	}
 
 	/*

@@ -1,5 +1,7 @@
 package com.rainnka.zhkunews.Activity;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -8,6 +10,8 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.rainnka.zhkunews.R;
 
@@ -17,9 +21,17 @@ import com.rainnka.zhkunews.R;
  */
 public class LoginAct extends AppCompatActivity {
 
+	SharedPreferences sharedPreferences;
+	SharedPreferences.Editor editor;
+
 	Toolbar toolbar;
 	TextInputEditText usernameTextInputEditText;
 	TextInputEditText passwordTextInputEditText;
+	TextView signInTextView;
+
+	public final static String DATAKEY = "VALIDCODE";
+	private boolean VALIDCODE = false;
+	public final static int RESULTCODE = 0x4567;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,6 +46,30 @@ public class LoginAct extends AppCompatActivity {
 
 		//设置输入框中的左图像
 		initDrawableTextInputEditText();
+
+		//设置登录点击事件
+		setSignInClickListener();
+	}
+
+	private void setSignInClickListener() {
+		signInTextView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (usernameTextInputEditText.getText().toString().equals("admin") &&
+						passwordTextInputEditText.getText().toString().equals("root")) {
+					VALIDCODE = true;
+					editor = sharedPreferences.edit();
+					editor.putString("isLogin","Y");
+					editor.putString("username",usernameTextInputEditText.getText().toString());
+					editor.putString("password",passwordTextInputEditText.getText().toString());
+					editor.apply();
+				}
+				Intent intent = getIntent();
+				intent.putExtra(DATAKEY, VALIDCODE);
+				LoginAct.this.setResult(RESULTCODE, intent);
+				LoginAct.this.finish();
+			}
+		});
 	}
 
 	private void initDrawableTextInputEditText() {
@@ -61,11 +97,14 @@ public class LoginAct extends AppCompatActivity {
 	}
 
 	private void initComponent() {
+		sharedPreferences = getSharedPreferences("up",MODE_PRIVATE);
+
 		toolbar = (Toolbar) findViewById(R.id.login_activity_Toolbar);
 		usernameTextInputEditText = (TextInputEditText) findViewById(R.id
 				.login_activity_UserName_TextInputEditText);
 		passwordTextInputEditText = (TextInputEditText) findViewById(R.id
 				.login_activity_UserPassword_TextInputEditText);
+		signInTextView = (TextView) findViewById(R.id.login_activity_signInButton);
 	}
 
 	@Override

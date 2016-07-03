@@ -108,6 +108,7 @@
             android:padding="6dp">
 
             <TextView
+                android:id="@+id/login_activity_signUpButton"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_marginLeft="16dp"
@@ -119,6 +120,7 @@
                 android:textColor="@color/md_blue_grey_300"/>
 
             <TextView
+                android:id="@+id/login_activity_signInButton"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_marginLeft="16dp"
@@ -126,7 +128,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/login_act_unuseful_button"
                 android:gravity="center"
-                android:text="LOGIN IN"
+                android:text="SIGN IN"
                 android:textColor="@color/md_white_1000"/>
 
         </LinearLayout>
