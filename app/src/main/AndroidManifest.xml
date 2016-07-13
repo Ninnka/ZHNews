@@ -2,7 +2,7 @@
           xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:allowBackup="true"
@@ -43,12 +43,25 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".Activity.LoginAct"
-                  android:theme="@style/LoginTheme"
-                  android:screenOrientation="portrait">
+        <activity
+            android:name=".Activity.LoginAct"
+            android:screenOrientation="portrait"
+            android:theme="@style/LoginTheme"
+            android:windowSoftInputMode="adjustResize">
 
             <intent-filter>
                 <action android:name="android.intent.action.Login"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".Activity.ProfilePageAct"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.ProfilePage"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>

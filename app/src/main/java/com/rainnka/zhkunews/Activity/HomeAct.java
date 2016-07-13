@@ -25,7 +25,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.transition.Fade;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -71,7 +70,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChangeListener,
 		HomeActivityRecyclerViewAdapter.HomeActivityRecyclerViewAdapterCallback, SwipeRefreshLayout
-				.OnRefreshListener, AppBarLayout.OnOffsetChangedListener, NavigationView.OnNavigationItemSelectedListener {
+				.OnRefreshListener, AppBarLayout.OnOffsetChangedListener, NavigationView
+				.OnNavigationItemSelectedListener {
 
 	protected SharedPreferences sharedPreferences;
 
@@ -132,12 +132,16 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 
 	String username = "";
 	String password = "";
+	String nickname = "";
 
 	public final static String INTENT_TO_NEWS_KEY = "android.intent.action.NewsActivity";
 	public final static String INTENT_TO_STAR_HISTORY_PRAISE_KEY = "android.intent.action" +
 			".Star_History_Praise";
 	public final static String INTENT_TO_LOGIN_KEY = "android.intent.action.Login";
 	public final static int ITENT_TO_LOGIN_REQUESTCODE = 0x1234;
+
+	public final static String INTENT_TO_PROFILE_KEY = "android.intent.action.ProfilePage";
+	public final static int ITENT_TO_PROFILE_REQUESTCODE = 0x7654;
 
 	public final static String INTENT_STRING_DATA_KEY = "STRING_DATA_KEY";
 	public final static String STAR_KEY = "star";
@@ -365,9 +369,18 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == ITENT_TO_LOGIN_REQUESTCODE && resultCode == LoginAct.RESULTCODE) {
-//			Log.i("ZRH", "Login result");
-			profile_tv.setText("admin");
+			profile_tv.setText(sharedPreferences.getString("nickname",""));
 			navigationView.getMenu().setGroupVisible(R.id.group2, true);
+			Snackbar.make(coordinatorLayout, "你已经成功登录", Snackbar.LENGTH_SHORT).show();
+		}
+		if(requestCode == ITENT_TO_PROFILE_REQUESTCODE && resultCode == ProfilePageAct.RESULTCODE_NORMALBACK){
+			profile_tv.setText(sharedPreferences.getString("nickname",""));
+			Snackbar.make(coordinatorLayout, "修改昵称成功", Snackbar.LENGTH_SHORT).show();
+		}
+		if(requestCode == ITENT_TO_PROFILE_REQUESTCODE && resultCode == ProfilePageAct.RESULTCODE){
+			profile_tv.setText("点击头像登录");
+			navigationView.getMenu().setGroupVisible(R.id.group2, false);
+			Snackbar.make(coordinatorLayout, "你已经成功退出登录", Snackbar.LENGTH_SHORT).show();
 		}
 	}
 
@@ -413,7 +426,7 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 	}
 
 	/*
-	*
+	* 获取已登录的用户
 	* */
 	private void initUser() {
 		sharedPreferences = getSharedPreferences("up", MODE_PRIVATE);
@@ -421,14 +434,15 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 			username = sharedPreferences.getString("username", " ");
 			password = sharedPreferences.getString("password", " ");
 			if(username.equals("admin") && password.equals("root")){
-				profile_tv.setText("admin");
+				nickname = sharedPreferences.getString("nickname","");
+				profile_tv.setText(nickname);
 				navigationView.getMenu().setGroupVisible(R.id.group2, true);
 				username = "";
 				password = "";
+				nickname = "";
 			}
 		}
 	}
-
 
 	/*
 	* 添加FAB menu中两个fab的点击事件
@@ -508,16 +522,21 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 		//		profile_iv = (ImageView) HeaderView.findViewById(R.id
 		//				.home_activity_drawer_header_login_info_profile_iv);
 
-		drawerLayout.closeDrawer(navigationView);
 
 		profile_iv.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if(sharedPreferences.getString("isLogin","N").equals("N")){
-					Log.i("ZRH","isLogin"+sharedPreferences.getString("isLogin",""));
+//					Log.i("ZRH","isLogin"+sharedPreferences.getString("isLogin",""));
+					drawerLayout.closeDrawer(navigationView);
 					Intent intent_to_login = new Intent();
 					intent_to_login.setAction(INTENT_TO_LOGIN_KEY);
 					startActivityForResult(intent_to_login, ITENT_TO_LOGIN_REQUESTCODE);
+				}else {
+					drawerLayout.closeDrawer(navigationView);
+					Intent intent_to_profile = new Intent();
+					intent_to_profile.setAction(INTENT_TO_PROFILE_KEY);
+					startActivityForResult(intent_to_profile, ITENT_TO_PROFILE_REQUESTCODE);
 				}
 			}
 		});
@@ -600,10 +619,10 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 			Network[] networks = connectivityManager.getAllNetworks();
 			if (networks != null && networks.length > 0) {
 				for (int i = 0; i < networks.length; i++) {
-					Log.i("ZRH", "network status: " + connectivityManager.getNetworkInfo
-							(networks[i]).getState());
-					Log.i("ZRH", "network tyoe: " + connectivityManager.getNetworkInfo(networks[i]
-					).getType());
+//					Log.i("ZRH", "network status: " + connectivityManager.getNetworkInfo
+//							(networks[i]).getState());
+//					Log.i("ZRH", "network tyoe: " + connectivityManager.getNetworkInfo(networks[i]
+//					).getType());
 					if (connectivityManager.getNetworkInfo(networks[i]).getState() == NetworkInfo
 							.State.CONNECTED) {
 						return true;
@@ -620,8 +639,8 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 			NetworkInfo[] networkInfos = connectivityManager.getAllNetworkInfo();
 			if (networkInfos != null && networkInfos.length > 0) {
 				for (int i = 0; i < networkInfos.length; i++) {
-					Log.i("ZRH", "network status: " + networkInfos[i].getState());
-					Log.i("ZRH", "network type: " + networkInfos[i].getType());
+//					Log.i("ZRH", "network status: " + networkInfos[i].getState());
+//					Log.i("ZRH", "network type: " + networkInfos[i].getType());
 					if (networkInfos[i].getState() == NetworkInfo.State.CONNECTED) {
 						return true;
 					}
@@ -772,6 +791,7 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 				drawerLayout, toolbar, R.string.open_drawer, R.string
 				.close_drawer);
 		actionBarDrawerToggle.syncState();
+
 		drawerLayout.addDrawerListener(actionBarDrawerToggle);
 	}
 
@@ -1049,6 +1069,12 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 
 		}
 	}
+
+//	@Override
+//	public void onNicknameChanged() {
+//		profile_tv.setText(sharedPreferences.getString("nickname",""));
+//	}
+
 
 	/*
 	* 静态内部类 BannerHandler

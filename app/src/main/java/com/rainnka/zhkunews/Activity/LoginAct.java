@@ -6,14 +6,19 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import com.rainnka.zhkunews.R;
+import com.rainnka.zhkunews.Utility.SnackbarUtility;
 
 /**
  * Created by rainnka on 2016/6/26 21:52
@@ -24,6 +29,7 @@ public class LoginAct extends AppCompatActivity {
 	SharedPreferences sharedPreferences;
 	SharedPreferences.Editor editor;
 
+	CoordinatorLayout coordinatorLayout;
 	Toolbar toolbar;
 	TextInputEditText usernameTextInputEditText;
 	TextInputEditText passwordTextInputEditText;
@@ -49,6 +55,66 @@ public class LoginAct extends AppCompatActivity {
 
 		//设置登录点击事件
 		setSignInClickListener();
+
+		//设置editText的监听事件
+		setEditTextChangedListener();
+	}
+
+	private void setEditTextChangedListener() {
+		usernameTextInputEditText.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				notifyEditTextChanged();
+
+				//				if(!s.equals("")){
+				//					String tempUser = passwordTextInputEditText.getText().toString();
+				//					if(!tempUser.equals("")){
+				//						signInTextView.setBackgroundDrawable(getApplicationContext()
+				//								.getResources().getDrawable(R.drawable.login_act_valid_button));
+				//					}else {
+				//						signInTextView.setBackgroundDrawable(getApplicationContext()
+				//								.getResources().getDrawable(R.drawable.login_act_invalid_button));
+				//					}
+				//				}
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+
+			}
+		});
+		passwordTextInputEditText.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				notifyEditTextChanged();
+
+				//				if(!s.equals("")){
+				//					String tempUser = usernameTextInputEditText.getText().toString();
+				//					if(!tempUser.equals("")){
+				//						signInTextView.setBackgroundDrawable(getApplicationContext()
+				//								.getResources().getDrawable(R.drawable.login_act_valid_button));
+				//					}else {
+				//						signInTextView.setBackgroundDrawable(getApplicationContext()
+				//								.getResources().getDrawable(R.drawable.login_act_invalid_button));
+				//					}
+				//				}
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+
+			}
+		});
 	}
 
 	private void setSignInClickListener() {
@@ -59,15 +125,19 @@ public class LoginAct extends AppCompatActivity {
 						passwordTextInputEditText.getText().toString().equals("root")) {
 					VALIDCODE = true;
 					editor = sharedPreferences.edit();
-					editor.putString("isLogin","Y");
-					editor.putString("username",usernameTextInputEditText.getText().toString());
-					editor.putString("password",passwordTextInputEditText.getText().toString());
+					editor.putString("isLogin", "Y");
+					editor.putString("username", usernameTextInputEditText.getText().toString());
+					editor.putString("password", passwordTextInputEditText.getText().toString());
+					editor.putString("nickname", "nickname");
 					editor.apply();
+					Intent intent = getIntent();
+					intent.putExtra(DATAKEY, VALIDCODE);
+					LoginAct.this.setResult(RESULTCODE, intent);
+					LoginAct.this.finish();
+				} else {
+					SnackbarUtility.getSnackbarDefault(coordinatorLayout, "username or password " +
+							"error", Snackbar.LENGTH_SHORT).show();
 				}
-				Intent intent = getIntent();
-				intent.putExtra(DATAKEY, VALIDCODE);
-				LoginAct.this.setResult(RESULTCODE, intent);
-				LoginAct.this.finish();
 			}
 		});
 	}
@@ -97,14 +167,37 @@ public class LoginAct extends AppCompatActivity {
 	}
 
 	private void initComponent() {
-		sharedPreferences = getSharedPreferences("up",MODE_PRIVATE);
+		sharedPreferences = getSharedPreferences("up", MODE_PRIVATE);
 
+		coordinatorLayout = (CoordinatorLayout) findViewById(R.id.login_activity_CoordinatorLayout);
 		toolbar = (Toolbar) findViewById(R.id.login_activity_Toolbar);
 		usernameTextInputEditText = (TextInputEditText) findViewById(R.id
 				.login_activity_UserName_TextInputEditText);
 		passwordTextInputEditText = (TextInputEditText) findViewById(R.id
 				.login_activity_UserPassword_TextInputEditText);
 		signInTextView = (TextView) findViewById(R.id.login_activity_signInButton);
+	}
+
+	protected void notifyEditTextChanged() {
+		String tempUser = usernameTextInputEditText.getText().toString();
+		String tempPW = passwordTextInputEditText.getText().toString();
+		if (!tempUser.equals("") && !tempPW.equals("")) {
+			modifySignInTextViewButton(true);
+		} else {
+			modifySignInTextViewButton(false);
+		}
+	}
+
+	protected void modifySignInTextViewButton(boolean flag) {
+		signInTextView.setClickable(flag);
+		if (flag) {
+			signInTextView.setBackgroundDrawable(getApplicationContext()
+					.getResources().getDrawable(R.drawable.login_act_valid_button));
+		} else {
+			signInTextView.setBackgroundDrawable(getApplicationContext()
+					.getResources().getDrawable(R.drawable.login_act_invalid_button));
+		}
+
 	}
 
 	@Override

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/profilepage_act_LinearLayout_root"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context=".Activity.ProfilePageAct">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/profilepage_act_Toolbar"
+        style="@style/AppTheme.PopupOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="?android:actionBarSize"
+        android:background="@color/colorPrimary">
+
+        <ImageView
+            android:id="@+id/profilepage_act_pencil_ImageView"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="end"
+            android:layout_marginRight="16dp"
+            android:src="@mipmap/pencil_edit"/>
+
+    </android.support.v7.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:focusableInTouchMode="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <ImageView
+            android:layout_width="66dp"
+            android:layout_height="66dp"
+            android:src="@mipmap/profile_dark"/>
+
+        <EditText
+            android:id="@+id/profilepage_act_username_EditText"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            android:textColor="@color/md_grey_500"
+            android:textSize="22sp"/>
+
+        <TextView
+            android:layout_width="160dp"
+            android:layout_height="0.2dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="42dp"
+            android:background="@color/md_grey_600"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="绑定QQ"
+            android:textColor="@color/md_blue_600"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:layout_width="160dp"
+            android:layout_height="0.2dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:background="@color/md_grey_600"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="绑定新浪微博"
+            android:textColor="@color/md_blue_600"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:layout_width="160dp"
+            android:layout_height="0.2dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:background="@color/md_grey_600"/>
+
+        <TextView
+            android:id="@+id/profilepage_act_logout_textView"
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/profilepage_logout_button"
+            android:gravity="center"
+            android:text="退出"
+            android:textColor="@color/md_red_400"
+            android:textSize="18dp"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>
