@@ -240,7 +240,7 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 		/*
 		* 添加viewPager的切换效果
 		* */
-		addViewPagerTransformer();
+//		addViewPagerTransformer();
 
 		/*
 		* 为viewpager 添加 OnPageChangeListener
@@ -369,15 +369,15 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == ITENT_TO_LOGIN_REQUESTCODE && resultCode == LoginAct.RESULTCODE) {
-			profile_tv.setText(sharedPreferences.getString("nickname",""));
+			profile_tv.setText(sharedPreferences.getString("nickname", ""));
 			navigationView.getMenu().setGroupVisible(R.id.group2, true);
 			Snackbar.make(coordinatorLayout, "你已经成功登录", Snackbar.LENGTH_SHORT).show();
 		}
-		if(requestCode == ITENT_TO_PROFILE_REQUESTCODE && resultCode == ProfilePageAct.RESULTCODE_NORMALBACK){
-			profile_tv.setText(sharedPreferences.getString("nickname",""));
+		if (requestCode == ITENT_TO_PROFILE_REQUESTCODE && resultCode == ProfilePageAct.RESULTCODE_NORMALBACK) {
+			profile_tv.setText(sharedPreferences.getString("nickname", ""));
 			Snackbar.make(coordinatorLayout, "修改昵称成功", Snackbar.LENGTH_SHORT).show();
 		}
-		if(requestCode == ITENT_TO_PROFILE_REQUESTCODE && resultCode == ProfilePageAct.RESULTCODE){
+		if (requestCode == ITENT_TO_PROFILE_REQUESTCODE && resultCode == ProfilePageAct.RESULTCODE) {
 			profile_tv.setText("点击头像登录");
 			navigationView.getMenu().setGroupVisible(R.id.group2, false);
 			Snackbar.make(coordinatorLayout, "你已经成功退出登录", Snackbar.LENGTH_SHORT).show();
@@ -433,8 +433,8 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 		if (sharedPreferences.getString("isLogin", " ").equals("Y")) {
 			username = sharedPreferences.getString("username", " ");
 			password = sharedPreferences.getString("password", " ");
-			if(username.equals("admin") && password.equals("root")){
-				nickname = sharedPreferences.getString("nickname","");
+			if (username.equals("admin") && password.equals("root")) {
+				nickname = sharedPreferences.getString("nickname", "");
 				profile_tv.setText(nickname);
 				navigationView.getMenu().setGroupVisible(R.id.group2, true);
 				username = "";
@@ -526,13 +526,13 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 		profile_iv.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(sharedPreferences.getString("isLogin","N").equals("N")){
-//					Log.i("ZRH","isLogin"+sharedPreferences.getString("isLogin",""));
+				if (sharedPreferences.getString("isLogin", "N").equals("N")) {
+					//					Log.i("ZRH","isLogin"+sharedPreferences.getString("isLogin",""));
 					drawerLayout.closeDrawer(navigationView);
 					Intent intent_to_login = new Intent();
 					intent_to_login.setAction(INTENT_TO_LOGIN_KEY);
 					startActivityForResult(intent_to_login, ITENT_TO_LOGIN_REQUESTCODE);
-				}else {
+				} else {
 					drawerLayout.closeDrawer(navigationView);
 					Intent intent_to_profile = new Intent();
 					intent_to_profile.setAction(INTENT_TO_PROFILE_KEY);
@@ -619,10 +619,10 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 			Network[] networks = connectivityManager.getAllNetworks();
 			if (networks != null && networks.length > 0) {
 				for (int i = 0; i < networks.length; i++) {
-//					Log.i("ZRH", "network status: " + connectivityManager.getNetworkInfo
-//							(networks[i]).getState());
-//					Log.i("ZRH", "network tyoe: " + connectivityManager.getNetworkInfo(networks[i]
-//					).getType());
+					//					Log.i("ZRH", "network status: " + connectivityManager.getNetworkInfo
+					//							(networks[i]).getState());
+					//					Log.i("ZRH", "network tyoe: " + connectivityManager.getNetworkInfo(networks[i]
+					//					).getType());
 					if (connectivityManager.getNetworkInfo(networks[i]).getState() == NetworkInfo
 							.State.CONNECTED) {
 						return true;
@@ -639,8 +639,8 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 			NetworkInfo[] networkInfos = connectivityManager.getAllNetworkInfo();
 			if (networkInfos != null && networkInfos.length > 0) {
 				for (int i = 0; i < networkInfos.length; i++) {
-//					Log.i("ZRH", "network status: " + networkInfos[i].getState());
-//					Log.i("ZRH", "network type: " + networkInfos[i].getType());
+					//					Log.i("ZRH", "network status: " + networkInfos[i].getState());
+					//					Log.i("ZRH", "network type: " + networkInfos[i].getType());
 					if (networkInfos[i].getState() == NetworkInfo.State.CONNECTED) {
 						return true;
 					}
@@ -819,17 +819,21 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 
 	@Override
 	public void onBackPressed() {
-		if (BACKPRESS_STATUS) {
-			super.onBackPressed();
-		}
-		if (!BACKPRESS_STATUS) {
-			BACKPRESS_STATUS = true;
-			Snackbar snackbar = SnackbarUtility.getSnackbarLight(coordinatorLayout, "再次点击退出键退出",
-					Snackbar.LENGTH_SHORT);
-			snackbar.show();
-		}
+		if(drawerLayout.isDrawerOpen(navigationView)){
+			drawerLayout.closeDrawer(navigationView);
+		}else {
+			if (BACKPRESS_STATUS) {
+				super.onBackPressed();
+			}
+			if (!BACKPRESS_STATUS) {
+				BACKPRESS_STATUS = true;
+				Snackbar snackbar = SnackbarUtility.getSnackbarLight(coordinatorLayout, "再次点击退出键退出",
+						Snackbar.LENGTH_SHORT);
+				snackbar.show();
+			}
 
-		mhandler.postDelayed(mRunnable, 2000);
+			mhandler.postDelayed(mRunnable, 2000);
+		}
 	}
 
 	@Override
@@ -938,7 +942,9 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 	@Override
 	public boolean onNavigationItemSelected(MenuItem item) {
 		Intent intent;
+//		drawerLayout.closeDrawers();
 		switch (item.getItemId()) {
+
 			case R.id.drawer_home:
 				onRefresh();
 
@@ -992,7 +998,6 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 				finish();
 				break;
 		}
-		drawerLayout.closeDrawers();
 		return true;
 	}
 
@@ -1070,10 +1075,10 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 		}
 	}
 
-//	@Override
-//	public void onNicknameChanged() {
-//		profile_tv.setText(sharedPreferences.getString("nickname",""));
-//	}
+	//	@Override
+	//	public void onNicknameChanged() {
+	//		profile_tv.setText(sharedPreferences.getString("nickname",""));
+	//	}
 
 
 	/*
@@ -1187,6 +1192,7 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 					* 设置viewPager的adapter
 					* viewPager状态初始化
 					* */
+//					homeAct.viewPager.setOffscreenPageLimit(0);
 					homeAct.viewPager.setAdapter(homeAct.homeActivityViewPagerAdapter);
 					//					Log.i("ZRH", "设置viewPager的adapter");
 					homeAct.viewPager.setCurrentItem(1);
@@ -1234,7 +1240,7 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 						homeAct.zhiHuNewsTopItemInfoList = homeAct
 								.zhiHuNewsLatestItemInfo_new.top_stories;
 						homeAct.homeActivityViewPagerAdapter.setZhiHuNewsTopItemInfoList
-								(homeAct.zhiHuNewsLatestItemInfo_new.top_stories);
+								(homeAct.zhiHuNewsTopItemInfoList);
 						//						Log.i("ZRH", "更新完banner数据");
 						homeAct.homeActivityViewPagerAdapter.updateViewImage();
 						//						Log.i("ZRH", "调用完homeActivity.homeActivityViewPagerAdapter.updateViewImage" +

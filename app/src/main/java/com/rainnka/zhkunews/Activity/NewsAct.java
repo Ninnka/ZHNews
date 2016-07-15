@@ -1,6 +1,9 @@
 package com.rainnka.zhkunews.Activity;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,6 +18,7 @@ import android.transition.Fade;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ImageView;
@@ -24,6 +28,7 @@ import com.google.gson.Gson;
 import com.rainnka.zhkunews.Bean.ZhiHuNewsItemInfo;
 import com.rainnka.zhkunews.R;
 import com.rainnka.zhkunews.Utility.LengthTransitionUtility;
+import com.rainnka.zhkunews.Utility.SQLiteCreateTableHelper;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
@@ -45,6 +50,8 @@ public class NewsAct extends AppCompatActivity {
 	protected Toolbar toolbar;
 	protected ImageView imageView;
 	protected WebView webView;
+	protected ImageView imageView_praise;
+	protected ImageView imageView_star;
 
 	public OkHttpClient okHttpClient;
 	public Request request;
@@ -54,7 +61,7 @@ public class NewsAct extends AppCompatActivity {
 
 	public ZhiHuNewsItemInfo zhiHuNewsItemInfo;
 
-	public ZhiHuNewsItemInfo zhiHuNewsItemInfoFormHome;
+	public ZhiHuNewsItemInfo zhiHuNewsItemInfoFromHome;
 
 	public WebViewHandler webViewHandler;
 
@@ -62,8 +69,10 @@ public class NewsAct extends AppCompatActivity {
 			"rel=\"stylesheet\"/></head><body>";
 	public String footer = "</body></html>";
 
-	public Boolean isGood = false;
-	public Boolean isStar = false;
+	protected SQLiteDatabase sqLiteDatabase;
+
+	//	public Boolean isGood = false;
+	//	public Boolean isStar = false;
 
 	public static final String getInfoByAPI = "http://news-at.zhihu.com/api/4/news/";
 
@@ -96,6 +105,10 @@ public class NewsAct extends AppCompatActivity {
 		* */
 		initComponent();
 
+		/*
+		* 沉浸式效果
+		* 适应 （API19） android4.4的版本
+		* */
 		if (Build.VERSION.SDK_INT == 19) {
 			appBarLayout.setFitsSystemWindows(false);
 
@@ -120,6 +133,16 @@ public class NewsAct extends AppCompatActivity {
 		initHandler();
 
 		/*
+		* 添加点赞点击事件
+		* */
+		addPraiseImageViewOnClickListener();
+
+		/*
+		* 添加收藏点击事件
+		* */
+		addStarImageViewOnClickListener();
+
+		/*
 		* 初始化gson
 		* */
 		gson = new Gson();
@@ -128,7 +151,7 @@ public class NewsAct extends AppCompatActivity {
 		* 初始化okhttpclient相关
 		* */
 		okHttpClient = new OkHttpClient();
-		String getInfoUrl = getInfoByAPI + zhiHuNewsItemInfoFormHome.id;
+		String getInfoUrl = getInfoByAPI + zhiHuNewsItemInfoFromHome.id;
 		//		Log.i("ZRH","getInfoUrl: "+getInfoUrl);
 		request = new Request.Builder()
 				.url(getInfoUrl)
@@ -144,6 +167,98 @@ public class NewsAct extends AppCompatActivity {
 		* 格局获得信息类加载webview中的主要内容
 		* */
 		loadWebViewContent();
+
+
+		/*
+		* 判断是否收藏
+		* */
+		judgeStarState();
+
+		/*
+		* 判断是否点赞
+		* */
+		judgePraiseState();
+
+	}
+
+	private void addStarImageViewOnClickListener() {
+		imageView_star.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (sqLiteDatabase == null) {
+					try {
+						sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(NewsAct.this
+								.getFilesDir().toString() + "/myInfo.db3", null);
+					} catch (Exception e) {
+						Log.i("ZRH", e.toString());
+					}
+				}
+
+				if (isStar()) {
+					sqLiteDatabase.delete("my_star", "ItemId like ?", new
+							String[]{String.valueOf(zhiHuNewsItemInfoFromHome.id)});
+					imageView_star.setImageResource(R.drawable.unstared);
+				} else {
+					sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_STAR_TABLE);
+					ContentValues contentValues = new ContentValues();
+					contentValues.put("ItemId", zhiHuNewsItemInfoFromHome.id);
+					try{
+						contentValues.put("ItemImage", zhiHuNewsItemInfoFromHome.images.get(0));
+					}catch (Exception e){
+						contentValues.put("ItemImage", zhiHuNewsItemInfoFromHome.image);
+					}
+					contentValues.put("ItemTitle", zhiHuNewsItemInfoFromHome.title);
+					sqLiteDatabase.insert("my_star", null, contentValues);
+					imageView_star.setImageResource(R.drawable.stared);
+				}
+
+				//测试用
+				//				Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM my_star", null);
+				//				if (cursor != null) {
+				//					if (cursor.moveToFirst()) {
+				//						Log.i("ZRH", "ItemId: " + cursor.getString(1));
+				//						Log.i("ZRH", "ItemImage: " + cursor.getString(2));
+				//						Log.i("ZRH", "ItemTitle: " + cursor.getString(3));
+				//					}
+				//				}
+				//				cursor.close();
+			}
+		});
+	}
+
+	private void addPraiseImageViewOnClickListener() {
+		imageView_praise.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (sqLiteDatabase == null) {
+					try {
+						sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(NewsAct.this
+								.getFilesDir().toString() + "/myInfo.db3", null);
+					} catch (Exception e) {
+						Log.i("ZRH", e.toString());
+					}
+				}
+
+				if (isPraise()) {
+//					sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_PRAISE_TABLE);
+					sqLiteDatabase.delete("my_praise", "ItemId like ?", new String[]{String.valueOf
+							(zhiHuNewsItemInfoFromHome.id)});
+					imageView_praise.setImageResource(R.drawable.ungood);
+				} else {
+					sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_PRAISE_TABLE);
+					ContentValues contentValues = new ContentValues();
+					contentValues.put("ItemId", zhiHuNewsItemInfoFromHome.id);
+					try{
+						contentValues.put("ItemImage", zhiHuNewsItemInfoFromHome.images.get(0));
+					}catch (Exception e){
+						contentValues.put("ItemImage", zhiHuNewsItemInfoFromHome.image);
+					}
+					contentValues.put("ItemTitle", zhiHuNewsItemInfoFromHome.title);
+					sqLiteDatabase.insert("my_praise", null, contentValues);
+					imageView_praise.setImageResource(R.drawable.good);
+				}
+			}
+		});
 	}
 
 	private void initToolbar() {
@@ -160,6 +275,8 @@ public class NewsAct extends AppCompatActivity {
 		toolbar = (Toolbar) findViewById(R.id.newsActivity_Toolbar);
 		imageView = (ImageView) findViewById(R.id.newsActivity_ImageView_InCollapsingToolbarLayout);
 		webView = (WebView) findViewById(R.id.newsActivity_WebView);
+		imageView_praise = (ImageView) findViewById(R.id.newsActivity_praise_ImageView);
+		imageView_star = (ImageView) findViewById(R.id.newsActivity_star_ImageView);
 	}
 
 	private void initWebView() {
@@ -176,7 +293,7 @@ public class NewsAct extends AppCompatActivity {
 	private void getInfomationFromIntent() {
 		Intent intent = getIntent();
 		//		homeActivityRecyclerViewItemInfo = (HomeActivityRecyclerViewItemInfo) intent.getSerializableExtra(HomeActivity.SER_KEY);
-		zhiHuNewsItemInfoFormHome = (ZhiHuNewsItemInfo) intent.getSerializableExtra(HomeAct.SER_KEY);
+		zhiHuNewsItemInfoFromHome = (ZhiHuNewsItemInfo) intent.getSerializableExtra(HomeAct.SER_KEY);
 	}
 
 	/*
@@ -210,7 +327,6 @@ public class NewsAct extends AppCompatActivity {
 					try {
 						zhiHuNewsItemInfo = gson.fromJson(response.body().string(),
 								ZhiHuNewsItemInfo.class);
-						//						Log.i("ZRH", "" + zhiHuNewsItemInfo.body);
 						webViewHandler.sendEmptyMessage(0x123);
 					} catch (Exception e) {
 						Log.i("ZRH", e.getMessage());
@@ -218,6 +334,51 @@ public class NewsAct extends AppCompatActivity {
 				}
 			}
 		});
+	}
+
+	/*
+	* 判断是否收藏
+	* */
+	public boolean isStar() {
+		boolean star = false;
+		String queryID = "SELECT * FROM my_star where ItemId like ?";
+		if (sqLiteDatabase == null) {
+			sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(NewsAct.this
+					.getFilesDir().toString() + "/myInfo.db3", null);
+		}
+		sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_STAR_TABLE);
+		try {
+			Cursor cursor = sqLiteDatabase.rawQuery(queryID, new String[]{String.valueOf
+					(zhiHuNewsItemInfoFromHome.id)});
+			if (cursor.getCount() > 0) {
+				star = true;
+			}
+			cursor.close();
+		} catch (Exception e) {
+			Log.i("ZRH", e.toString());
+		}
+
+		return star;
+	}
+
+	/*
+	* 判断是否点赞
+	* */
+	public boolean isPraise() {
+		boolean praise = false;
+		return praise;
+	}
+
+	private void judgeStarState() {
+		if (isStar()) {
+			imageView_star.setImageResource(R.drawable.stared);
+		}
+	}
+
+	private void judgePraiseState() {
+		if (isPraise()) {
+			imageView_praise.setImageResource(R.drawable.good);
+		}
 	}
 
 	@Override
@@ -239,13 +400,16 @@ public class NewsAct extends AppCompatActivity {
 		}
 		super.onDestroy();
 		webViewHandler.removeMessages(0x123);
+		if (sqLiteDatabase != null) {
+			sqLiteDatabase.close();
+		}
+		sqLiteDatabase = null;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
-
 				finish();
 
 				//				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -255,25 +419,26 @@ public class NewsAct extends AppCompatActivity {
 				//					Log.i("ZRH", "finish");
 				//					finish();
 				//				}
+
 				break;
-			case R.id.news_activity_menu_good:
-				if (!isGood) {
-					item.setIcon(R.drawable.good);
-					isGood = true;
-				} else {
-					item.setIcon(R.drawable.ungood);
-					isGood = false;
-				}
-				break;
-			case R.id.news_activity_menu_star:
-				if (!isStar) {
-					item.setIcon(R.drawable.stared);
-					isStar = true;
-				} else {
-					item.setIcon(R.drawable.unstared);
-					isStar = false;
-				}
-				break;
+			//			case R.id.news_activity_menu_good:
+			//				if (!isGood) {
+			//					item.setIcon(R.drawable.good);
+			//					isGood = true;
+			//				} else {
+			//					item.setIcon(R.drawable.ungood);
+			//					isGood = false;
+			//				}
+			//				break;
+			//			case R.id.news_activity_menu_star:
+			//				if (!isStar) {
+			//					item.setIcon(R.drawable.stared);
+			//					isStar = true;
+			//				} else {
+			//					item.setIcon(R.drawable.unstared);
+			//					isStar = false;
+			//				}
+			//				break;
 		}
 		return super.onOptionsItemSelected(item);
 	}

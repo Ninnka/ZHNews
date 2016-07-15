@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,28 +86,6 @@ public class HomeActivityViewPagerAdapter extends PagerAdapter {
 		View view = viewList.get(position);
 
 		/*
-		* 加载图片
-		* */
-		//		ImageView imageView = (ImageView) view.findViewById(R.id
-		//				.homeActivity_Content_ViewPager_CustomItem_ImageView);
-		//		if (position == 0) {
-		//			Glide.with(appCompatActivity)
-		//					.load(zhiHuNewsTopItemInfoList.get(zhiHuNewsTopItemInfoList.size() - 1).image)
-		//					.into(imageView);
-		//			Log.i("ZRH", "加载i==0图片: " + zhiHuNewsTopItemInfoList.get(zhiHuNewsTopItemInfoList.size() - 1).image);
-		//		} else if (position == zhiHuNewsTopItemInfoList.size() + 1) {
-		//			Glide.with(appCompatActivity)
-		//					.load(zhiHuNewsTopItemInfoList.get(0).image)
-		//					.into(imageView);
-		//			Log.i("ZRH", "加载i==homeActivity.zhiHuNewsTopItemInfoList.size() + 1 图片: " + zhiHuNewsTopItemInfoList.get(0).image);
-		//		} else {
-		//			Glide.with(appCompatActivity)
-		//					.load(zhiHuNewsTopItemInfoList.get(position - 1).image)
-		//					.into(imageView);
-		//			Log.i("ZRH", "加载图片: " + zhiHuNewsTopItemInfoList.get(position - 1).image);
-		//		}
-
-		/*
 		* 每个子view添加点击事件
 		* */
 		view.setOnClickListener(new View.OnClickListener() {
@@ -116,10 +95,14 @@ public class HomeActivityViewPagerAdapter extends PagerAdapter {
 				Intent intent = new Intent();
 				intent.setAction(HomeAct.INTENT_TO_NEWS_KEY);
 				Bundle bundle = new Bundle();
-				bundle.putSerializable(HomeAct.SER_KEY, zhiHuNewsTopItemInfoList.get
-						(position - 1));
-				intent.putExtras(bundle);
-				appCompatActivity.startActivity(intent);
+				try {
+					bundle.putSerializable(HomeAct.SER_KEY, zhiHuNewsTopItemInfoList.get
+							(position - 1));
+					intent.putExtras(bundle);
+					appCompatActivity.startActivity(intent);
+				} catch (Exception e) {
+					Log.i("ZRH", e.toString());
+				}
 			}
 		});
 

@@ -2,20 +2,20 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/news_activity_menu_good"
-        app:showAsAction="always"
-        android:icon="@drawable/ungood"
-        android:title="666">
+    <!--<item-->
+        <!--android:id="@+id/news_activity_menu_good"-->
+        <!--app:showAsAction="always"-->
+        <!--android:icon="@drawable/ungood"-->
+        <!--android:title="666">-->
 
-    </item>
+    <!--</item>-->
 
-    <item
-        android:id="@+id/news_activity_menu_star"
-        app:showAsAction="always"
-        android:icon="@drawable/unstared"
-        android:title="">
+    <!--<item-->
+        <!--android:id="@+id/news_activity_menu_star"-->
+        <!--app:showAsAction="always"-->
+        <!--android:icon="@drawable/unstared"-->
+        <!--android:title="">-->
 
-    </item>
+    <!--</item>-->
 
 </menu>

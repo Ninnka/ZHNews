@@ -43,6 +43,22 @@
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/AppTheme.PopupOverlay">
 
+                <ImageView
+                    android:id="@+id/newsActivity_praise_ImageView"
+                    android:layout_marginRight="18dp"
+                    android:layout_gravity="end"
+                    android:src="@drawable/ungood"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"/>
+
+                <ImageView
+                    android:id="@+id/newsActivity_star_ImageView"
+                    android:layout_marginRight="24dp"
+                    android:layout_gravity="end"
+                    android:src="@drawable/unstared"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"/>
+
             </android.support.v7.widget.Toolbar>
 
         </android.support.design.widget.CollapsingToolbarLayout>
