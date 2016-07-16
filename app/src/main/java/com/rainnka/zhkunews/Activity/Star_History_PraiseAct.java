@@ -385,6 +385,9 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 						break;
 					}
 				}
+				if(checkId == -1){
+					checkId = tempList.size();
+				}
 			}
 		} else {
 			zhiHuNewsItemInfoList.addAll(tempList);
@@ -422,6 +425,9 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 							checkId = i;
 							break;
 						}
+					}
+					if(checkId == -1){
+						checkId = tempList.size();
 					}
 				}
 			} catch (Exception e) {
