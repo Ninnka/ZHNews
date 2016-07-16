@@ -240,9 +240,8 @@ public class NewsAct extends AppCompatActivity {
 				}
 
 				if (isPraise()) {
-//					sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_PRAISE_TABLE);
-					sqLiteDatabase.delete("my_praise", "ItemId like ?", new String[]{String.valueOf
-							(zhiHuNewsItemInfoFromHome.id)});
+					sqLiteDatabase.delete("my_praise", "ItemId like ?", new
+							String[]{String.valueOf(zhiHuNewsItemInfoFromHome.id)});
 					imageView_praise.setImageResource(R.drawable.ungood);
 				} else {
 					sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_PRAISE_TABLE);
@@ -357,7 +356,6 @@ public class NewsAct extends AppCompatActivity {
 		} catch (Exception e) {
 			Log.i("ZRH", e.toString());
 		}
-
 		return star;
 	}
 
@@ -366,6 +364,22 @@ public class NewsAct extends AppCompatActivity {
 	* */
 	public boolean isPraise() {
 		boolean praise = false;
+		String queryID = "SELECT * FROM my_praise where ItemId like ?";
+		if (sqLiteDatabase == null) {
+			sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(NewsAct.this
+					.getFilesDir().toString() + "/myInfo.db3", null);
+		}
+		sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_PRAISE_TABLE);
+		try {
+			Cursor cursor = sqLiteDatabase.rawQuery(queryID, new String[]{String.valueOf
+					(zhiHuNewsItemInfoFromHome.id)});
+			if (cursor.getCount() > 0) {
+				praise = true;
+			}
+			cursor.close();
+		} catch (Exception e) {
+			Log.i("ZRH", e.toString());
+		}
 		return praise;
 	}
 

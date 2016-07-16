@@ -111,20 +111,20 @@
 
     </android.support.v4.widget.NestedScrollView>
 
-    <com.getbase.floatingactionbutton.FloatingActionsMenu
-        android:id="@+id/newsActivity_FAB"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="12dp"
-        android:clickable="true"
-        android:src="@mipmap/star_fab"
-        android:transitionName="transition"
-        app:elevation="5dp"
-        app:fabSize="normal"
-        app:fab_addButtonColorNormal="#607D8B"
-        app:layout_anchor="@id/newsActivity_AppBarLayout"
-        app:layout_anchorGravity="end|bottom"
-        app:pressedTranslationZ="12dp"
-        app:rippleColor="#7C4DFF"/>
+    <!--<com.getbase.floatingactionbutton.FloatingActionsMenu-->
+        <!--android:id="@+id/newsActivity_FAB"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_margin="12dp"-->
+        <!--android:clickable="true"-->
+        <!--android:src="@mipmap/star_fab"-->
+        <!--android:transitionName="transition"-->
+        <!--app:elevation="5dp"-->
+        <!--app:fabSize="normal"-->
+        <!--app:fab_addButtonColorNormal="#607D8B"-->
+        <!--app:layout_anchor="@id/newsActivity_AppBarLayout"-->
+        <!--app:layout_anchorGravity="end|bottom"-->
+        <!--app:pressedTranslationZ="12dp"-->
+        <!--app:rippleColor="#7C4DFF"/>-->
 
 </android.support.design.widget.CoordinatorLayout>
