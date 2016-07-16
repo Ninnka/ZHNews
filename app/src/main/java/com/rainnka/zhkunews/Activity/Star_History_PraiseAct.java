@@ -376,20 +376,21 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 		cursor.close();
 		if (hasPaused) {
 			checkId = -1;
-			if(tempList.size() == 0){
+			if ((tempList.size() == 0) && (zhiHuNewsItemInfoList.size() != 0)) {
 				checkId = 0;
-			}else {
+			} else {
 				for (int i = 0; i < tempList.size(); i++) {
 					if (zhiHuNewsItemInfoList.get(i).id != tempList.get(i).id) {
 						checkId = i;
 						break;
 					}
 				}
-				if(checkId == -1){
+				if (checkId == -1 && (tempList.size() != zhiHuNewsItemInfoList.size())) {
 					checkId = tempList.size();
 				}
 			}
 		} else {
+			zhiHuNewsItemInfoList.clear();
 			zhiHuNewsItemInfoList.addAll(tempList);
 		}
 
@@ -417,16 +418,16 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 		if (hasPaused) {
 			try {
 				checkId = -1;
-				if(tempList.size() == 0){
+				if ((tempList.size() == 0) && (zhiHuNewsItemInfoList.size() != 0)) {
 					checkId = 0;
-				}else {
+				} else {
 					for (int i = 0; i < tempList.size(); i++) {
 						if (zhiHuNewsItemInfoList.get(i).id != tempList.get(i).id) {
 							checkId = i;
 							break;
 						}
 					}
-					if(checkId == -1){
+					if (checkId == -1 && (tempList.size() != zhiHuNewsItemInfoList.size())) {
 						checkId = tempList.size();
 					}
 				}
@@ -437,6 +438,7 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 			}
 
 		} else {
+			zhiHuNewsItemInfoList.clear();
 			zhiHuNewsItemInfoList.addAll(tempList);
 		}
 
@@ -486,9 +488,12 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 						/*
 						* 恢复页面
 						* */
-						star_history_praiseAct.zhiHuNewsItemInfoList.remove(star_history_praiseAct.checkId);
-						star_history_praiseAct.star_history_praiseActivityRecyclerViewAdapter
-								.notifyItemRemoved(star_history_praiseAct.checkId);
+						if(star_history_praiseAct.checkId != -1){
+							star_history_praiseAct.zhiHuNewsItemInfoList.remove(star_history_praiseAct.checkId);
+							star_history_praiseAct.star_history_praiseActivityRecyclerViewAdapter
+									.notifyItemRemoved(star_history_praiseAct.checkId);
+						}
+
 
 						/*
 						* 此方法与上两行相同
