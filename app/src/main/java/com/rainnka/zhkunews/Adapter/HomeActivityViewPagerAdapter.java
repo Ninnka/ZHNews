@@ -1,6 +1,8 @@
 package com.rainnka.zhkunews.Adapter;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.rainnka.zhkunews.Activity.HomeAct;
 import com.rainnka.zhkunews.Bean.ZhiHuNewsItemInfo;
 import com.rainnka.zhkunews.R;
+import com.rainnka.zhkunews.Utility.SQLiteCreateTableHelper;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -28,6 +31,7 @@ public class HomeActivityViewPagerAdapter extends PagerAdapter {
 	List<ZhiHuNewsItemInfo> zhiHuNewsTopItemInfoList;
 	public WeakReference<AppCompatActivity> appCompatActivityWeakReference;
 	public AppCompatActivity appCompatActivity;
+	public SQLiteDatabase sqLiteDatabase;
 
 	public HomeActivityViewPagerAdapter(AppCompatActivity appCompatActivity, List<View> viewList) {
 		this.appCompatActivityWeakReference = new WeakReference<>(appCompatActivity);
@@ -92,6 +96,24 @@ public class HomeActivityViewPagerAdapter extends PagerAdapter {
 			@Override
 			public void onClick(View v) {
 				//				Snackbar.make(v, "test click", Snackbar.LENGTH_SHORT).show();
+				if(sqLiteDatabase == null){
+					sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(appCompatActivity
+							.getFilesDir().toString() + "/myInfo.db3", null);
+				}
+				sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_HISTORY_TABLE);
+				int deleteCount = sqLiteDatabase.delete("my_history","ItemId like ?",new
+						String[]{String.valueOf(zhiHuNewsTopItemInfoList.get(position).id)});
+				ContentValues contentValues = new ContentValues();
+				contentValues.put("ItemId", zhiHuNewsTopItemInfoList.get(position).id);
+				try {
+					contentValues.put("ItemImage", zhiHuNewsTopItemInfoList.get(position).images
+							.get(0));
+				} catch (Exception e) {
+					contentValues.put("ItemImage", zhiHuNewsTopItemInfoList.get(position).image);
+				}
+				contentValues.put("ItemTitle", zhiHuNewsTopItemInfoList.get(position).title);
+				sqLiteDatabase.insert("my_history", null, contentValues);
+
 				Intent intent = new Intent();
 				intent.setAction(HomeAct.INTENT_TO_NEWS_KEY);
 				Bundle bundle = new Bundle();

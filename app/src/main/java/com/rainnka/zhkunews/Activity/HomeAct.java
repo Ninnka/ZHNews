@@ -1,7 +1,9 @@
 package com.rainnka.zhkunews.Activity;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
@@ -47,6 +49,7 @@ import com.rainnka.zhkunews.Callback_Listener.onHActRecyclerItemClickListener;
 import com.rainnka.zhkunews.CustomView.HomeActivityViewPagerIndicator;
 import com.rainnka.zhkunews.R;
 import com.rainnka.zhkunews.Utility.LengthTransitionUtility;
+import com.rainnka.zhkunews.Utility.SQLiteCreateTableHelper;
 import com.rainnka.zhkunews.Utility.SnackbarUtility;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
@@ -165,6 +168,8 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 
 	private ConnectivityManager connectivityManager;
 
+	public SQLiteDatabase sqLiteDatabase;
+
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -240,7 +245,7 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 		/*
 		* 添加viewPager的切换效果
 		* */
-//		addViewPagerTransformer();
+		//		addViewPagerTransformer();
 
 		/*
 		* 为viewpager 添加 OnPageChangeListener
@@ -394,28 +399,56 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 		recyclerView.addOnItemTouchListener(new onHActRecyclerItemClickListener(recyclerView) {
 			@Override
 			public void onItemClickListener(RecyclerView.ViewHolder viewHolder) {
-				Intent intent = new Intent();
-				intent.setAction(INTENT_TO_NEWS_KEY);
-				Bundle bundle = new Bundle();
-				bundle.putSerializable(SER_KEY, homeActivityRecyclerViewAdapter
-						.zhiHuNewsItemInfoList.get(viewHolder.getAdapterPosition()));
-				intent.putExtras(bundle);
+				if (homeActivityRecyclerViewAdapter.zhiHuNewsItemInfoList.get(viewHolder
+						.getAdapterPosition()).item_layout == 1) {
+					if (sqLiteDatabase == null) {
+						sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(HomeAct.this
+								.getFilesDir().toString() + "/myInfo.db3", null);
+					}
+					sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_HISTORY_TABLE);
+					int deleteCount = sqLiteDatabase.delete("my_history","ItemId like ?",new
+							String[]{String.valueOf(zhiHuNewsLatestItemInfo.stories.get(viewHolder
+							.getAdapterPosition()).id)});
+//					if(deleteCount > 0){
+//
+//					}
+					ContentValues contentValues = new ContentValues();
+					contentValues.put("ItemId", homeActivityRecyclerViewAdapter
+							.zhiHuNewsItemInfoList.get(viewHolder.getAdapterPosition()).id);
+					try {
+						contentValues.put("ItemImage", homeActivityRecyclerViewAdapter
+								.zhiHuNewsItemInfoList.get(viewHolder.getAdapterPosition())
+								.images.get(0));
+					} catch (Exception e) {
+						contentValues.put("ItemImage", homeActivityRecyclerViewAdapter
+								.zhiHuNewsItemInfoList.get(viewHolder.getAdapterPosition()).image);
+					}
+					contentValues.put("ItemTitle", homeActivityRecyclerViewAdapter
+							.zhiHuNewsItemInfoList.get(viewHolder.getAdapterPosition()).title);
+					sqLiteDatabase.insert("my_history", null, contentValues);
 
-				startActivity(intent);
+					Intent intent = new Intent();
+					intent.setAction(INTENT_TO_NEWS_KEY);
+					Bundle bundle = new Bundle();
+					bundle.putSerializable(SER_KEY, homeActivityRecyclerViewAdapter
+							.zhiHuNewsItemInfoList.get(viewHolder.getAdapterPosition()));
+					intent.putExtras(bundle);
 
-				//				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-				//					Pair<View, String> pair = new Pair<View, String>
-				//							(floatingActionsMenu,
-				//									"transition");
-				//					ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat
-				//							.makeSceneTransitionAnimation(HomeActivity.this, pair);
-				//					Log.i("ZRH", "startActivity(intent, activityOptionsCompat.toBundle())");
-				//					startActivity(intent, activityOptionsCompat.toBundle());
-				//				} else {
-				//					Log.i("ZRH", "startActivity(intent)");
-				//					startActivity(intent);
-				//				}
+					startActivity(intent);
 
+					//				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+					//					Pair<View, String> pair = new Pair<View, String>
+					//							(floatingActionsMenu,
+					//									"transition");
+					//					ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat
+					//							.makeSceneTransitionAnimation(HomeActivity.this, pair);
+					//					Log.i("ZRH", "startActivity(intent, activityOptionsCompat.toBundle())");
+					//					startActivity(intent, activityOptionsCompat.toBundle());
+					//				} else {
+					//					Log.i("ZRH", "startActivity(intent)");
+					//					startActivity(intent);
+					//				}
+				}
 			}
 
 			@Override
@@ -819,9 +852,9 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 
 	@Override
 	public void onBackPressed() {
-		if(drawerLayout.isDrawerOpen(navigationView)){
+		if (drawerLayout.isDrawerOpen(navigationView)) {
 			drawerLayout.closeDrawer(navigationView);
-		}else {
+		} else {
 			if (BACKPRESS_STATUS) {
 				super.onBackPressed();
 			}
@@ -942,7 +975,7 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 	@Override
 	public boolean onNavigationItemSelected(MenuItem item) {
 		Intent intent;
-//		drawerLayout.closeDrawers();
+		//		drawerLayout.closeDrawers();
 		switch (item.getItemId()) {
 
 			case R.id.drawer_home:
@@ -1192,7 +1225,7 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 					* 设置viewPager的adapter
 					* viewPager状态初始化
 					* */
-//					homeAct.viewPager.setOffscreenPageLimit(0);
+					//					homeAct.viewPager.setOffscreenPageLimit(0);
 					homeAct.viewPager.setAdapter(homeAct.homeActivityViewPagerAdapter);
 					//					Log.i("ZRH", "设置viewPager的adapter");
 					homeAct.viewPager.setCurrentItem(1);

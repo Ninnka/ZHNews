@@ -6,6 +6,9 @@ package com.rainnka.zhkunews.Utility;
  */
 public class SQLiteCreateTableHelper {
 
+	public final static String CREATE_HISTORY_TABLE = "create table if not exists my_history (Id " +
+			"integer primary key, ItemId text, ItemImage text, ItemTitle text)";
+
 	public final static String CREATE_PRAISE_TABLE = "create table if not exists my_praise (Id " +
 			"integer primary key, ItemId text, ItemImage text, ItemTitle text)";
 
