@@ -121,7 +121,6 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 		* */
 		initMyItemInfoFromDatabase();
 
-
 		/*
 		* 网络访问资源
 		* */
@@ -378,6 +377,7 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 				int deleteCount = sqLiteDatabase.delete("my_history", "ItemId like ?", new
 						String[]{String.valueOf(zhiHuNewsItemInfoList.get(viewHolder
 						.getAdapterPosition()).id)});
+
 				ContentValues contentValues = new ContentValues();
 				contentValues.put("ItemId", zhiHuNewsItemInfoList.get(viewHolder
 						.getAdapterPosition()).id);
@@ -391,7 +391,9 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 				contentValues.put("ItemTitle", zhiHuNewsItemInfoList.get(viewHolder
 						.getAdapterPosition()).title);
 				sqLiteDatabase.insert("my_history", null, contentValues);
-
+//				TextView textView = (TextView) viewHolder.itemView.findViewById(R.id
+//						.star_history_praise_activity_content_recyclerview_item_checkmark);
+//				textView.setVisibility(View.VISIBLE);
 				Intent intent = new Intent();
 				intent.setAction(HomeAct.INTENT_TO_NEWS_KEY);
 				Bundle bundle = new Bundle();
@@ -521,15 +523,14 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 		cursor.close();
 		if (hasPaused) {
 			checkId = -1;
-			for (int i = 0; i < zhiHuNewsItemInfoList.size(); i++) {
-				if (zhiHuNewsItemInfoList.get(i).id == tempList.get(0).id) {
-					checkId = i;
-//					zhiHuNewsItemInfoList.remove(i);
-					break;
+			if(zhiHuNewsItemInfoList.get(0).id != tempList.get(0).id){
+				for (int i = 0; i < zhiHuNewsItemInfoList.size(); i++) {
+					if (zhiHuNewsItemInfoList.get(i).id == tempList.get(0).id) {
+						checkId = i;
+						break;
+					}
 				}
 			}
-			//			zhiHuNewsItemInfoList.add(0, tempList.get(0));
-			//			zhiHuNewsItemInfoList.
 		} else {
 			zhiHuNewsItemInfoList.clear();
 			zhiHuNewsItemInfoList.addAll(tempList);

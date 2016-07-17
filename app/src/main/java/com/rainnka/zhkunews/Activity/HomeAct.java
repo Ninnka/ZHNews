@@ -343,16 +343,17 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 		if (floatingActionsMenu.isExpanded()) {
 			floatingActionsMenu.collapse();
 		}
-		//		Log.i("ZRH","onPause");
 	}
 
 	@Override
 	protected void onDestroy() {
-		super.onDestroy();
-		//		Log.i("ZRH","onDestory");
+		if(sqLiteDatabase != null){
+			sqLiteDatabase.close();
+		}
 		mhandler.removeCallbacks(mRunnable);
 		bannerHandler.removeMessages(BANNER_SCROLL_KEY);
 		recyclerRefreshHandler.removeCallbacksAndMessages(null);
+		super.onDestroy();
 	}
 
 	@Override

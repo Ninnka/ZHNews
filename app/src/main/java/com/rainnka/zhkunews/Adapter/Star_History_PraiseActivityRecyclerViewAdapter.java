@@ -66,6 +66,8 @@ public class Star_History_PraiseActivityRecyclerViewAdapter extends RecyclerView
 		}
 	}
 
+
+
 	@Override
 	public int getItemCount() {
 		return zhiHuNewsItemInfoList.size();
@@ -98,10 +100,12 @@ public class Star_History_PraiseActivityRecyclerViewAdapter extends RecyclerView
 
 		public RecyclerViewContentViewHolder(View itemView) {
 			super(itemView);
+
 			image_iv = (ImageView) itemView.findViewById(R.id
 					.star_history_praise_activity_content_recyclerview_item_picture_iv);
 			title_tv = (TextView) itemView.findViewById(R.id
 					.star_history_praise_activity_content_recyclerview_item_content_tv);
 		}
+
 	}
 }

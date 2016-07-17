@@ -87,8 +87,6 @@ public class ProfilePageAct extends AppCompatActivity {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				if (editText_username.hasFocus()) {
-					imeManager = (InputMethodManager) getSystemService
-							(Context.INPUT_METHOD_SERVICE);
 					imeManager.showSoftInput(editText_username, InputMethodManager.RESULT_SHOWN);
 					return false;
 				}
@@ -144,6 +142,9 @@ public class ProfilePageAct extends AppCompatActivity {
 		imageView_pencil = (ImageView) findViewById(R.id.profilepage_act_pencil_ImageView);
 		editText_username = (EditText) findViewById(R.id.profilepage_act_username_EditText);
 		textViewLogout = (TextView) findViewById(R.id.profilepage_act_logout_textView);
+
+		imeManager = (InputMethodManager) getSystemService
+				(Context.INPUT_METHOD_SERVICE);
 	}
 
 	private void initSettingToolbar() {

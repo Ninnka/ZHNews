@@ -18,40 +18,57 @@
     app:cardPreventCornerOverlap="true"
     app:contentPadding="12dp">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/star_history_praise_activity_content_recyclerview_item_picture_iv"
-            android:layout_width="0dp"
-            android:layout_height="68dp"
-            android:layout_marginEnd="12dp"
-            android:layout_marginLeft="2dp"
-            android:layout_marginRight="12dp"
-            android:layout_marginStart="2dp"
-            android:layout_weight="3"
-            android:contentDescription="@string/imageViewContentDescribtion"
-            android:scaleType="centerCrop"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/star_history_praise_activity_content_recyclerview_item_picture_iv"
+                android:layout_width="0dp"
+                android:layout_height="68dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginStart="2dp"
+                android:layout_weight="3"
+                android:contentDescription="@string/imageViewContentDescribtion"
+                android:scaleType="centerCrop"/>
+
+            <TextView
+                android:id="@+id/star_history_praise_activity_content_recyclerview_item_content_tv"
+                android:layout_width="0dp"
+                android:layout_height="68dp"
+                android:layout_marginEnd="3dp"
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="3dp"
+                android:layout_marginStart="3dp"
+                android:layout_weight="6"
+                android:ellipsize="end"
+                android:gravity="start|top"
+                android:maxLines="3"
+                android:singleLine="false"
+                android:textColor="#424242"
+                android:textSize="16sp"/>
+
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/star_history_praise_activity_content_recyclerview_item_content_tv"
-            android:layout_width="0dp"
-            android:layout_height="68dp"
-            android:layout_marginEnd="3dp"
-            android:layout_marginLeft="3dp"
-            android:layout_marginRight="3dp"
-            android:layout_marginStart="3dp"
-            android:layout_weight="6"
-            android:ellipsize="end"
-            android:gravity="start|top"
-            android:maxLines="3"
-            android:singleLine="false"
-            android:textColor="#424242"
-            android:textSize="16sp"/>
+            android:id="@+id/star_history_praise_activity_content_recyclerview_item_checkmark"
+            android:focusable="false"
+            android:clickable="false"
+            android:visibility="gone"
+            android:layout_gravity="end|bottom"
+            android:background="@mipmap/checkmark"
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
 
-    </LinearLayout>
+    </FrameLayout>
+
 
 </android.support.v7.widget.CardView>
 
