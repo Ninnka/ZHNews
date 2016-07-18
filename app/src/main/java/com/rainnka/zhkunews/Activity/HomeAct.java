@@ -380,8 +380,11 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 			Snackbar.make(coordinatorLayout, "你已经成功登录", Snackbar.LENGTH_SHORT).show();
 		}
 		if (requestCode == ITENT_TO_PROFILE_REQUESTCODE && resultCode == ProfilePageAct.RESULTCODE_NORMALBACK) {
-			profile_tv.setText(sharedPreferences.getString("nickname", ""));
-			Snackbar.make(coordinatorLayout, "修改昵称成功", Snackbar.LENGTH_SHORT).show();
+			String nn = sharedPreferences.getString("nickname", "");
+			if(!profile_tv.getText().equals(nn)){
+				profile_tv.setText(nn);
+				Snackbar.make(coordinatorLayout, "修改昵称成功", Snackbar.LENGTH_SHORT).show();
+			}
 		}
 		if (requestCode == ITENT_TO_PROFILE_REQUESTCODE && resultCode == ProfilePageAct.RESULTCODE) {
 			profile_tv.setText("点击头像登录");

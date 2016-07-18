@@ -13,12 +13,17 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
+import android.util.SparseBooleanArray;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.google.gson.Gson;
 import com.rainnka.zhkunews.Adapter.Star_History_PraiseActivityRecyclerViewAdapter;
@@ -44,13 +49,16 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 	protected Toolbar toolbar;
 	protected RecyclerView recyclerView;
 	protected SwipeRefreshLayout swipeRefreshLayout;
+	protected ImageView imageView_MultChoice;
+
+	public ActionMode actionMode;
 
 	public LinearLayoutManager linearLayoutManager;
 
 	public Star_History_PraiseActivityRecyclerViewAdapter
 			star_history_praiseActivityRecyclerViewAdapter;
 
-	String title = "";
+	public String title = "";
 
 	public List<ZhiHuNewsItemInfo> zhiHuNewsItemInfoList = new ArrayList<>();
 
@@ -122,6 +130,11 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 		initMyItemInfoFromDatabase();
 
 		/*
+		* 多选按钮的点击事件
+		* */
+		initMultChoiceClickListener();
+
+		/*
 		* 网络访问资源
 		* */
 		//		swipeRefreshLayout.setRefreshing(true);
@@ -149,54 +162,6 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 		//		});
 	}
 
-	/*
-	* 初试化页面
-	* 从数据库获取信息
-	* */
-	private void initMyItemInfoFromDatabase() {
-		if (title.equals(HomeAct.STAR_KEY)) {
-			if (sqLiteDatabase == null) {
-				sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(Star_History_PraiseAct.this
-						.getFilesDir().toString() + "/myInfo.db3", null);
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						//						sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_STAR_TABLE);
-						updateStarItemInfoFromResumeOrCreate();
-						//						getStarItemInfoHandler.sendEmptyMessage(getStarItemInfoHandler_KEY);
-					}
-				}).start();
-			}
-		}
-		if (title.equals(HomeAct.PRAISE_KEY)) {
-			if (sqLiteDatabase == null) {
-				sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(Star_History_PraiseAct.this
-						.getFilesDir().toString() + "/myInfo.db3", null);
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						//						sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_PRAISE_TABLE);
-						updatePraiseItemInfoFromResumeOrCreate();
-
-					}
-				}).start();
-			}
-		}
-		if (title.equals(HomeAct.HISTORY_KEY)) {
-			if (sqLiteDatabase == null) {
-				sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(Star_History_PraiseAct.this
-						.getFilesDir().toString() + "/myInfo.db3", null);
-			}
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					//					sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_HISTORY_TABLE);
-					updateHistoryItemInfoFromResumeOrCreate();
-
-				}
-			}).start();
-		}
-	}
 
 	@Override
 	protected void onResume() {
@@ -279,12 +244,82 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 	}
 
 	@Override
+	public void onBackPressed() {
+		//		if (actionMode != null) {
+		//			recyclerViewDisableMultChoice();
+		//			destoryActionModel();
+		//			Log.i("ZRH","before recyclerViewWithdrawNormalItem()");
+		//			recyclerViewWithdrawNormalItem();
+		//		} else {
+		//			Log.i("ZRH","actionMode is not null");
+		super.onBackPressed();
+		//		}
+	}
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
+				//				if (actionMode != null) {
+				//					recyclerViewDisableMultChoice();
+				//					destoryActionModel();
+				//					Log.i("ZRH","before recyclerViewWithdrawNormalItem()");
+				//					recyclerViewWithdrawNormalItem();
+				//				} else {
+				//					Log.i("ZRH","actionMode is not null");
 				finish();
+				//				}
 		}
 		return true;
+	}
+
+	/*
+	* 初试化页面
+	* 从数据库获取信息
+	* */
+	private void initMyItemInfoFromDatabase() {
+		if (title.equals(HomeAct.STAR_KEY)) {
+			if (sqLiteDatabase == null) {
+				sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(Star_History_PraiseAct.this
+						.getFilesDir().toString() + "/myInfo.db3", null);
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						//						sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_STAR_TABLE);
+						updateStarItemInfoFromResumeOrCreate();
+						//						getStarItemInfoHandler.sendEmptyMessage(getStarItemInfoHandler_KEY);
+					}
+				}).start();
+			}
+		}
+		if (title.equals(HomeAct.PRAISE_KEY)) {
+			if (sqLiteDatabase == null) {
+				sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(Star_History_PraiseAct.this
+						.getFilesDir().toString() + "/myInfo.db3", null);
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						//						sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_PRAISE_TABLE);
+						updatePraiseItemInfoFromResumeOrCreate();
+
+					}
+				}).start();
+			}
+		}
+		if (title.equals(HomeAct.HISTORY_KEY)) {
+			if (sqLiteDatabase == null) {
+				sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(Star_History_PraiseAct.this
+						.getFilesDir().toString() + "/myInfo.db3", null);
+			}
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					//					sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_HISTORY_TABLE);
+					updateHistoryItemInfoFromResumeOrCreate();
+
+				}
+			}).start();
+		}
 	}
 
 	private void initComponent() {
@@ -298,6 +333,8 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 		swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id
 				.star_history_praiseActivity_Content_main_SwipeRefreshLayout);
 		swipeRefreshLayout.setEnabled(false);
+		imageView_MultChoice = (ImageView) findViewById(R.id
+				.star_history_praiseActivity_Content_main_MultChoice_ImageView);
 	}
 
 	private void initToolbar() {
@@ -316,6 +353,23 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 		setSupportActionBar(toolbar);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
+
+	private void initMultChoiceClickListener() {
+		if (title.equals(HomeAct.HISTORY_KEY)) {
+			imageView_MultChoice.setVisibility(View.GONE);
+		} else {
+			imageView_MultChoice.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					if (actionMode == null) {
+						createActionModel();
+						recyclerViewEnableMultChoice();
+					}
+				}
+			});
+		}
+	}
+
 
 	private void initRecyclerViewAdapter() {
 		star_history_praiseActivityRecyclerViewAdapter = new
@@ -391,17 +445,38 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 				contentValues.put("ItemTitle", zhiHuNewsItemInfoList.get(viewHolder
 						.getAdapterPosition()).title);
 				sqLiteDatabase.insert("my_history", null, contentValues);
-//				TextView textView = (TextView) viewHolder.itemView.findViewById(R.id
-//						.star_history_praise_activity_content_recyclerview_item_checkmark);
-//				textView.setVisibility(View.VISIBLE);
-				Intent intent = new Intent();
-				intent.setAction(HomeAct.INTENT_TO_NEWS_KEY);
-				Bundle bundle = new Bundle();
-				bundle.putSerializable(HomeAct.SER_KEY,
-						star_history_praiseActivityRecyclerViewAdapter.zhiHuNewsItemInfoList.get
-								(viewHolder.getAdapterPosition()));
-				intent.putExtras(bundle);
-				startActivity(intent);
+
+				if (star_history_praiseActivityRecyclerViewAdapter.getSelectable()) {
+
+					if (star_history_praiseActivityRecyclerViewAdapter.getItemChecked(viewHolder
+							.getAdapterPosition())) {
+						((Star_History_PraiseActivityRecyclerViewAdapter
+								.RecyclerViewContentViewHolder) viewHolder).check_tv.setVisibility
+								(View.GONE);
+						star_history_praiseActivityRecyclerViewAdapter.removeSelectedItem
+								(viewHolder.getAdapterPosition());
+					} else {
+						((Star_History_PraiseActivityRecyclerViewAdapter
+								.RecyclerViewContentViewHolder) viewHolder).check_tv.setVisibility
+								(View.VISIBLE);
+						star_history_praiseActivityRecyclerViewAdapter.setItemChecked(viewHolder
+								.getAdapterPosition(), true);
+					}
+					actionMode.setTitle("已选: " + star_history_praiseActivityRecyclerViewAdapter
+							.mSelectedPositions.size() + "/" +
+							star_history_praiseActivityRecyclerViewAdapter.getItemCount());
+
+				} else {
+					Intent intent = new Intent();
+					intent.setAction(HomeAct.INTENT_TO_NEWS_KEY);
+					Bundle bundle = new Bundle();
+					bundle.putSerializable(HomeAct.SER_KEY,
+							star_history_praiseActivityRecyclerViewAdapter.zhiHuNewsItemInfoList.get
+									(viewHolder.getAdapterPosition()));
+					intent.putExtras(bundle);
+					startActivity(intent);
+				}
+
 			}
 
 			@Override
@@ -411,6 +486,228 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 				}
 			}
 		});
+	}
+
+	protected void recyclerViewEnableMultChoice() {
+		star_history_praiseActivityRecyclerViewAdapter.setSelectable(true);
+	}
+
+	protected void recyclerViewDisableMultChoice() {
+		star_history_praiseActivityRecyclerViewAdapter.setSelectable(false);
+	}
+
+	protected void createActionModel() {
+		actionMode = startSupportActionMode(new ActionMode.Callback() {
+			@Override
+			public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+				if (actionMode == null) {
+					actionMode = mode;
+
+					MenuItem menuItem_delete = menu.add(0, 0x428, Menu.NONE, "");
+					menuItem_delete.setIcon(R.mipmap.delete_84px);
+					menuItem_delete.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+					menuItem_delete.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+						@Override
+						public boolean onMenuItemClick(MenuItem item) {
+							if (star_history_praiseActivityRecyclerViewAdapter.getItemCount() != 0
+									&& star_history_praiseActivityRecyclerViewAdapter
+									.mSelectedPositions.size() != 0) {
+								if (sqLiteDatabase == null) {
+									sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(Star_History_PraiseAct.this
+											.getFilesDir().toString() + "/myInfo.db3", null);
+								}
+								new Thread(new Runnable() {
+									@Override
+									public void run() {
+										if (star_history_praiseActivityRecyclerViewAdapter
+												.mSelectedPositions.size() !=
+												star_history_praiseActivityRecyclerViewAdapter.getItemCount()) {
+											deleteChoiceItem();
+										} else {
+											deleteAllItem();
+										}
+									}
+								}).start();
+							}
+							return true;
+						}
+					});
+
+					MenuItem menuItem_selectAll = menu.add(0, 0x427, Menu.NONE, "");
+					menuItem_selectAll.setIcon(R.mipmap.select_all_filled_75px);
+					menuItem_selectAll.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+					menuItem_selectAll.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+						@Override
+						public boolean onMenuItemClick(MenuItem item) {
+							if (star_history_praiseActivityRecyclerViewAdapter.getItemCount() ==
+									star_history_praiseActivityRecyclerViewAdapter.mSelectedPositions.size()) {
+								recyclerViewAllUnSelected();
+							} else {
+								recyclerViewAllSelected();
+							}
+							return true;
+						}
+					});
+					return true;
+				}
+				return false;
+			}
+
+			@Override
+			public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+				return false;
+			}
+
+			@Override
+			public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+				return false;
+			}
+
+			@Override
+			public void onDestroyActionMode(ActionMode mode) {
+				destoryActionModel();
+				recyclerViewDisableMultChoice();
+				recyclerViewWithdrawNormalItem();
+			}
+		});
+
+		actionMode.setTitle("已选: 0/" + star_history_praiseActivityRecyclerViewAdapter
+				.getItemCount());
+
+	}
+
+	protected void destoryActionModel() {
+		if (actionMode != null) {
+			actionMode.finish();
+			actionMode = null;
+		}
+	}
+
+	public void recyclerViewWithdrawNormalItem() {
+		/*
+		* 方法1
+		* 推荐使用这种方法
+		* 无刷新列表的情况下更新item的状态
+		* */
+		LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+		for (int i = 0; i < star_history_praiseActivityRecyclerViewAdapter.getItemCount(); i++) {
+			try {
+				if(star_history_praiseActivityRecyclerViewAdapter.getItemChecked(i)){
+					View view = linearLayoutManager.findViewByPosition(i);
+					if (view != null) {
+						if (recyclerView.getChildViewHolder(view) != null) {
+							Star_History_PraiseActivityRecyclerViewAdapter.RecyclerViewContentViewHolder
+									recyclerViewContentViewHolder =
+									(Star_History_PraiseActivityRecyclerViewAdapter
+											.RecyclerViewContentViewHolder) recyclerView.getChildViewHolder(view);
+							recyclerViewContentViewHolder.check_tv.setVisibility(View.GONE);
+						}
+					}
+				}
+			} catch (Exception e) {
+				Log.i("ZRH", e.toString());
+				Log.i("ZRH", e.getMessage());
+				Log.i("ZRH", e.getLocalizedMessage());
+			}
+		}
+		star_history_praiseActivityRecyclerViewAdapter.clearCheckedItem();
+
+		/*
+		* 方法2
+		* 不推荐
+		* 因为每次都会调用notifyDataSetChanged()
+		* 列表会重新刷新，如果有网络请求，体验会更差
+		* */
+		//		star_history_praiseActivityRecyclerViewAdapter.notifyDataSetChanged();
+		//		int firstVisiableItem = ((LinearLayoutManager) recyclerView.getLayoutManager())
+		//				.findFirstVisibleItemPosition();
+		//		for (int i = 0; i < star_history_praiseActivityRecyclerViewAdapter.getItemCount(); i++) {
+		//			if (i - firstVisiableItem >= 0 && i - firstVisiableItem <= 100) {
+		//				try {
+		//					if (star_history_praiseActivityRecyclerViewAdapter.getItemChecked
+		//							(i - firstVisiableItem)) {
+		//						View view = recyclerView.getChildAt(i - firstVisiableItem);
+		//						if (view != null) {
+		//							if (recyclerView.getChildViewHolder(view) != null) {
+		//								Star_History_PraiseActivityRecyclerViewAdapter.RecyclerViewContentViewHolder
+		//										recyclerViewContentViewHolder =
+		//										(Star_History_PraiseActivityRecyclerViewAdapter
+		//												.RecyclerViewContentViewHolder) recyclerView.getChildViewHolder(view);
+		//								recyclerViewContentViewHolder.check_tv.setVisibility(View.GONE);
+		//							}
+		//						}
+		//					}
+		//				} catch (Exception e) {
+		//					Log.i("ZRH", e.toString());
+		//					Log.i("ZRH", e.getMessage());
+		//					Log.i("ZRH", e.getLocalizedMessage());
+		//				}
+		//
+		//			}
+		//		}
+	}
+
+	public void recyclerViewAllSelected() {
+		/*
+		* 方法1
+		* 推荐使用
+		* 理由同上
+		* */
+		star_history_praiseActivityRecyclerViewAdapter.notifyDataSetChanged();
+		star_history_praiseActivityRecyclerViewAdapter.setAllItemChecked();
+		LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+		for (int i = 0; i < star_history_praiseActivityRecyclerViewAdapter.getItemCount(); i++) {
+			try {
+				View view = linearLayoutManager.findViewByPosition(i);
+				if (view != null) {
+					if (recyclerView.getChildViewHolder(view) != null) {
+						Star_History_PraiseActivityRecyclerViewAdapter.RecyclerViewContentViewHolder
+								recyclerViewContentViewHolder =
+								(Star_History_PraiseActivityRecyclerViewAdapter
+										.RecyclerViewContentViewHolder) recyclerView.getChildViewHolder(view);
+						recyclerViewContentViewHolder.check_tv.setVisibility(View.VISIBLE);
+					}
+				}
+			} catch (Exception e) {
+				Log.i("ZRH", e.toString());
+				Log.i("ZRH", e.getMessage());
+				Log.i("ZRH", e.getLocalizedMessage());
+			}
+		}
+
+		/*
+		* 方法2
+		* 不推荐
+		* 理由同上
+		* */
+//		star_history_praiseActivityRecyclerViewAdapter.notifyDataSetChanged();
+//		int firstVisiableItem = ((LinearLayoutManager) recyclerView.getLayoutManager())
+//				.findFirstVisibleItemPosition();
+//		for (int i = 0; i < star_history_praiseActivityRecyclerViewAdapter.getItemCount(); i++) {
+//			try {
+//				if (i - firstVisiableItem >= 0) {
+//					View view = recyclerView.getChildAt(i - firstVisiableItem);
+//					if (view != null) {
+//						if (recyclerView.getChildViewHolder(view) != null) {
+//							Star_History_PraiseActivityRecyclerViewAdapter
+//									.RecyclerViewContentViewHolder recyclerViewContentViewHolder =
+//									(Star_History_PraiseActivityRecyclerViewAdapter
+//											.RecyclerViewContentViewHolder) recyclerView.getChildViewHolder(view);
+//							recyclerViewContentViewHolder.check_tv.setVisibility(View.VISIBLE);
+//						}
+//					}
+//				}
+//			} catch (Exception e) {
+//				Log.i("ZRH", e.toString());
+//				Log.i("ZRH", e.getMessage());
+//				Log.i("ZRH", e.getLocalizedMessage());
+//			}
+//		}
+	}
+
+	public void recyclerViewAllUnSelected() {
+		star_history_praiseActivityRecyclerViewAdapter.clearCheckedItem();
+
 	}
 
 	protected void updateStarItemInfoFromResumeOrCreate() {
@@ -523,7 +820,7 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 		cursor.close();
 		if (hasPaused) {
 			checkId = -1;
-			if(zhiHuNewsItemInfoList.get(0).id != tempList.get(0).id){
+			if (zhiHuNewsItemInfoList.get(0).id != tempList.get(0).id) {
 				for (int i = 0; i < zhiHuNewsItemInfoList.size(); i++) {
 					if (zhiHuNewsItemInfoList.get(i).id == tempList.get(0).id) {
 						checkId = i;
@@ -539,6 +836,76 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 
 		loadZhiHuNewsItemHandler.sendEmptyMessage(0x981);
 
+	}
+
+	protected void deleteChoiceItem() {
+		//		sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_STAR_TABLE);
+		//		sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_PRAISE_TABLE);
+		SparseBooleanArray sparseBooleanArray = star_history_praiseActivityRecyclerViewAdapter
+				.mSelectedPositions;
+		for (int i = 0; i < sparseBooleanArray.size(); i++) {
+			int id = star_history_praiseActivityRecyclerViewAdapter.zhiHuNewsItemInfoList.get
+					(sparseBooleanArray.keyAt(i)).id;
+			if (title.equals(HomeAct.STAR_KEY)) {
+				sqLiteDatabase.delete("my_star", "ItemId like ?", new String[]{String.valueOf(id)});
+			} else {
+				sqLiteDatabase.delete("my_praise", "ItemId like ?", new String[]{String.valueOf(id)});
+			}
+		}
+		if (star_history_praiseActivityRecyclerViewAdapter.mSelectedPositions.size() > 0) {
+			List<Integer> list = new ArrayList<>();
+			for (int i = 0; i < star_history_praiseActivityRecyclerViewAdapter.mSelectedPositions.size(); i++) {
+				//				star_history_praiseActivityRecyclerViewAdapter
+				//						.removeSelectedItem
+				//								(star_history_praiseActivityRecyclerViewAdapter.mSelectedPositions.keyAt(i));
+				int tempPosition = star_history_praiseActivityRecyclerViewAdapter
+						.mSelectedPositions.keyAt(i);
+				if (i == 0) {
+					list.add(tempPosition);
+				} else {
+					for (int j = 0; j < list.size(); j++) {
+						if (tempPosition > list.get(j)) {
+							list.add(j, tempPosition);
+							break;
+						}
+						if (j == list.size()) {
+							list.add(tempPosition);
+						}
+					}
+				}
+			}
+			star_history_praiseActivityRecyclerViewAdapter.clearCheckedItem();
+			for (int i = 0; i < list.size(); i++) {
+				star_history_praiseActivityRecyclerViewAdapter.zhiHuNewsItemInfoList.remove
+						(list.get(i).intValue());
+				Message msg = new Message();
+				Bundle bundle = new Bundle();
+				bundle.putInt("position", list.get(i));
+				msg.setData(bundle);
+				msg.what = 0x888;
+				loadZhiHuNewsItemHandler.sendMessage(msg);
+			}
+		}
+
+	}
+
+	protected void deleteAllItem() {
+		if (title.equals(HomeAct.STAR_KEY)) {
+			sqLiteDatabase.delete("my_star", null, null);
+		} else {
+			sqLiteDatabase.delete("my_praise", null, null);
+		}
+		int deleteCount = star_history_praiseActivityRecyclerViewAdapter.zhiHuNewsItemInfoList.size();
+		//		Log.i("ZRH", "s: " + star_history_praiseActivityRecyclerViewAdapter.mSelectedPositions.size());
+		//		Log.i("ZRH", "z: " + star_history_praiseActivityRecyclerViewAdapter.getItemCount());
+		star_history_praiseActivityRecyclerViewAdapter.zhiHuNewsItemInfoList.clear();
+		star_history_praiseActivityRecyclerViewAdapter.clearCheckedItem();
+		Message msg = new Message();
+		Bundle bundle = new Bundle();
+		bundle.putInt("deleteCount", deleteCount);
+		msg.setData(bundle);
+		msg.what = 0x999;
+		loadZhiHuNewsItemHandler.sendMessage(msg);
 	}
 
 	/*
@@ -571,7 +938,6 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 									.notifyItemRemoved(star_history_praiseAct.checkId);
 						}
 
-
 						/*
 						* 此方法与上两行相同
 						* */
@@ -590,7 +956,7 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 					break;
 				case 0x981:
 					if (star_history_praiseAct.hasPaused) {
-						if(star_history_praiseAct.checkId != -1){
+						if (star_history_praiseAct.checkId != -1) {
 							star_history_praiseAct.zhiHuNewsItemInfoList.add(0, star_history_praiseAct
 									.zhiHuNewsItemInfoList.get(star_history_praiseAct.checkId));
 							star_history_praiseAct.star_history_praiseActivityRecyclerViewAdapter
@@ -606,6 +972,25 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 						star_history_praiseAct.recyclerView.setAdapter(star_history_praiseAct
 								.star_history_praiseActivityRecyclerViewAdapter);
 					}
+
+					break;
+				case 0x888:
+					star_history_praiseAct.star_history_praiseActivityRecyclerViewAdapter
+							.notifyItemRemoved(msg.getData().getInt("position"));
+					star_history_praiseAct.actionMode.setTitle("已选: " + star_history_praiseAct
+							.star_history_praiseActivityRecyclerViewAdapter.mSelectedPositions
+							.size() + "/" + star_history_praiseAct
+							.star_history_praiseActivityRecyclerViewAdapter.getItemCount());
+					break;
+				case 0x999:
+					star_history_praiseAct.star_history_praiseActivityRecyclerViewAdapter
+							.notifyItemRangeRemoved(0, msg.getData().getInt("deleteCount"));
+					star_history_praiseAct.actionMode.setTitle("已选: " + star_history_praiseAct
+							.star_history_praiseActivityRecyclerViewAdapter.mSelectedPositions
+							.size() + "/" + star_history_praiseAct
+							.star_history_praiseActivityRecyclerViewAdapter.getItemCount());
+					break;
+				case 0x1986:
 
 					break;
 			}

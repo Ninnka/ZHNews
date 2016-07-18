@@ -21,6 +21,9 @@
         <item name="android:windowAllowEnterTransitionOverlap">false</item>
         <item name="android:windowAllowReturnTransitionOverlap">false</item>
 
+        <!-- 防止actionMode情况下 toolbar移位 -->
+        <item name="windowActionModeOverlay">true</item>
+
     </style>
 
     <style name="AppTheme.NoActionBar" parent="AppTheme">

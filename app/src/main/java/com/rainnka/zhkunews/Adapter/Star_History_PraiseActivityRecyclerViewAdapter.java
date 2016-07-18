@@ -5,6 +5,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.rainnka.zhkunews.Activity.HomeAct;
 import com.rainnka.zhkunews.Activity.Star_History_PraiseAct;
 import com.rainnka.zhkunews.Bean.ZhiHuNewsItemInfo;
 import com.rainnka.zhkunews.R;
@@ -31,6 +33,9 @@ public class Star_History_PraiseActivityRecyclerViewAdapter extends RecyclerView
 	public AppCompatActivity appCompatActivity;
 	public LayoutInflater layoutInflater;
 	public List<ZhiHuNewsItemInfo> zhiHuNewsItemInfoList;
+
+	public boolean mIsSelected = false;
+	public SparseBooleanArray mSelectedPositions = new SparseBooleanArray();
 
 	public SQLiteDatabase sqLiteDatabase;
 
@@ -58,15 +63,18 @@ public class Star_History_PraiseActivityRecyclerViewAdapter extends RecyclerView
 			RecyclerViewContentViewHolder recyclerViewContentViewHolder =
 					(RecyclerViewContentViewHolder) holder;
 			recyclerViewContentViewHolder.title_tv.setText(zhiHuNewsItemInfo.title);
+			if (getItemChecked(position)) {
+				recyclerViewContentViewHolder.check_tv.setVisibility(View.VISIBLE);
+			} else {
+				recyclerViewContentViewHolder.check_tv.setVisibility(View.GONE);
+			}
 			Glide.with(appCompatActivity)
 					.load(zhiHuNewsItemInfo.images.get(0))
-					.crossFade(500)
+					.crossFade(0)
 					.skipMemoryCache(true)
 					.into(recyclerViewContentViewHolder.image_iv);
 		}
 	}
-
-
 
 	@Override
 	public int getItemCount() {
@@ -81,10 +89,19 @@ public class Star_History_PraiseActivityRecyclerViewAdapter extends RecyclerView
 				sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(this.appCompatActivity
 						.getFilesDir().toString() + "/myInfo.db3", null);
 			}
-			sqLiteDatabase.delete("my_star", "ItemId like ?", new String[]{String.valueOf
-					(itemId)});
-			SnackbarUtility.getSnackbarDefault(((Star_History_PraiseAct) appCompatActivity)
-					.coordinatorLayout, "删除成功", Snackbar.LENGTH_SHORT).show();
+			int deleteCount = 0;
+			if (((Star_History_PraiseAct) appCompatActivity).title.equals(HomeAct.STAR_KEY)) {
+				deleteCount = sqLiteDatabase.delete("my_star", "ItemId like ?", new
+						String[]{String.valueOf
+						(itemId)});
+			} else {
+				deleteCount = sqLiteDatabase.delete("my_praise", "ItemId like ?", new String[]{String.valueOf
+						(itemId)});
+			}
+			if (deleteCount > 0) {
+				SnackbarUtility.getSnackbarDefault(((Star_History_PraiseAct) appCompatActivity)
+						.coordinatorLayout, "删除成功", Snackbar.LENGTH_SHORT).show();
+			}
 		} catch (Exception e) {
 			Log.i("ZRH", "exception in onItemDismiss" + e.toString());
 			Log.i("ZRH", "exception in onItemDismiss" + e.getMessage());
@@ -93,10 +110,41 @@ public class Star_History_PraiseActivityRecyclerViewAdapter extends RecyclerView
 		notifyItemRemoved(targetPosition);
 	}
 
+	public void setSelectable(boolean selectable) {
+		mIsSelected = selectable;
+	}
+
+	public boolean getSelectable() {
+		return mIsSelected;
+	}
+
+	public void setItemChecked(int position, boolean checked) {
+		mSelectedPositions.put(position, checked);
+	}
+
+	public boolean getItemChecked(int position) {
+		return mSelectedPositions.get(position, false);
+	}
+
+	public void removeSelectedItem(int position) {
+		mSelectedPositions.delete(position);
+	}
+
+	public void setAllItemChecked() {
+		for (int i = 0; i < zhiHuNewsItemInfoList.size(); i++) {
+			setItemChecked(i, true);
+		}
+	}
+
+	public void clearCheckedItem() {
+		mSelectedPositions.clear();
+	}
+
 	public static class RecyclerViewContentViewHolder extends RecyclerView.ViewHolder {
 
 		public ImageView image_iv;
 		public TextView title_tv;
+		public TextView check_tv;
 
 		public RecyclerViewContentViewHolder(View itemView) {
 			super(itemView);
@@ -105,6 +153,8 @@ public class Star_History_PraiseActivityRecyclerViewAdapter extends RecyclerView
 					.star_history_praise_activity_content_recyclerview_item_picture_iv);
 			title_tv = (TextView) itemView.findViewById(R.id
 					.star_history_praise_activity_content_recyclerview_item_content_tv);
+			check_tv = (TextView) itemView.findViewById(R.id
+					.star_history_praise_activity_content_recyclerview_item_checkmark);
 		}
 
 	}
