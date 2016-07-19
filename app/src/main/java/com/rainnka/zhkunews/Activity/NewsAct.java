@@ -63,6 +63,7 @@ public class NewsAct extends AppCompatActivity {
 
 	public ZhiHuNewsItemInfo zhiHuNewsItemInfoFromHome;
 
+	public StarOrPraiseHandler starOrPraiseHandler;
 	public WebViewHandler webViewHandler;
 
 	public String header = "<html><head><link href=\"%s\" type=\"text/css\" " +
@@ -148,6 +149,16 @@ public class NewsAct extends AppCompatActivity {
 		gson = new Gson();
 
 		/*
+		* 判断是否收藏
+		* */
+		judgeStarState();
+
+		/*
+		* 判断是否点赞
+		* */
+		judgePraiseState();
+
+		/*
 		* 初始化okhttpclient相关
 		* */
 		okHttpClient = new OkHttpClient();
@@ -159,25 +170,9 @@ public class NewsAct extends AppCompatActivity {
 		call = okHttpClient.newCall(request);
 
 		/*
-		* 根据获取的信息类加载头布局实际信息
-		* */
-		//		loadCollapsingToolbarContent();
-
-		/*
 		* 格局获得信息类加载webview中的主要内容
 		* */
 		loadWebViewContent();
-
-
-		/*
-		* 判断是否收藏
-		* */
-		judgeStarState();
-
-		/*
-		* 判断是否点赞
-		* */
-		judgePraiseState();
 
 	}
 
@@ -185,32 +180,37 @@ public class NewsAct extends AppCompatActivity {
 		imageView_star.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (sqLiteDatabase == null) {
-					try {
-						sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(NewsAct.this
-								.getFilesDir().toString() + "/myInfo.db3", null);
-					} catch (Exception e) {
-						Log.i("ZRH", e.toString());
+				starOrPraiseHandler.post(new Runnable() {
+					@Override
+					public void run() {
+						if (sqLiteDatabase == null) {
+							try {
+								sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(NewsAct.this
+										.getFilesDir().toString() + "/myInfo.db3", null);
+							} catch (Exception e) {
+								Log.i("ZRH", e.toString());
+							}
+						}
+						if (isStar()) {
+							sqLiteDatabase.delete("my_star", "ItemId like ?", new
+									String[]{String.valueOf(zhiHuNewsItemInfoFromHome.id)});
+							starOrPraiseHandler.sendEmptyMessage(0x4693);
+						} else {
+							sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_STAR_TABLE);
+							ContentValues contentValues = new ContentValues();
+							contentValues.put("ItemId", zhiHuNewsItemInfoFromHome.id);
+							try {
+								contentValues.put("ItemImage", zhiHuNewsItemInfoFromHome.images.get(0));
+							} catch (Exception e) {
+								contentValues.put("ItemImage", zhiHuNewsItemInfoFromHome.image);
+							}
+							contentValues.put("ItemTitle", zhiHuNewsItemInfoFromHome.title);
+							sqLiteDatabase.insert("my_star", null, contentValues);
+							starOrPraiseHandler.sendEmptyMessage(0x4692);
+						}
 					}
-				}
-
-				if (isStar()) {
-					sqLiteDatabase.delete("my_star", "ItemId like ?", new
-							String[]{String.valueOf(zhiHuNewsItemInfoFromHome.id)});
-					imageView_star.setImageResource(R.drawable.unstared);
-				} else {
-					sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_STAR_TABLE);
-					ContentValues contentValues = new ContentValues();
-					contentValues.put("ItemId", zhiHuNewsItemInfoFromHome.id);
-					try{
-						contentValues.put("ItemImage", zhiHuNewsItemInfoFromHome.images.get(0));
-					}catch (Exception e){
-						contentValues.put("ItemImage", zhiHuNewsItemInfoFromHome.image);
-					}
-					contentValues.put("ItemTitle", zhiHuNewsItemInfoFromHome.title);
-					sqLiteDatabase.insert("my_star", null, contentValues);
-					imageView_star.setImageResource(R.drawable.stared);
-				}
+				});
+//				new Thread().start();
 
 				//测试用
 				//				Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM my_star", null);
@@ -242,19 +242,19 @@ public class NewsAct extends AppCompatActivity {
 				if (isPraise()) {
 					sqLiteDatabase.delete("my_praise", "ItemId like ?", new
 							String[]{String.valueOf(zhiHuNewsItemInfoFromHome.id)});
-					imageView_praise.setImageResource(R.drawable.ungood);
+					starOrPraiseHandler.sendEmptyMessage(0x9418);
 				} else {
 					sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_PRAISE_TABLE);
 					ContentValues contentValues = new ContentValues();
 					contentValues.put("ItemId", zhiHuNewsItemInfoFromHome.id);
-					try{
+					try {
 						contentValues.put("ItemImage", zhiHuNewsItemInfoFromHome.images.get(0));
-					}catch (Exception e){
+					} catch (Exception e) {
 						contentValues.put("ItemImage", zhiHuNewsItemInfoFromHome.image);
 					}
 					contentValues.put("ItemTitle", zhiHuNewsItemInfoFromHome.title);
 					sqLiteDatabase.insert("my_praise", null, contentValues);
-					imageView_praise.setImageResource(R.drawable.good);
+					starOrPraiseHandler.sendEmptyMessage(0x9419);
 				}
 			}
 		});
@@ -286,12 +286,12 @@ public class NewsAct extends AppCompatActivity {
 	}
 
 	private void initHandler() {
+		starOrPraiseHandler = new StarOrPraiseHandler(NewsAct.this);
 		webViewHandler = new WebViewHandler(NewsAct.this);
 	}
 
 	private void getInfomationFromIntent() {
 		Intent intent = getIntent();
-		//		homeActivityRecyclerViewItemInfo = (HomeActivityRecyclerViewItemInfo) intent.getSerializableExtra(HomeActivity.SER_KEY);
 		zhiHuNewsItemInfoFromHome = (ZhiHuNewsItemInfo) intent.getSerializableExtra(HomeAct.SER_KEY);
 	}
 
@@ -299,20 +299,16 @@ public class NewsAct extends AppCompatActivity {
 	* 根据获取的信息类加载头布局实际信息
 	* */
 	private void loadCollapsingToolbarContent() {
-		//		imageView.setImageResource();
 		Glide.with(NewsAct.this)
 				.load(zhiHuNewsItemInfo.image)
 				.into(imageView);
 		collapsingToolbarLayout.setTitle(zhiHuNewsItemInfo.title);
-		//		textView.setText(homeActivityRecyclerViewItemInfo.title);
 	}
 
 	/*
 	* 格局获得信息类加载webview中的主要内容
 	* */
 	private void loadWebViewContent() {
-		//		webView.loadUrl("http://news-at.zhihu.com/api/4/news/8288126");
-		//		webView.loadDataWithBaseURL();
 		call.enqueue(new Callback() {
 			@Override
 			public void onFailure(Request request, IOException e) {
@@ -384,15 +380,31 @@ public class NewsAct extends AppCompatActivity {
 	}
 
 	private void judgeStarState() {
-		if (isStar()) {
-			imageView_star.setImageResource(R.drawable.stared);
-		}
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				Message msg = new Message();
+				Bundle bundle = new Bundle();
+				bundle.putBoolean("isStar", isStar());
+				msg.setData(bundle);
+				msg.what = 0x5555;
+				starOrPraiseHandler.sendMessage(msg);
+			}
+		}).start();
 	}
 
 	private void judgePraiseState() {
-		if (isPraise()) {
-			imageView_praise.setImageResource(R.drawable.good);
-		}
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				Message msg = new Message();
+				Bundle bundle = new Bundle();
+				bundle.putBoolean("isPraise", isStar());
+				msg.setData(bundle);
+				msg.what = 0x5556;
+				starOrPraiseHandler.sendMessage(msg);
+			}
+		}).start();
 	}
 
 	@Override
@@ -407,17 +419,19 @@ public class NewsAct extends AppCompatActivity {
 
 	@Override
 	protected void onDestroy() {
-		if (webView != null) {
-			webView.removeAllViews();
-			webView.onPause();
-			webView.destroy();
-		}
-		super.onDestroy();
-		webViewHandler.removeMessages(0x123);
+		starOrPraiseHandler.removeCallbacksAndMessages(null);
 		if (sqLiteDatabase != null) {
 			sqLiteDatabase.close();
 		}
+		webViewHandler.removeMessages(0x123);
 		sqLiteDatabase = null;
+		if (webView != null) {
+			webView.removeAllViews();
+//			webView.onPause();
+			webView.destroy();
+		}
+		webView = null;
+		super.onDestroy();
 	}
 
 	@Override
@@ -435,24 +449,6 @@ public class NewsAct extends AppCompatActivity {
 				//				}
 
 				break;
-			//			case R.id.news_activity_menu_good:
-			//				if (!isGood) {
-			//					item.setIcon(R.drawable.good);
-			//					isGood = true;
-			//				} else {
-			//					item.setIcon(R.drawable.ungood);
-			//					isGood = false;
-			//				}
-			//				break;
-			//			case R.id.news_activity_menu_star:
-			//				if (!isStar) {
-			//					item.setIcon(R.drawable.stared);
-			//					isStar = true;
-			//				} else {
-			//					item.setIcon(R.drawable.unstared);
-			//					isStar = false;
-			//				}
-			//				break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -476,6 +472,56 @@ public class NewsAct extends AppCompatActivity {
 		return super.onCreateOptionsMenu(menu);
 	}
 
+	/*
+	* 静态内部类--处理数据库返回的信息
+	* 判断是否收藏或点赞
+	* */
+	static class StarOrPraiseHandler extends Handler{
+		WeakReference<NewsAct> newsActivityWeakReference;
+		NewsAct newsAct;
+
+		public StarOrPraiseHandler(NewsAct newsAct) {
+			this.newsActivityWeakReference = new WeakReference<>(newsAct);
+			this.newsAct = this.newsActivityWeakReference.get();
+		}
+
+		@Override
+		public void handleMessage(Message msg) {
+			switch (msg.what){
+				case 0x5555:
+					if(msg.getData().getBoolean("isStar")){
+						newsAct.imageView_star.setImageResource(R.drawable.stared);
+					}else {
+						newsAct.imageView_star.setImageResource(R.drawable.unstared);
+					}
+					break;
+				case 0x5556:
+					if(msg.getData().getBoolean("isPraise")){
+						newsAct.imageView_praise.setImageResource(R.drawable.good);
+					}else {
+						newsAct.imageView_praise.setImageResource(R.drawable.ungood);
+					}
+					break;
+				case 0x4692:
+					newsAct.imageView_star.setImageResource(R.drawable.stared);
+					break;
+				case 0x4693:
+					newsAct.imageView_star.setImageResource(R.drawable.unstared);
+					break;
+				case 0x9418:
+					newsAct.imageView_praise.setImageResource(R.drawable.good);
+					break;
+				case 0x9419:
+					newsAct.imageView_praise.setImageResource(R.drawable.ungood);
+					break;
+			}
+		}
+	}
+
+	/*
+	* 静态内部类--处理返回的json信息
+	* 加载webVie内容
+	* */
 	static class WebViewHandler extends Handler {
 
 		WeakReference<NewsAct> newsActivityWeakReference;

@@ -27,6 +27,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.transition.Fade;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -333,7 +334,6 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 		if (isLoadBanner) {
 			bannerStartAutoScroll();
 		}
-		//		Log.i("ZRH","onResume");
 	}
 
 	@Override
@@ -347,7 +347,7 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 
 	@Override
 	protected void onDestroy() {
-		if(sqLiteDatabase != null){
+		if (sqLiteDatabase != null) {
 			sqLiteDatabase.close();
 		}
 		mhandler.removeCallbacks(mRunnable);
@@ -381,7 +381,7 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 		}
 		if (requestCode == ITENT_TO_PROFILE_REQUESTCODE && resultCode == ProfilePageAct.RESULTCODE_NORMALBACK) {
 			String nn = sharedPreferences.getString("nickname", "");
-			if(!profile_tv.getText().equals(nn)){
+			if (!profile_tv.getText().equals(nn)) {
 				profile_tv.setText(nn);
 				Snackbar.make(coordinatorLayout, "修改昵称成功", Snackbar.LENGTH_SHORT).show();
 			}
@@ -405,31 +405,53 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 			public void onItemClickListener(RecyclerView.ViewHolder viewHolder) {
 				if (homeActivityRecyclerViewAdapter.zhiHuNewsItemInfoList.get(viewHolder
 						.getAdapterPosition()).item_layout == 1) {
-					if (sqLiteDatabase == null) {
-						sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(HomeAct.this
-								.getFilesDir().toString() + "/myInfo.db3", null);
-					}
-					sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_HISTORY_TABLE);
-					int deleteCount = sqLiteDatabase.delete("my_history","ItemId like ?",new
-							String[]{String.valueOf(zhiHuNewsLatestItemInfo.stories.get(viewHolder
-							.getAdapterPosition()).id)});
-//					if(deleteCount > 0){
-//
-//					}
-					ContentValues contentValues = new ContentValues();
-					contentValues.put("ItemId", homeActivityRecyclerViewAdapter
-							.zhiHuNewsItemInfoList.get(viewHolder.getAdapterPosition()).id);
-					try {
-						contentValues.put("ItemImage", homeActivityRecyclerViewAdapter
-								.zhiHuNewsItemInfoList.get(viewHolder.getAdapterPosition())
-								.images.get(0));
-					} catch (Exception e) {
-						contentValues.put("ItemImage", homeActivityRecyclerViewAdapter
-								.zhiHuNewsItemInfoList.get(viewHolder.getAdapterPosition()).image);
-					}
-					contentValues.put("ItemTitle", homeActivityRecyclerViewAdapter
-							.zhiHuNewsItemInfoList.get(viewHolder.getAdapterPosition()).title);
-					sqLiteDatabase.insert("my_history", null, contentValues);
+					final ZhiHuNewsItemInfo temp_zhiHuNewsItemInfo = homeActivityRecyclerViewAdapter
+							.zhiHuNewsItemInfoList.get(viewHolder.getAdapterPosition());
+					new Thread(new Runnable() {
+						@Override
+						public void run() {
+							if (sqLiteDatabase == null) {
+								sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(HomeAct.this
+										.getFilesDir().toString() + "/myInfo.db3", null);
+							}
+							sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_HISTORY_TABLE);
+							sqLiteDatabase.beginTransaction();
+							try{
+								sqLiteDatabase.beginTransaction();
+								sqLiteDatabase.delete("my_history", "ItemId like ?", new
+										String[]{String.valueOf(temp_zhiHuNewsItemInfo.id)});
+								sqLiteDatabase.setTransactionSuccessful();
+							}catch (Exception e){
+								Log.i("ZRH", e.getStackTrace().toString());
+								Log.i("ZRH", e.getMessage());
+								Log.i("ZRH", e.toString());
+							}finally {
+								sqLiteDatabase.endTransaction();
+							}
+
+
+							ContentValues contentValues = new ContentValues();
+							contentValues.put("ItemId", temp_zhiHuNewsItemInfo.id);
+							try {
+								contentValues.put("ItemImage", temp_zhiHuNewsItemInfo
+										.images.get(0));
+							} catch (Exception e) {
+								contentValues.put("ItemImage", temp_zhiHuNewsItemInfo.image);
+							}
+							contentValues.put("ItemTitle", temp_zhiHuNewsItemInfo.title);
+							try{
+								sqLiteDatabase.beginTransaction();
+								sqLiteDatabase.insert("my_history", null, contentValues);
+								sqLiteDatabase.setTransactionSuccessful();
+							}catch (Exception e){
+								Log.i("ZRH", e.getStackTrace().toString());
+								Log.i("ZRH", e.getMessage());
+								Log.i("ZRH", e.toString());
+							}finally {
+								sqLiteDatabase.endTransaction();
+							}
+						}
+					}).start();
 
 					Intent intent = new Intent();
 					intent.setAction(INTENT_TO_NEWS_KEY);
@@ -555,11 +577,6 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 	* 侧栏头像点击事件
 	* */
 	private void initDrawerNavigationProfileOnClickListener() {
-		//		View HeaderView = navigationView.inflateHeaderView(R.layout.home_activity_drawer_header);
-		//		profile_iv = (ImageView) HeaderView.findViewById(R.id
-		//				.home_activity_drawer_header_login_info_profile_iv);
-
-
 		profile_iv.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -577,15 +594,6 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 				}
 			}
 		});
-		//		profile_iv.setOnClickListener(new View.OnClickListener() {
-		//			@Override
-		//			public void onClick(View v) {
-		//				drawerLayout.closeDrawer(navigationView);
-		//				Snackbar.make(coordinatorLayout, "你已经成功登录", Snackbar.LENGTH_SHORT).show();
-		//				navigationView.getMenu().setGroupVisible(R.id.group2, true);
-		//				profile_tv.setText("admin(假定账号)");
-		//			}
-		//		});
 	}
 
 	/*
@@ -686,7 +694,6 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 				Snackbar snackbar = SnackbarUtility.getSnackbarDefault(coordinatorLayout,
 						"咦，没有可用的网络吔", 3000);
 				snackbar.show();
-				//				Log.i("ZRH", "无可用网络");
 				return false;
 			}
 		}
@@ -841,15 +848,12 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 		Date date_current = null;
 		try {
 			date_current = simpleDateFormat.parse(currentDate);
-			//			Log.i("ZRH", "date_current: " + date_current);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 		calendar.setTime(date_current);
 		int day = calendar.get(Calendar.DATE);
 		calendar.set(Calendar.DATE, day - 1);
-		//		Log.i("ZRH", "simpleDateFormat.format(calendar.getTime()): " + simpleDateFormat.format
-		//				(calendar.getTime()));
 		return simpleDateFormat.format(calendar.getTime());
 	}
 
@@ -918,7 +922,6 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 			call.enqueue(new Callback() {
 				@Override
 				public void onFailure(Request request, IOException e) {
-					//					Log.i("ZRH", "onFailure in onRefresh for latest");
 					Snackbar snackbar = SnackbarUtility.getSnackbarDefault(coordinatorLayout,
 							"咦，网络不太顺畅吔", 3000);
 					snackbar.show();
@@ -928,7 +931,6 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 				@Override
 				public void onResponse(Response response) throws IOException {
 					if (response.code() == 200) {
-						//						Log.i("ZRH", "success in access url: " + response.request().urlString());
 						zhiHuNewsLatestItemInfo_new = gson.fromJson(response.body().string(),
 								ZhiHuNewsLatestItemInfo.class);
 						Message message = new Message();
@@ -1111,12 +1113,6 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 
 		}
 	}
-
-	//	@Override
-	//	public void onNicknameChanged() {
-	//		profile_tv.setText(sharedPreferences.getString("nickname",""));
-	//	}
-
 
 	/*
 	* 静态内部类 BannerHandler
@@ -1309,8 +1305,6 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 						SnackbarUtility.getSnackbarDefault(homeAct.coordinatorLayout,
 								"成功更新" + tempList.size() + "条日报", 2000).show();
 					} else {
-						//						Snackbar.make(homeActivity.coordinatorLayout, "已经是最新日报", Snackbar
-						//								.LENGTH_SHORT).show();
 						SnackbarUtility.getSnackbarLight(homeAct.coordinatorLayout,
 								"已经是最新日报", Snackbar.LENGTH_SHORT);
 					}

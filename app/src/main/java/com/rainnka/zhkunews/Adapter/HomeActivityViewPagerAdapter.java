@@ -95,13 +95,12 @@ public class HomeActivityViewPagerAdapter extends PagerAdapter {
 		view.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				//				Snackbar.make(v, "test click", Snackbar.LENGTH_SHORT).show();
 				if(sqLiteDatabase == null){
 					sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(appCompatActivity
 							.getFilesDir().toString() + "/myInfo.db3", null);
 				}
 				sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_HISTORY_TABLE);
-				int deleteCount = sqLiteDatabase.delete("my_history","ItemId like ?",new
+				sqLiteDatabase.delete("my_history","ItemId like ?",new
 						String[]{String.valueOf(zhiHuNewsTopItemInfoList.get(position).id)});
 				ContentValues contentValues = new ContentValues();
 				contentValues.put("ItemId", zhiHuNewsTopItemInfoList.get(position).id);
