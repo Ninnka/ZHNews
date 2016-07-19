@@ -112,7 +112,6 @@ public class NewsAct extends AppCompatActivity {
 		* */
 		if (Build.VERSION.SDK_INT == 19) {
 			appBarLayout.setFitsSystemWindows(false);
-
 			CollapsingToolbarLayout.LayoutParams layoutParams = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
 			layoutParams.setMargins(0, LengthTransitionUtility.getStatusBarHeight(this), 0, 0);
 			toolbar.setLayoutParams(layoutParams);
@@ -180,7 +179,7 @@ public class NewsAct extends AppCompatActivity {
 		imageView_star.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				starOrPraiseHandler.post(new Runnable() {
+				new Thread(new Runnable() {
 					@Override
 					public void run() {
 						if (sqLiteDatabase == null) {
@@ -191,26 +190,40 @@ public class NewsAct extends AppCompatActivity {
 								Log.i("ZRH", e.toString());
 							}
 						}
-						if (isStar()) {
-							sqLiteDatabase.delete("my_star", "ItemId like ?", new
-									String[]{String.valueOf(zhiHuNewsItemInfoFromHome.id)});
-							starOrPraiseHandler.sendEmptyMessage(0x4693);
-						} else {
-							sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_STAR_TABLE);
-							ContentValues contentValues = new ContentValues();
-							contentValues.put("ItemId", zhiHuNewsItemInfoFromHome.id);
-							try {
-								contentValues.put("ItemImage", zhiHuNewsItemInfoFromHome.images.get(0));
-							} catch (Exception e) {
-								contentValues.put("ItemImage", zhiHuNewsItemInfoFromHome.image);
+						while (true) {
+							if (!sqLiteDatabase.inTransaction()) {
+								if (isStar()) {
+									sqLiteDatabase.beginTransaction();
+									sqLiteDatabase.delete("my_star", "ItemId like ?", new
+											String[]{String.valueOf(zhiHuNewsItemInfoFromHome.id)});
+									sqLiteDatabase.setTransactionSuccessful();
+									sqLiteDatabase.endTransaction();
+									if (starOrPraiseHandler != null) {
+										starOrPraiseHandler.sendEmptyMessage(0x4693);
+									}
+								} else {
+									sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_STAR_TABLE);
+									ContentValues contentValues = new ContentValues();
+									contentValues.put("ItemId", zhiHuNewsItemInfoFromHome.id);
+									try {
+										contentValues.put("ItemImage", zhiHuNewsItemInfoFromHome.images.get(0));
+									} catch (Exception e) {
+										contentValues.put("ItemImage", zhiHuNewsItemInfoFromHome.image);
+									}
+									contentValues.put("ItemTitle", zhiHuNewsItemInfoFromHome.title);
+									sqLiteDatabase.beginTransaction();
+									sqLiteDatabase.insert("my_star", null, contentValues);
+									sqLiteDatabase.setTransactionSuccessful();
+									sqLiteDatabase.endTransaction();
+									if (starOrPraiseHandler != null) {
+										starOrPraiseHandler.sendEmptyMessage(0x4692);
+									}
+								}
+								break;
 							}
-							contentValues.put("ItemTitle", zhiHuNewsItemInfoFromHome.title);
-							sqLiteDatabase.insert("my_star", null, contentValues);
-							starOrPraiseHandler.sendEmptyMessage(0x4692);
 						}
 					}
-				});
-//				new Thread().start();
+				}).start();
 
 				//测试用
 				//				Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM my_star", null);
@@ -230,32 +243,51 @@ public class NewsAct extends AppCompatActivity {
 		imageView_praise.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (sqLiteDatabase == null) {
-					try {
-						sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(NewsAct.this
-								.getFilesDir().toString() + "/myInfo.db3", null);
-					} catch (Exception e) {
-						Log.i("ZRH", e.toString());
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						if (sqLiteDatabase == null) {
+							try {
+								sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(NewsAct.this
+										.getFilesDir().toString() + "/myInfo.db3", null);
+							} catch (Exception e) {
+								Log.i("ZRH", e.toString());
+							}
+						}
+						while (true) {
+							if (!sqLiteDatabase.inTransaction()) {
+								if (isPraise()) {
+									sqLiteDatabase.beginTransaction();
+									sqLiteDatabase.delete("my_praise", "ItemId like ?", new
+											String[]{String.valueOf(zhiHuNewsItemInfoFromHome.id)});
+									sqLiteDatabase.setTransactionSuccessful();
+									sqLiteDatabase.endTransaction();
+									if (starOrPraiseHandler != null) {
+										starOrPraiseHandler.sendEmptyMessage(0x9418);
+									}
+								} else {
+									sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_PRAISE_TABLE);
+									ContentValues contentValues = new ContentValues();
+									contentValues.put("ItemId", zhiHuNewsItemInfoFromHome.id);
+									try {
+										contentValues.put("ItemImage", zhiHuNewsItemInfoFromHome.images.get(0));
+									} catch (Exception e) {
+										contentValues.put("ItemImage", zhiHuNewsItemInfoFromHome.image);
+									}
+									contentValues.put("ItemTitle", zhiHuNewsItemInfoFromHome.title);
+									sqLiteDatabase.beginTransaction();
+									sqLiteDatabase.insert("my_praise", null, contentValues);
+									sqLiteDatabase.setTransactionSuccessful();
+									sqLiteDatabase.endTransaction();
+									if (starOrPraiseHandler != null) {
+										starOrPraiseHandler.sendEmptyMessage(0x9419);
+									}
+								}
+								break;
+							}
+						}
 					}
-				}
-
-				if (isPraise()) {
-					sqLiteDatabase.delete("my_praise", "ItemId like ?", new
-							String[]{String.valueOf(zhiHuNewsItemInfoFromHome.id)});
-					starOrPraiseHandler.sendEmptyMessage(0x9418);
-				} else {
-					sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_PRAISE_TABLE);
-					ContentValues contentValues = new ContentValues();
-					contentValues.put("ItemId", zhiHuNewsItemInfoFromHome.id);
-					try {
-						contentValues.put("ItemImage", zhiHuNewsItemInfoFromHome.images.get(0));
-					} catch (Exception e) {
-						contentValues.put("ItemImage", zhiHuNewsItemInfoFromHome.image);
-					}
-					contentValues.put("ItemTitle", zhiHuNewsItemInfoFromHome.title);
-					sqLiteDatabase.insert("my_praise", null, contentValues);
-					starOrPraiseHandler.sendEmptyMessage(0x9419);
-				}
+				}).start();
 			}
 		});
 	}
@@ -322,7 +354,9 @@ public class NewsAct extends AppCompatActivity {
 					try {
 						zhiHuNewsItemInfo = gson.fromJson(response.body().string(),
 								ZhiHuNewsItemInfo.class);
-						webViewHandler.sendEmptyMessage(0x123);
+						if (webViewHandler != null) {
+							webViewHandler.sendEmptyMessage(0x123);
+						}
 					} catch (Exception e) {
 						Log.i("ZRH", e.getMessage());
 					}
@@ -341,17 +375,33 @@ public class NewsAct extends AppCompatActivity {
 			sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(NewsAct.this
 					.getFilesDir().toString() + "/myInfo.db3", null);
 		}
-		sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_STAR_TABLE);
 		try {
-			Cursor cursor = sqLiteDatabase.rawQuery(queryID, new String[]{String.valueOf
-					(zhiHuNewsItemInfoFromHome.id)});
-			if (cursor.getCount() > 0) {
-				star = true;
+			while (true) {
+				if (!sqLiteDatabase.inTransaction()) {
+					sqLiteDatabase.beginTransaction();
+					sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_STAR_TABLE);
+					try {
+						Cursor cursor = sqLiteDatabase.rawQuery(queryID, new String[]{String.valueOf
+								(zhiHuNewsItemInfoFromHome.id)});
+						if (cursor.getCount() > 0) {
+							star = true;
+						}
+						cursor.close();
+					} catch (Exception e) {
+						Log.i("ZRH", e.toString());
+					}
+					sqLiteDatabase.setTransactionSuccessful();
+					break;
+				}
 			}
-			cursor.close();
 		} catch (Exception e) {
 			Log.i("ZRH", e.toString());
+			Log.i("ZRH", e.getMessage());
+			Log.i("ZRH", e.getLocalizedMessage());
+		} finally {
+			sqLiteDatabase.endTransaction();
 		}
+
 		return star;
 	}
 
@@ -365,17 +415,33 @@ public class NewsAct extends AppCompatActivity {
 			sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(NewsAct.this
 					.getFilesDir().toString() + "/myInfo.db3", null);
 		}
-		sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_PRAISE_TABLE);
 		try {
-			Cursor cursor = sqLiteDatabase.rawQuery(queryID, new String[]{String.valueOf
-					(zhiHuNewsItemInfoFromHome.id)});
-			if (cursor.getCount() > 0) {
-				praise = true;
+			while (true) {
+				if (!sqLiteDatabase.inTransaction()) {
+					sqLiteDatabase.beginTransaction();
+					sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_PRAISE_TABLE);
+					try {
+						Cursor cursor = sqLiteDatabase.rawQuery(queryID, new String[]{String.valueOf
+								(zhiHuNewsItemInfoFromHome.id)});
+						if (cursor.getCount() > 0) {
+							praise = true;
+						}
+						cursor.close();
+					} catch (Exception e) {
+						Log.i("ZRH", e.toString());
+					}
+					sqLiteDatabase.setTransactionSuccessful();
+					break;
+				}
 			}
-			cursor.close();
 		} catch (Exception e) {
 			Log.i("ZRH", e.toString());
+			Log.i("ZRH", e.getMessage());
+			Log.i("ZRH", e.getLocalizedMessage());
+		} finally {
+			sqLiteDatabase.endTransaction();
 		}
+
 		return praise;
 	}
 
@@ -388,7 +454,9 @@ public class NewsAct extends AppCompatActivity {
 				bundle.putBoolean("isStar", isStar());
 				msg.setData(bundle);
 				msg.what = 0x5555;
-				starOrPraiseHandler.sendMessage(msg);
+				if (starOrPraiseHandler != null) {
+					starOrPraiseHandler.sendMessage(msg);
+				}
 			}
 		}).start();
 	}
@@ -399,10 +467,12 @@ public class NewsAct extends AppCompatActivity {
 			public void run() {
 				Message msg = new Message();
 				Bundle bundle = new Bundle();
-				bundle.putBoolean("isPraise", isStar());
+				bundle.putBoolean("isPraise", isPraise());
 				msg.setData(bundle);
 				msg.what = 0x5556;
-				starOrPraiseHandler.sendMessage(msg);
+				if (starOrPraiseHandler != null) {
+					starOrPraiseHandler.sendMessage(msg);
+				}
 			}
 		}).start();
 	}
@@ -419,19 +489,24 @@ public class NewsAct extends AppCompatActivity {
 
 	@Override
 	protected void onDestroy() {
+		super.onDestroy();
+
 		starOrPraiseHandler.removeCallbacksAndMessages(null);
+		starOrPraiseHandler = null;
+		webViewHandler.removeCallbacksAndMessages(null);
+		webViewHandler = null;
 		if (sqLiteDatabase != null) {
 			sqLiteDatabase.close();
+			sqLiteDatabase = null;
 		}
-		webViewHandler.removeMessages(0x123);
-		sqLiteDatabase = null;
 		if (webView != null) {
-			webView.removeAllViews();
-//			webView.onPause();
+			webView.clearHistory();
+			webView.clearCache(true);
+			webView.loadUrl("about:blank");
+			webView.pauseTimers();
 			webView.destroy();
+			webView = null;
 		}
-		webView = null;
-		super.onDestroy();
 	}
 
 	@Override
@@ -476,7 +551,7 @@ public class NewsAct extends AppCompatActivity {
 	* 静态内部类--处理数据库返回的信息
 	* 判断是否收藏或点赞
 	* */
-	static class StarOrPraiseHandler extends Handler{
+	static class StarOrPraiseHandler extends Handler {
 		WeakReference<NewsAct> newsActivityWeakReference;
 		NewsAct newsAct;
 
@@ -487,18 +562,18 @@ public class NewsAct extends AppCompatActivity {
 
 		@Override
 		public void handleMessage(Message msg) {
-			switch (msg.what){
+			switch (msg.what) {
 				case 0x5555:
-					if(msg.getData().getBoolean("isStar")){
+					if (msg.getData().getBoolean("isStar")) {
 						newsAct.imageView_star.setImageResource(R.drawable.stared);
-					}else {
+					} else {
 						newsAct.imageView_star.setImageResource(R.drawable.unstared);
 					}
 					break;
 				case 0x5556:
-					if(msg.getData().getBoolean("isPraise")){
+					if (msg.getData().getBoolean("isPraise")) {
 						newsAct.imageView_praise.setImageResource(R.drawable.good);
-					}else {
+					} else {
 						newsAct.imageView_praise.setImageResource(R.drawable.ungood);
 					}
 					break;
@@ -509,10 +584,10 @@ public class NewsAct extends AppCompatActivity {
 					newsAct.imageView_star.setImageResource(R.drawable.unstared);
 					break;
 				case 0x9418:
-					newsAct.imageView_praise.setImageResource(R.drawable.good);
+					newsAct.imageView_praise.setImageResource(R.drawable.ungood);
 					break;
 				case 0x9419:
-					newsAct.imageView_praise.setImageResource(R.drawable.ungood);
+					newsAct.imageView_praise.setImageResource(R.drawable.good);
 					break;
 			}
 		}
