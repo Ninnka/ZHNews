@@ -329,13 +329,13 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 		* */
 		//		navigationView.getMenu().setGroupVisible(R.id.group2, true);
 
-
 	}
-
 
 	@Override
 	protected void onResume() {
-		initSQLiteDatabase();
+		if (!sqLiteDatabase.isOpen()) {
+			initSQLiteDatabase();
+		}
 		Log.i("ZRH", "init sqlite");
 		super.onResume();
 		if (isLoadBanner) {
@@ -345,7 +345,9 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 
 	@Override
 	protected void onPause() {
-		closeSQLiteDatabase();
+		if (sqLiteDatabase.isOpen()) {
+			closeSQLiteDatabase();
+		}
 		Log.i("ZRH", "close sqlite");
 		bannerStopAutoScroll();
 		if (floatingActionsMenu.isExpanded()) {
@@ -516,7 +518,7 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 				.getFilesDir().toString() + "/myInfo.db3", null);
 	}
 
-	private void closeSQLiteDatabase() {
+	public void closeSQLiteDatabase() {
 		sqLiteDatabase.close();
 	}
 

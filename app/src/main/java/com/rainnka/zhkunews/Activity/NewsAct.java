@@ -21,6 +21,7 @@ import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
@@ -51,6 +52,7 @@ public class NewsAct extends AppCompatActivity {
 	protected WebView webView;
 	protected ImageView imageView_praise;
 	protected ImageView imageView_star;
+	protected LinearLayout linearLayout_webViewContainer;
 
 	public OkHttpClient okHttpClient;
 	public Request request;
@@ -83,17 +85,17 @@ public class NewsAct extends AppCompatActivity {
 
 		setContentView(R.layout.news_act);
 
-//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//			Fade enterTransition = new Fade();
-//			enterTransition.setDuration(600);
-//			//			enterTransition.excludeTarget(R.id.newsActivity_WebView, true);
-//
-//			Fade returnTransition = new Fade();
-//			returnTransition.setDuration(500);
-//
-//			getWindow().setEnterTransition(enterTransition);
-//			getWindow().setReturnTransition(returnTransition);
-//		}
+		//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+		//			Fade enterTransition = new Fade();
+		//			enterTransition.setDuration(600);
+		//			//			enterTransition.excludeTarget(R.id.newsActivity_WebView, true);
+		//
+		//			Fade returnTransition = new Fade();
+		//			returnTransition.setDuration(500);
+		//
+		//			getWindow().setEnterTransition(enterTransition);
+		//			getWindow().setReturnTransition(returnTransition);
+		//		}
 
 		/*
 		* 获取intent中的数据
@@ -184,14 +186,14 @@ public class NewsAct extends AppCompatActivity {
 				new Thread(new Runnable() {
 					@Override
 					public void run() {
-//						if (sqLiteDatabase == null) {
-//							try {
-//								sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(NewsAct.this
-//										.getFilesDir().toString() + "/myInfo.db3", null);
-//							} catch (Exception e) {
-//								Log.i("ZRH", e.toString());
-//							}
-//						}
+						//						if (sqLiteDatabase == null) {
+						//							try {
+						//								sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(NewsAct.this
+						//										.getFilesDir().toString() + "/myInfo.db3", null);
+						//							} catch (Exception e) {
+						//								Log.i("ZRH", e.toString());
+						//							}
+						//						}
 						while (true) {
 							if (!sqLiteDatabase.inTransaction()) {
 								if (isStar()) {
@@ -248,14 +250,14 @@ public class NewsAct extends AppCompatActivity {
 				new Thread(new Runnable() {
 					@Override
 					public void run() {
-//						if (sqLiteDatabase == null) {
-//							try {
-//								sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(NewsAct.this
-//										.getFilesDir().toString() + "/myInfo.db3", null);
-//							} catch (Exception e) {
-//								Log.i("ZRH", e.toString());
-//							}
-//						}
+						//						if (sqLiteDatabase == null) {
+						//							try {
+						//								sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(NewsAct.this
+						//										.getFilesDir().toString() + "/myInfo.db3", null);
+						//							} catch (Exception e) {
+						//								Log.i("ZRH", e.toString());
+						//							}
+						//						}
 						while (true) {
 							if (!sqLiteDatabase.inTransaction()) {
 								if (isPraise()) {
@@ -310,6 +312,8 @@ public class NewsAct extends AppCompatActivity {
 		webView = (WebView) findViewById(R.id.newsActivity_WebView);
 		imageView_praise = (ImageView) findViewById(R.id.newsActivity_praise_ImageView);
 		imageView_star = (ImageView) findViewById(R.id.newsActivity_star_ImageView);
+		linearLayout_webViewContainer = (LinearLayout) findViewById(R.id
+				.newsActivity_WebView_container);
 	}
 
 	private void initWebView() {
@@ -491,22 +495,24 @@ public class NewsAct extends AppCompatActivity {
 
 	@Override
 	protected void onDestroy() {
+		super.onDestroy();
 		starOrPraiseHandler.removeCallbacksAndMessages(null);
 		starOrPraiseHandler = null;
 		webViewHandler.removeCallbacksAndMessages(null);
 		webViewHandler = null;
-		if (sqLiteDatabase != null) {
+		if (sqLiteDatabase.isOpen()) {
 			sqLiteDatabase.close();
+			sqLiteDatabase = null;
 		}
+		linearLayout_webViewContainer.removeAllViews();
 		if (webView != null) {
 			webView.clearHistory();
 			webView.clearCache(true);
 			webView.loadUrl("about:blank");
 			webView.pauseTimers();
-			webView.destroy();
+//			webView.destroy();
 			webView = null;
 		}
-		super.onDestroy();
 	}
 
 	@Override

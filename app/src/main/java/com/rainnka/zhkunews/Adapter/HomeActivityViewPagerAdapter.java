@@ -39,6 +39,14 @@ public class HomeActivityViewPagerAdapter extends PagerAdapter {
 		this.viewList = viewList;
 	}
 
+	//	public HomeActivityViewPagerAdapter(AppCompatActivity appCompatActivity, List<View> viewList,
+	//										SQLiteDatabase sqLiteDatabase) {
+	//		this.appCompatActivityWeakReference = new WeakReference<>(appCompatActivity);
+	//		this.appCompatActivity = this.appCompatActivityWeakReference.get();
+	//		this.viewList = viewList;
+	//		this.sqLiteDatabase = sqLiteDatabase;
+	//	}
+
 	public void setZhiHuNewsTopItemInfoList(List<ZhiHuNewsItemInfo> zhiHuNewsTopItemInfoList) {
 		this.zhiHuNewsTopItemInfoList = zhiHuNewsTopItemInfoList;
 	}
@@ -95,12 +103,18 @@ public class HomeActivityViewPagerAdapter extends PagerAdapter {
 		view.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(sqLiteDatabase == null){
-					sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(appCompatActivity
-							.getFilesDir().toString() + "/myInfo.db3", null);
+				if (((HomeAct) appCompatActivity).sqLiteDatabase.isOpen()) {
+					((HomeAct) appCompatActivity).closeSQLiteDatabase();
 				}
+//				if (sqLiteDatabase == null) {
+//					Log.i("ZRH", "sqLiteDatabase is null");
+//
+//					Log.i("ZRH", "sqLiteDatabase is created");
+//				}
+				sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(appCompatActivity
+						.getFilesDir().toString() + "/myInfo.db3", null);
 				sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_HISTORY_TABLE);
-				sqLiteDatabase.delete("my_history","ItemId like ?",new
+				sqLiteDatabase.delete("my_history", "ItemId like ?", new
 						String[]{String.valueOf(zhiHuNewsTopItemInfoList.get(position).id)});
 				ContentValues contentValues = new ContentValues();
 				contentValues.put("ItemId", zhiHuNewsTopItemInfoList.get(position).id);
@@ -112,7 +126,7 @@ public class HomeActivityViewPagerAdapter extends PagerAdapter {
 				}
 				contentValues.put("ItemTitle", zhiHuNewsTopItemInfoList.get(position).title);
 				sqLiteDatabase.insert("my_history", null, contentValues);
-
+				sqLiteDatabase.close();
 				Intent intent = new Intent();
 				intent.setAction(HomeAct.INTENT_TO_NEWS_KEY);
 				Bundle bundle = new Bundle();
