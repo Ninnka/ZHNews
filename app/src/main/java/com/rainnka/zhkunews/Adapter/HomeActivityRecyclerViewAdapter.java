@@ -95,7 +95,7 @@ public class HomeActivityRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 					.placeholder(R.drawable.placeholder)
 					.skipMemoryCache(true)
 					.diskCacheStrategy(DiskCacheStrategy.RESULT)
-					.crossFade(500)
+					.crossFade(0)
 					.fitCenter()
 					.into(recyclerViewContentViewHolder.picture_iv);
 		} else if (holder instanceof RecyclerViewDateViewHolder) {
