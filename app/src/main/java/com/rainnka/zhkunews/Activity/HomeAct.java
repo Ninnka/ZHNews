@@ -204,6 +204,11 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 		initComponent();
 
 		/*
+		* 初始化数据库
+		* */
+		initSQLiteDatabase();
+
+		/*
 		* 获取已登录的用户
 		* */
 		initUser();
@@ -330,6 +335,8 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 
 	@Override
 	protected void onResume() {
+		initSQLiteDatabase();
+		Log.i("ZRH", "init sqlite");
 		super.onResume();
 		if (isLoadBanner) {
 			bannerStartAutoScroll();
@@ -338,22 +345,24 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 
 	@Override
 	protected void onPause() {
-		super.onPause();
+		closeSQLiteDatabase();
+		Log.i("ZRH", "close sqlite");
 		bannerStopAutoScroll();
 		if (floatingActionsMenu.isExpanded()) {
 			floatingActionsMenu.collapse();
 		}
+		super.onPause();
 	}
 
 	@Override
 	protected void onDestroy() {
+		super.onDestroy();
 		if (sqLiteDatabase != null) {
 			sqLiteDatabase.close();
 		}
 		mhandler.removeCallbacks(mRunnable);
 		bannerHandler.removeMessages(BANNER_SCROLL_KEY);
 		recyclerRefreshHandler.removeCallbacksAndMessages(null);
-		super.onDestroy();
 	}
 
 	@Override
@@ -407,51 +416,50 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 						.getAdapterPosition()).item_layout == 1) {
 					final ZhiHuNewsItemInfo temp_zhiHuNewsItemInfo = homeActivityRecyclerViewAdapter
 							.zhiHuNewsItemInfoList.get(viewHolder.getAdapterPosition());
-					new Thread(new Runnable() {
-						@Override
-						public void run() {
-							if (sqLiteDatabase == null) {
-								sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(HomeAct.this
-										.getFilesDir().toString() + "/myInfo.db3", null);
-							}
-							sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_HISTORY_TABLE);
-							sqLiteDatabase.beginTransaction();
-							try{
-								sqLiteDatabase.beginTransaction();
-								sqLiteDatabase.delete("my_history", "ItemId like ?", new
-										String[]{String.valueOf(temp_zhiHuNewsItemInfo.id)});
-								sqLiteDatabase.setTransactionSuccessful();
-							}catch (Exception e){
-								Log.i("ZRH", e.getStackTrace().toString());
-								Log.i("ZRH", e.getMessage());
-								Log.i("ZRH", e.toString());
-							}finally {
-								sqLiteDatabase.endTransaction();
-							}
+					//					if (sqLiteDatabase == null) {
+					//						sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(HomeAct.this
+					//								.getFilesDir().toString() + "/myInfo.db3", null);
+					//					}
+					sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_HISTORY_TABLE);
+					try {
+						sqLiteDatabase.beginTransaction();
+						sqLiteDatabase.delete("my_history", "ItemId like ?", new
+								String[]{String.valueOf(temp_zhiHuNewsItemInfo.id)});
+						sqLiteDatabase.setTransactionSuccessful();
+					} catch (Exception e) {
+						Log.i("ZRH", e.getStackTrace().toString());
+						Log.i("ZRH", e.getMessage());
+						Log.i("ZRH", e.toString());
+					} finally {
+						sqLiteDatabase.endTransaction();
+					}
 
-
-							ContentValues contentValues = new ContentValues();
-							contentValues.put("ItemId", temp_zhiHuNewsItemInfo.id);
-							try {
-								contentValues.put("ItemImage", temp_zhiHuNewsItemInfo
-										.images.get(0));
-							} catch (Exception e) {
-								contentValues.put("ItemImage", temp_zhiHuNewsItemInfo.image);
-							}
-							contentValues.put("ItemTitle", temp_zhiHuNewsItemInfo.title);
-							try{
-								sqLiteDatabase.beginTransaction();
-								sqLiteDatabase.insert("my_history", null, contentValues);
-								sqLiteDatabase.setTransactionSuccessful();
-							}catch (Exception e){
-								Log.i("ZRH", e.getStackTrace().toString());
-								Log.i("ZRH", e.getMessage());
-								Log.i("ZRH", e.toString());
-							}finally {
-								sqLiteDatabase.endTransaction();
-							}
-						}
-					}).start();
+					ContentValues contentValues = new ContentValues();
+					contentValues.put("ItemId", temp_zhiHuNewsItemInfo.id);
+					try {
+						contentValues.put("ItemImage", temp_zhiHuNewsItemInfo
+								.images.get(0));
+					} catch (Exception e) {
+						contentValues.put("ItemImage", temp_zhiHuNewsItemInfo.image);
+					}
+					contentValues.put("ItemTitle", temp_zhiHuNewsItemInfo.title);
+					try {
+						sqLiteDatabase.beginTransaction();
+						sqLiteDatabase.insert("my_history", null, contentValues);
+						sqLiteDatabase.setTransactionSuccessful();
+					} catch (Exception e) {
+						Log.i("ZRH", e.getStackTrace().toString());
+						Log.i("ZRH", e.getMessage());
+						Log.i("ZRH", e.toString());
+					} finally {
+						sqLiteDatabase.endTransaction();
+					}
+					//					new Thread(new Runnable() {
+					//						@Override
+					//						public void run() {
+					//
+					//						}
+					//					}).start();
 
 					Intent intent = new Intent();
 					intent.setAction(INTENT_TO_NEWS_KEY);
@@ -501,6 +509,15 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 				nickname = "";
 			}
 		}
+	}
+
+	private void initSQLiteDatabase() {
+		sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(HomeAct.this
+				.getFilesDir().toString() + "/myInfo.db3", null);
+	}
+
+	private void closeSQLiteDatabase() {
+		sqLiteDatabase.close();
 	}
 
 	/*

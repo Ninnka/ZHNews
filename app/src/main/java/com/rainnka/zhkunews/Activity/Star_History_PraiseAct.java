@@ -235,11 +235,10 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 
 	@Override
 	protected void onDestroy() {
-		if (sqLiteDatabase != null) {
-			sqLiteDatabase.close();
-		}
-		loadZhiHuNewsItemHandler.removeCallbacksAndMessages(null);
 		super.onDestroy();
+		sqLiteDatabase.close();
+		loadZhiHuNewsItemHandler.removeCallbacksAndMessages(null);
+		loadZhiHuNewsItemHandler = null;
 	}
 
 	@Override
@@ -743,7 +742,9 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 			zhiHuNewsItemInfoList.addAll(tempList);
 		}
 
-		loadZhiHuNewsItemHandler.sendEmptyMessage(0x643);
+		if (loadZhiHuNewsItemHandler != null) {
+			loadZhiHuNewsItemHandler.sendEmptyMessage(0x643);
+		}
 	}
 
 	protected void updatePraiseItemInfoFromResumeOrCreate() {
@@ -791,7 +792,9 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 			zhiHuNewsItemInfoList.addAll(tempList);
 		}
 
-		loadZhiHuNewsItemHandler.sendEmptyMessage(0x671);
+		if (loadZhiHuNewsItemHandler != null) {
+			loadZhiHuNewsItemHandler.sendEmptyMessage(0x671);
+		}
 
 	}
 
@@ -829,7 +832,9 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 		}
 
 
-		loadZhiHuNewsItemHandler.sendEmptyMessage(0x981);
+		if (loadZhiHuNewsItemHandler != null) {
+			loadZhiHuNewsItemHandler.sendEmptyMessage(0x981);
+		}
 
 	}
 
@@ -873,7 +878,9 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 				bundle.putInt("position", list.get(i));
 				msg.setData(bundle);
 				msg.what = 0x888;
-				loadZhiHuNewsItemHandler.sendMessage(msg);
+				if (loadZhiHuNewsItemHandler != null) {
+					loadZhiHuNewsItemHandler.sendMessage(msg);
+				}
 			}
 		}
 
@@ -893,14 +900,17 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 		bundle.putInt("deleteCount", deleteCount);
 		msg.setData(bundle);
 		msg.what = 0x999;
-		loadZhiHuNewsItemHandler.sendMessage(msg);
+		if (loadZhiHuNewsItemHandler != null) {
+			loadZhiHuNewsItemHandler.sendMessage(msg);
+		}
 	}
 
-	protected void setActionModeTitle(){
+	protected void setActionModeTitle() {
 		actionMode.setTitle("已选: " + star_history_praiseActivityRecyclerViewAdapter
 				.mSelectedPositions.size() + "/" + star_history_praiseActivityRecyclerViewAdapter
 				.getItemCount());
 	}
+
 	/*
 	* 静态内部类-获取资源后的处理
 	* */

@@ -14,7 +14,6 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.transition.Fade;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -84,17 +83,17 @@ public class NewsAct extends AppCompatActivity {
 
 		setContentView(R.layout.news_act);
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			Fade enterTransition = new Fade();
-			enterTransition.setDuration(600);
-			//			enterTransition.excludeTarget(R.id.newsActivity_WebView, true);
-
-			Fade returnTransition = new Fade();
-			returnTransition.setDuration(500);
-
-			getWindow().setEnterTransition(enterTransition);
-			getWindow().setReturnTransition(returnTransition);
-		}
+//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//			Fade enterTransition = new Fade();
+//			enterTransition.setDuration(600);
+//			//			enterTransition.excludeTarget(R.id.newsActivity_WebView, true);
+//
+//			Fade returnTransition = new Fade();
+//			returnTransition.setDuration(500);
+//
+//			getWindow().setEnterTransition(enterTransition);
+//			getWindow().setReturnTransition(returnTransition);
+//		}
 
 		/*
 		* 获取intent中的数据
@@ -131,6 +130,8 @@ public class NewsAct extends AppCompatActivity {
 		* 初始化handler
 		* */
 		initHandler();
+
+		initSQLiteDatabase();
 
 		/*
 		* 添加点赞点击事件
@@ -175,6 +176,7 @@ public class NewsAct extends AppCompatActivity {
 
 	}
 
+
 	private void addStarImageViewOnClickListener() {
 		imageView_star.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -182,14 +184,14 @@ public class NewsAct extends AppCompatActivity {
 				new Thread(new Runnable() {
 					@Override
 					public void run() {
-						if (sqLiteDatabase == null) {
-							try {
-								sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(NewsAct.this
-										.getFilesDir().toString() + "/myInfo.db3", null);
-							} catch (Exception e) {
-								Log.i("ZRH", e.toString());
-							}
-						}
+//						if (sqLiteDatabase == null) {
+//							try {
+//								sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(NewsAct.this
+//										.getFilesDir().toString() + "/myInfo.db3", null);
+//							} catch (Exception e) {
+//								Log.i("ZRH", e.toString());
+//							}
+//						}
 						while (true) {
 							if (!sqLiteDatabase.inTransaction()) {
 								if (isStar()) {
@@ -246,14 +248,14 @@ public class NewsAct extends AppCompatActivity {
 				new Thread(new Runnable() {
 					@Override
 					public void run() {
-						if (sqLiteDatabase == null) {
-							try {
-								sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(NewsAct.this
-										.getFilesDir().toString() + "/myInfo.db3", null);
-							} catch (Exception e) {
-								Log.i("ZRH", e.toString());
-							}
-						}
+//						if (sqLiteDatabase == null) {
+//							try {
+//								sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(NewsAct.this
+//										.getFilesDir().toString() + "/myInfo.db3", null);
+//							} catch (Exception e) {
+//								Log.i("ZRH", e.toString());
+//							}
+//						}
 						while (true) {
 							if (!sqLiteDatabase.inTransaction()) {
 								if (isPraise()) {
@@ -322,6 +324,13 @@ public class NewsAct extends AppCompatActivity {
 		webViewHandler = new WebViewHandler(NewsAct.this);
 	}
 
+	private void initSQLiteDatabase() {
+		if (sqLiteDatabase == null) {
+			sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(NewsAct.this
+					.getFilesDir().toString() + "/myInfo.db3", null);
+		}
+	}
+
 	private void getInfomationFromIntent() {
 		Intent intent = getIntent();
 		zhiHuNewsItemInfoFromHome = (ZhiHuNewsItemInfo) intent.getSerializableExtra(HomeAct.SER_KEY);
@@ -371,10 +380,6 @@ public class NewsAct extends AppCompatActivity {
 	public boolean isStar() {
 		boolean star = false;
 		String queryID = "SELECT * FROM my_star where ItemId like ?";
-		if (sqLiteDatabase == null) {
-			sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(NewsAct.this
-					.getFilesDir().toString() + "/myInfo.db3", null);
-		}
 		try {
 			while (true) {
 				if (!sqLiteDatabase.inTransaction()) {
@@ -411,10 +416,7 @@ public class NewsAct extends AppCompatActivity {
 	public boolean isPraise() {
 		boolean praise = false;
 		String queryID = "SELECT * FROM my_praise where ItemId like ?";
-		if (sqLiteDatabase == null) {
-			sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(NewsAct.this
-					.getFilesDir().toString() + "/myInfo.db3", null);
-		}
+
 		try {
 			while (true) {
 				if (!sqLiteDatabase.inTransaction()) {
@@ -489,15 +491,12 @@ public class NewsAct extends AppCompatActivity {
 
 	@Override
 	protected void onDestroy() {
-		super.onDestroy();
-
 		starOrPraiseHandler.removeCallbacksAndMessages(null);
 		starOrPraiseHandler = null;
 		webViewHandler.removeCallbacksAndMessages(null);
 		webViewHandler = null;
 		if (sqLiteDatabase != null) {
 			sqLiteDatabase.close();
-			sqLiteDatabase = null;
 		}
 		if (webView != null) {
 			webView.clearHistory();
@@ -507,6 +506,7 @@ public class NewsAct extends AppCompatActivity {
 			webView.destroy();
 			webView = null;
 		}
+		super.onDestroy();
 	}
 
 	@Override
