@@ -1,5 +1,8 @@
 package com.rainnka.zhkunews.Activity;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,6 +26,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -35,10 +39,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.target.NotificationTarget;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.gson.Gson;
 import com.rainnka.zhkunews.Adapter.HomeActivityRecyclerViewAdapter;
@@ -96,6 +102,8 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 			floatingActionButton_quickDown;
 	protected FloatingActionsMenu floatingActionsMenu;
 
+	public RemoteViews remoteViews_notification;
+
 	protected ImageView profile_iv;
 	protected TextView profile_tv;
 
@@ -105,6 +113,7 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 	public Handler mhandler;
 	public BannerHandler bannerHandler;
 	public RecyclerRefreshHandler recyclerRefreshHandler;
+	public NotificationHandler notificationHandler;
 
 	public int viewPagerStatusPosition = 1;
 	public final static int BANNER_SCROLL_INTERVAL = 4000;
@@ -132,6 +141,12 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 
 	public LinearLayoutManager linearLayoutManager;
 
+	public NotificationManager notificationManager;
+	public NotificationCompat.Builder mBuilder;
+	public Notification notification;
+
+	public PendingIntent pendingIntent_News;
+
 	public Gson gson;
 
 	String username = "";
@@ -152,10 +167,12 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 	public final static String HISTORY_KEY = "history";
 	public final static String PRAISE_KEY = "praise";
 
-	public static String SER_KEY = "SER";
+	public final static String SER_KEY = "SER";
 
-	public static String ZHIHUAPI_LATEST = "http://news-at.zhihu.com/api/4/news/latest";
-	public static String ZHIHUAPI_BEFORE = "http://news.at.zhihu.com/api/4/news/before/";
+	public final static String ZHIHUAPI_LATEST = "http://news-at.zhihu.com/api/4/news/latest";
+	public final static String ZHIHUAPI_BEFORE = "http://news.at.zhihu.com/api/4/news/before/";
+
+	public final static int PENDINGINTENT_NEWS_REQUESTCODE = 0x87;
 
 	private Boolean isLoadBanner = false;
 
@@ -224,6 +241,11 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 		initHandler();
 
 		/*
+		* 初始化通知管理器
+		* */
+		initNotificationManager();
+
+		/*
 		* 初始化 线程
 		* */
 		initThreadORRunnable();
@@ -286,7 +308,7 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 		/*
 		* 首次启动时加载最新的内容
 		* */
-		initRecyclerViewFirstZhiHuContent();
+		initZhiHuContent();
 
 
 		/*
@@ -513,6 +535,18 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 		}
 	}
 
+	public PendingIntent getPendingIntent_News() {
+		Bundle bundle = new Bundle();
+		bundle.putSerializable(HomeAct.SER_KEY, zhiHuNewsLatestItemInfo.stories.get
+				(1));
+		Intent intent = new Intent();
+		intent.setAction(INTENT_TO_NEWS_KEY);
+		intent.putExtras(bundle);
+		pendingIntent_News = PendingIntent.getActivity(HomeAct.this,
+				PENDINGINTENT_NEWS_REQUESTCODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		return pendingIntent_News;
+	}
+
 	private void initSQLiteDatabase() {
 		sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(HomeAct.this
 				.getFilesDir().toString() + "/myInfo.db3", null);
@@ -591,7 +625,6 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 		linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 	}
 
-
 	/*
 	* 侧栏头像点击事件
 	* */
@@ -660,6 +693,43 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 	}
 
 	/*
+	* 初始化notification的自定义remoteView
+	* */
+	public void initNotificationRemoteView() {
+		remoteViews_notification = new RemoteViews(getPackageName(), R.layout
+				.home_notification_content);
+		remoteViews_notification.setTextViewText(R.id.home_notification_content_text,
+				zhiHuNewsLatestItemInfo.stories.get(1).title);
+
+	}
+
+	/*
+	* 初始化notification
+	* */
+	public void initNotification() {
+		mBuilder = new NotificationCompat.Builder(HomeAct.this);
+		mBuilder.setSmallIcon(R.mipmap.app_icon)
+				.setContent(remoteViews_notification)
+				.setPriority(NotificationCompat.PRIORITY_DEFAULT)
+				.setContentIntent(getPendingIntent_News())
+				.setWhen(System.currentTimeMillis())
+				.setDefaults(Notification.DEFAULT_LIGHTS);
+		notification = mBuilder.build();
+		notification.flags = Notification.FLAG_AUTO_CANCEL;
+		notificationManager.notify(1, notification);
+	}
+
+	public void initNotificationImage() {
+		NotificationTarget notificationTarget;
+		notificationTarget = new NotificationTarget(HomeAct.this, remoteViews_notification, R.id
+				.home_notification_content_image, notification, 1);
+		Glide.with(HomeAct.this.getApplicationContext())
+				.load(zhiHuNewsLatestItemInfo.stories.get(1).images.get(0))
+				.asBitmap()
+				.into(notificationTarget);
+	}
+
+	/*
 	* 初始化网络连接客户端
 	* */
 	private void initOkhttpClient() {
@@ -722,7 +792,7 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 	/*
 	* 首次启动时加载最新的内容
 	* */
-	private void initRecyclerViewFirstZhiHuContent() {
+	private void initZhiHuContent() {
 		if (getConnectivityCondition()) {
 			Request request = new Request.Builder()
 					.url(ZHIHUAPI_LATEST)
@@ -752,6 +822,7 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 						Message message = new Message();
 						message.what = RECYCLER_REFRESH_LATEST;
 						recyclerRefreshHandler.sendMessage(message);
+
 					}
 				}
 			});
@@ -839,6 +910,11 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 		mhandler = new Handler();
 		bannerHandler = new BannerHandler(this);
 		recyclerRefreshHandler = new RecyclerRefreshHandler(this);
+		notificationHandler = new NotificationHandler(this);
+	}
+
+	public void initNotificationManager() {
+		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 	}
 
 	/*
@@ -1159,6 +1235,27 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 	}
 
 	/*
+	* 静态内部类
+	* 处理notification
+	* */
+	static class NotificationHandler extends Handler {
+		WeakReference<HomeAct> homeActivityWeakReference;
+		HomeAct homeAct;
+
+		public NotificationHandler(HomeAct homeAct) {
+			this.homeActivityWeakReference = new WeakReference<>(homeAct);
+			this.homeAct = this.homeActivityWeakReference.get();
+		}
+
+		@Override
+		public void handleMessage(Message msg) {
+			homeAct.initNotificationRemoteView();
+			homeAct.initNotification();
+			homeAct.initNotificationImage();
+		}
+	}
+
+	/*
 	* 静态内部类 RecyclerVRefreshHandler
 	* 处理RecyclerView的刷新事件
 	* */
@@ -1280,6 +1377,9 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 							(homeAct.zhiHuNewsLatestItemInfo.stories);
 					homeAct.recyclerView.setAdapter(homeAct.homeActivityRecyclerViewAdapter);
 					homeAct.recyclerView.setLayoutManager(homeAct.linearLayoutManager);
+
+					homeAct.notificationHandler.sendEmptyMessage(0x4826);
+
 					break;
 
 				case RECYCLER_REFRESH_NEW:
