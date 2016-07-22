@@ -72,6 +72,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -127,6 +128,8 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 
 	public boolean BACKPRESS_STATUS = false;
 
+	public static boolean userIsLogin = false;
+
 	public Runnable mRunnable;
 
 	public Date date;
@@ -161,6 +164,9 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 
 	public final static String INTENT_TO_PROFILE_KEY = "android.intent.action.ProfilePage";
 	public final static int ITENT_TO_PROFILE_REQUESTCODE = 0x7654;
+
+	public final static String INTENT_TO_NOTIFICATION_KEY = "android.intent.action" +
+			".NotificationPage";
 
 	public final static String INTENT_STRING_DATA_KEY = "STRING_DATA_KEY";
 	public final static String STAR_KEY = "star";
@@ -358,7 +364,6 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 		if (!sqLiteDatabase.isOpen()) {
 			initSQLiteDatabase();
 		}
-		Log.i("ZRH", "init sqlite");
 		super.onResume();
 		if (isLoadBanner) {
 			bannerStartAutoScroll();
@@ -370,7 +375,6 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 		if (sqLiteDatabase.isOpen()) {
 			closeSQLiteDatabase();
 		}
-		Log.i("ZRH", "close sqlite");
 		bannerStopAutoScroll();
 		if (floatingActionsMenu.isExpanded()) {
 			floatingActionsMenu.collapse();
@@ -408,6 +412,7 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == ITENT_TO_LOGIN_REQUESTCODE && resultCode == LoginAct.RESULTCODE) {
+			userIsLogin = true;
 			profile_tv.setText(sharedPreferences.getString("nickname", ""));
 			navigationView.getMenu().setGroupVisible(R.id.group2, true);
 			Snackbar.make(coordinatorLayout, "你已经成功登录", Snackbar.LENGTH_SHORT).show();
@@ -420,6 +425,7 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 			}
 		}
 		if (requestCode == ITENT_TO_PROFILE_REQUESTCODE && resultCode == ProfilePageAct.RESULTCODE) {
+			userIsLogin = false;
 			profile_tv.setText("点击头像登录");
 			navigationView.getMenu().setGroupVisible(R.id.group2, false);
 			Snackbar.make(coordinatorLayout, "你已经成功退出登录", Snackbar.LENGTH_SHORT).show();
@@ -431,7 +437,6 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 		return super.onOptionsItemSelected(item);
 	}
 
-
 	private void addRecyclerViewOnItemClickListener() {
 		recyclerView.addOnItemTouchListener(new onHActRecyclerItemClickListener(recyclerView) {
 			@Override
@@ -440,56 +445,48 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 						.getAdapterPosition()).item_layout == 1) {
 					final ZhiHuNewsItemInfo temp_zhiHuNewsItemInfo = homeActivityRecyclerViewAdapter
 							.zhiHuNewsItemInfoList.get(viewHolder.getAdapterPosition());
-					//					if (sqLiteDatabase == null) {
-					//						sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(HomeAct.this
-					//								.getFilesDir().toString() + "/myInfo.db3", null);
-					//					}
-					sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_HISTORY_TABLE);
-					try {
-						sqLiteDatabase.beginTransaction();
-						sqLiteDatabase.delete("my_history", "ItemId like ?", new
-								String[]{String.valueOf(temp_zhiHuNewsItemInfo.id)});
-						sqLiteDatabase.setTransactionSuccessful();
-					} catch (Exception e) {
-						Log.i("ZRH", e.getStackTrace().toString());
-						Log.i("ZRH", e.getMessage());
-						Log.i("ZRH", e.toString());
-					} finally {
-						sqLiteDatabase.endTransaction();
-					}
 
-					ContentValues contentValues = new ContentValues();
-					contentValues.put("ItemId", temp_zhiHuNewsItemInfo.id);
-					try {
-						contentValues.put("ItemImage", temp_zhiHuNewsItemInfo
-								.images.get(0));
-					} catch (Exception e) {
-						contentValues.put("ItemImage", temp_zhiHuNewsItemInfo.image);
+					if(userIsLogin){
+						sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_HISTORY_TABLE);
+						try {
+							sqLiteDatabase.beginTransaction();
+							sqLiteDatabase.delete("my_history", "ItemId like ?", new
+									String[]{String.valueOf(temp_zhiHuNewsItemInfo.id)});
+							sqLiteDatabase.setTransactionSuccessful();
+						} catch (Exception e) {
+							Log.i("ZRH", e.getStackTrace().toString());
+							Log.i("ZRH", e.getMessage());
+							Log.i("ZRH", e.toString());
+						} finally {
+							sqLiteDatabase.endTransaction();
+						}
+
+						ContentValues contentValues = new ContentValues();
+						contentValues.put("ItemId", temp_zhiHuNewsItemInfo.id);
+						try {
+							contentValues.put("ItemImage", temp_zhiHuNewsItemInfo
+									.images.get(0));
+						} catch (Exception e) {
+							contentValues.put("ItemImage", temp_zhiHuNewsItemInfo.image);
+						}
+						contentValues.put("ItemTitle", temp_zhiHuNewsItemInfo.title);
+						try {
+							sqLiteDatabase.beginTransaction();
+							sqLiteDatabase.insert("my_history", null, contentValues);
+							sqLiteDatabase.setTransactionSuccessful();
+						} catch (Exception e) {
+							Log.i("ZRH", e.getStackTrace().toString());
+							Log.i("ZRH", e.getMessage());
+							Log.i("ZRH", e.toString());
+						} finally {
+							sqLiteDatabase.endTransaction();
+						}
 					}
-					contentValues.put("ItemTitle", temp_zhiHuNewsItemInfo.title);
-					try {
-						sqLiteDatabase.beginTransaction();
-						sqLiteDatabase.insert("my_history", null, contentValues);
-						sqLiteDatabase.setTransactionSuccessful();
-					} catch (Exception e) {
-						Log.i("ZRH", e.getStackTrace().toString());
-						Log.i("ZRH", e.getMessage());
-						Log.i("ZRH", e.toString());
-					} finally {
-						sqLiteDatabase.endTransaction();
-					}
-					//					new Thread(new Runnable() {
-					//						@Override
-					//						public void run() {
-					//
-					//						}
-					//					}).start();
 
 					Intent intent = new Intent();
 					intent.setAction(INTENT_TO_NEWS_KEY);
 					Bundle bundle = new Bundle();
-					bundle.putSerializable(SER_KEY, homeActivityRecyclerViewAdapter
-							.zhiHuNewsItemInfoList.get(viewHolder.getAdapterPosition()));
+					bundle.putSerializable(SER_KEY, temp_zhiHuNewsItemInfo);
 					intent.putExtras(bundle);
 
 					startActivity(intent);
@@ -522,6 +519,7 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 	private void initUser() {
 		sharedPreferences = getSharedPreferences("up", MODE_PRIVATE);
 		if (sharedPreferences.getString("isLogin", " ").equals("Y")) {
+			userIsLogin = true;
 			username = sharedPreferences.getString("username", " ");
 			password = sharedPreferences.getString("password", " ");
 			if (username.equals("admin") && password.equals("root")) {
@@ -535,10 +533,10 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 		}
 	}
 
-	public PendingIntent getPendingIntent_News() {
+	public PendingIntent getPendingIntent_News(int targetNum) {
 		Bundle bundle = new Bundle();
 		bundle.putSerializable(HomeAct.SER_KEY, zhiHuNewsLatestItemInfo.stories.get
-				(1));
+				(targetNum));
 		Intent intent = new Intent();
 		intent.setAction(INTENT_TO_NEWS_KEY);
 		intent.putExtras(bundle);
@@ -693,41 +691,38 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 	}
 
 	/*
-	* 初始化notification的自定义remoteView
-	* */
-	public void initNotificationRemoteView() {
-		remoteViews_notification = new RemoteViews(getPackageName(), R.layout
-				.home_notification_content);
-		remoteViews_notification.setTextViewText(R.id.home_notification_content_text,
-				zhiHuNewsLatestItemInfo.stories.get(1).title);
-
-	}
-
-	/*
 	* 初始化notification
 	* */
 	public void initNotification() {
+		int maxLength = zhiHuNewsLatestItemInfo.stories.size();
+		Random random = new Random();
+		int targetNum = random.nextInt(maxLength - 1) + 1;
+
+		remoteViews_notification = new RemoteViews(getPackageName(), R.layout
+				.home_notification_content_remoteview);
+		remoteViews_notification.setTextViewText(R.id.home_notification_content_text,
+				zhiHuNewsLatestItemInfo.stories.get(targetNum).title);
+
 		mBuilder = new NotificationCompat.Builder(HomeAct.this);
 		mBuilder.setSmallIcon(R.mipmap.app_icon)
 				.setContent(remoteViews_notification)
 				.setPriority(NotificationCompat.PRIORITY_DEFAULT)
-				.setContentIntent(getPendingIntent_News())
+				.setContentIntent(getPendingIntent_News(targetNum))
 				.setWhen(System.currentTimeMillis())
 				.setDefaults(Notification.DEFAULT_LIGHTS);
 		notification = mBuilder.build();
 		notification.flags = Notification.FLAG_AUTO_CANCEL;
 		notificationManager.notify(1, notification);
-	}
 
-	public void initNotificationImage() {
 		NotificationTarget notificationTarget;
 		notificationTarget = new NotificationTarget(HomeAct.this, remoteViews_notification, R.id
 				.home_notification_content_image, notification, 1);
 		Glide.with(HomeAct.this.getApplicationContext())
-				.load(zhiHuNewsLatestItemInfo.stories.get(1).images.get(0))
+				.load(zhiHuNewsLatestItemInfo.stories.get(targetNum).images.get(0))
 				.asBitmap()
 				.into(notificationTarget);
 	}
+
 
 	/*
 	* 初始化网络连接客户端
@@ -1007,6 +1002,9 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 
 	@Override
 	public void onRefresh() {
+		if (!swipeRefreshLayout.isRefreshing()) {
+			swipeRefreshLayout.setRefreshing(true);
+		}
 		if (getConnectivityCondition()) {
 			Request request = new Request.Builder()
 					.url(ZHIHUAPI_LATEST)
@@ -1080,6 +1078,7 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 		switch (item.getItemId()) {
 
 			case R.id.drawer_home:
+				drawerLayout.closeDrawers();
 				onRefresh();
 
 				break;
@@ -1109,7 +1108,9 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 				break;
 
 			case R.id.drawer_notification:
-				actionForNavigationItemSelected(item);
+				intent = new Intent();
+				intent.setAction(INTENT_TO_NOTIFICATION_KEY);
+				startActivity(intent);
 
 				break;
 			case R.id.drawer_theme:
@@ -1249,9 +1250,7 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 
 		@Override
 		public void handleMessage(Message msg) {
-			homeAct.initNotificationRemoteView();
 			homeAct.initNotification();
-			homeAct.initNotificationImage();
 		}
 	}
 
@@ -1427,7 +1426,9 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 						SnackbarUtility.getSnackbarLight(homeAct.coordinatorLayout,
 								"已经是最新日报", Snackbar.LENGTH_SHORT);
 					}
-					homeAct.swipeRefreshLayout.setRefreshing(false);
+					if (homeAct.swipeRefreshLayout.isRefreshing()) {
+						homeAct.swipeRefreshLayout.setRefreshing(false);
+					}
 
 					break;
 

@@ -165,24 +165,10 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 
 	@Override
 	protected void onResume() {
-		if (hasPaused) {
-			switch (title) {
-				case HomeAct.STAR_KEY:
-					if (sqLiteDatabase == null) {
-						sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase
-								(Star_History_PraiseAct.this.getFilesDir().toString() + "/myInfo" +
-										".db3", null);
-					}
-					new Thread(new Runnable() {
-						@Override
-						public void run() {
-							updateStarItemInfoFromResumeOrCreate();
-
-						}
-					}).start();
-					break;
-				case HomeAct.PRAISE_KEY:
-					try {
+		if (HomeAct.userIsLogin) {
+			if (hasPaused) {
+				switch (title) {
+					case HomeAct.STAR_KEY:
 						if (sqLiteDatabase == null) {
 							sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase
 									(Star_History_PraiseAct.this.getFilesDir().toString() + "/myInfo" +
@@ -191,37 +177,53 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 						new Thread(new Runnable() {
 							@Override
 							public void run() {
-								updatePraiseItemInfoFromResumeOrCreate();
+								updateStarItemInfoFromResumeOrCreate();
 
 							}
 						}).start();
-					} catch (Exception e) {
-						Log.i("ZRH in resume", e.getStackTrace().toString());
-						Log.i("ZRH in resume", e.getMessage());
-						Log.i("ZRH in resume", e.toString());
-					}
+						break;
+					case HomeAct.PRAISE_KEY:
+						try {
+							if (sqLiteDatabase == null) {
+								sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase
+										(Star_History_PraiseAct.this.getFilesDir().toString() + "/myInfo" +
+												".db3", null);
+							}
+							new Thread(new Runnable() {
+								@Override
+								public void run() {
+									updatePraiseItemInfoFromResumeOrCreate();
 
-					break;
-				case HomeAct.HISTORY_KEY:
-					try {
-						if (sqLiteDatabase == null) {
-							sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase
-									(Star_History_PraiseAct.this.getFilesDir().toString() + "/myInfo" +
-											".db3", null);
+								}
+							}).start();
+						} catch (Exception e) {
+							Log.i("ZRH in resume", e.getStackTrace().toString());
+							Log.i("ZRH in resume", e.getMessage());
+							Log.i("ZRH in resume", e.toString());
 						}
-						new Thread(new Runnable() {
-							@Override
-							public void run() {
-								updateHistoryItemInfoFromResumeOrCreate();
 
+						break;
+					case HomeAct.HISTORY_KEY:
+						try {
+							if (sqLiteDatabase == null) {
+								sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase
+										(Star_History_PraiseAct.this.getFilesDir().toString() + "/myInfo" +
+												".db3", null);
 							}
-						}).start();
-					} catch (Exception e) {
-						Log.i("ZRH in resume", e.getStackTrace().toString());
-						Log.i("ZRH in resume", e.getMessage());
-						Log.i("ZRH in resume", e.toString());
-					}
-					break;
+							new Thread(new Runnable() {
+								@Override
+								public void run() {
+									updateHistoryItemInfoFromResumeOrCreate();
+
+								}
+							}).start();
+						} catch (Exception e) {
+							Log.i("ZRH in resume", e.getStackTrace().toString());
+							Log.i("ZRH in resume", e.getMessage());
+							Log.i("ZRH in resume", e.toString());
+						}
+						break;
+				}
 			}
 		}
 		super.onResume();
@@ -236,7 +238,9 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		sqLiteDatabase.close();
+		if (sqLiteDatabase.isOpen()) {
+			sqLiteDatabase.close();
+		}
 		loadZhiHuNewsItemHandler.removeCallbacksAndMessages(null);
 		loadZhiHuNewsItemHandler = null;
 	}
@@ -260,41 +264,43 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 	* 从数据库获取信息
 	* */
 	private void initMyItemInfoFromDatabase() {
-		if (title.equals(HomeAct.STAR_KEY)) {
-			if (sqLiteDatabase == null) {
-				sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(Star_History_PraiseAct.this
-						.getFilesDir().toString() + "/myInfo.db3", null);
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						updateStarItemInfoFromResumeOrCreate();
-					}
-				}).start();
-			}
-		}
-		if (title.equals(HomeAct.PRAISE_KEY)) {
-			if (sqLiteDatabase == null) {
-				sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(Star_History_PraiseAct.this
-						.getFilesDir().toString() + "/myInfo.db3", null);
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						updatePraiseItemInfoFromResumeOrCreate();
-					}
-				}).start();
-			}
-		}
-		if (title.equals(HomeAct.HISTORY_KEY)) {
-			if (sqLiteDatabase == null) {
-				sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(Star_History_PraiseAct.this
-						.getFilesDir().toString() + "/myInfo.db3", null);
-			}
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					updateHistoryItemInfoFromResumeOrCreate();
+		if (HomeAct.userIsLogin) {
+			if (title.equals(HomeAct.STAR_KEY)) {
+				if (sqLiteDatabase == null) {
+					sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(Star_History_PraiseAct.this
+							.getFilesDir().toString() + "/myInfo.db3", null);
+					new Thread(new Runnable() {
+						@Override
+						public void run() {
+							updateStarItemInfoFromResumeOrCreate();
+						}
+					}).start();
 				}
-			}).start();
+			}
+			if (title.equals(HomeAct.PRAISE_KEY)) {
+				if (sqLiteDatabase == null) {
+					sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(Star_History_PraiseAct.this
+							.getFilesDir().toString() + "/myInfo.db3", null);
+					new Thread(new Runnable() {
+						@Override
+						public void run() {
+							updatePraiseItemInfoFromResumeOrCreate();
+						}
+					}).start();
+				}
+			}
+			if (title.equals(HomeAct.HISTORY_KEY)) {
+				if (sqLiteDatabase == null) {
+					sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(Star_History_PraiseAct.this
+							.getFilesDir().toString() + "/myInfo.db3", null);
+				}
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						updateHistoryItemInfoFromResumeOrCreate();
+					}
+				}).start();
+			}
 		}
 	}
 
@@ -331,18 +337,20 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 	}
 
 	private void initMultChoiceClickListener() {
-		if (title.equals(HomeAct.HISTORY_KEY)) {
-			imageView_MultChoice.setVisibility(View.GONE);
-		} else {
-			imageView_MultChoice.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					if (actionMode == null) {
-						createActionModel();
-						recyclerViewEnableMultChoice();
+		if (HomeAct.userIsLogin) {
+			if (title.equals(HomeAct.HISTORY_KEY)) {
+				imageView_MultChoice.setVisibility(View.GONE);
+			} else {
+				imageView_MultChoice.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						if (actionMode == null) {
+							createActionModel();
+							recyclerViewEnableMultChoice();
+						}
 					}
-				}
-			});
+				});
+			}
 		}
 	}
 

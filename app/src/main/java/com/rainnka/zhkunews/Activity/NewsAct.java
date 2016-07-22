@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -29,6 +30,7 @@ import com.rainnka.zhkunews.Bean.ZhiHuNewsItemInfo;
 import com.rainnka.zhkunews.R;
 import com.rainnka.zhkunews.Utility.LengthTransitionUtility;
 import com.rainnka.zhkunews.Utility.SQLiteCreateTableHelper;
+import com.rainnka.zhkunews.Utility.SnackbarUtility;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
@@ -176,69 +178,70 @@ public class NewsAct extends AppCompatActivity {
 		* */
 		loadWebViewContent();
 
-	}
 
+		/*
+		*
+		* */
+		//		setActivityOnTouchEvent();
+	}
 
 	private void addStarImageViewOnClickListener() {
 		imageView_star.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						//						if (sqLiteDatabase == null) {
-						//							try {
-						//								sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(NewsAct.this
-						//										.getFilesDir().toString() + "/myInfo.db3", null);
-						//							} catch (Exception e) {
-						//								Log.i("ZRH", e.toString());
-						//							}
-						//						}
-						while (true) {
-							if (!sqLiteDatabase.inTransaction()) {
-								if (isStar()) {
-									sqLiteDatabase.beginTransaction();
-									sqLiteDatabase.delete("my_star", "ItemId like ?", new
-											String[]{String.valueOf(zhiHuNewsItemInfoFromHome.id)});
-									sqLiteDatabase.setTransactionSuccessful();
-									sqLiteDatabase.endTransaction();
-									if (starOrPraiseHandler != null) {
-										starOrPraiseHandler.sendEmptyMessage(0x4693);
+				if(HomeAct.userIsLogin){
+					new Thread(new Runnable() {
+						@Override
+						public void run() {
+							while (true) {
+								if (!sqLiteDatabase.inTransaction()) {
+									if (isStar()) {
+										sqLiteDatabase.beginTransaction();
+										sqLiteDatabase.delete("my_star", "ItemId like ?", new
+												String[]{String.valueOf(zhiHuNewsItemInfoFromHome.id)});
+										sqLiteDatabase.setTransactionSuccessful();
+										sqLiteDatabase.endTransaction();
+										if (starOrPraiseHandler != null) {
+											starOrPraiseHandler.sendEmptyMessage(0x4693);
+										}
+									} else {
+										sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_STAR_TABLE);
+										ContentValues contentValues = new ContentValues();
+										contentValues.put("ItemId", zhiHuNewsItemInfoFromHome.id);
+										try {
+											contentValues.put("ItemImage", zhiHuNewsItemInfoFromHome.images.get(0));
+										} catch (Exception e) {
+											contentValues.put("ItemImage", zhiHuNewsItemInfoFromHome.image);
+										}
+										contentValues.put("ItemTitle", zhiHuNewsItemInfoFromHome.title);
+										sqLiteDatabase.beginTransaction();
+										sqLiteDatabase.insert("my_star", null, contentValues);
+										sqLiteDatabase.setTransactionSuccessful();
+										sqLiteDatabase.endTransaction();
+										if (starOrPraiseHandler != null) {
+											starOrPraiseHandler.sendEmptyMessage(0x4692);
+										}
 									}
-								} else {
-									sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_STAR_TABLE);
-									ContentValues contentValues = new ContentValues();
-									contentValues.put("ItemId", zhiHuNewsItemInfoFromHome.id);
-									try {
-										contentValues.put("ItemImage", zhiHuNewsItemInfoFromHome.images.get(0));
-									} catch (Exception e) {
-										contentValues.put("ItemImage", zhiHuNewsItemInfoFromHome.image);
-									}
-									contentValues.put("ItemTitle", zhiHuNewsItemInfoFromHome.title);
-									sqLiteDatabase.beginTransaction();
-									sqLiteDatabase.insert("my_star", null, contentValues);
-									sqLiteDatabase.setTransactionSuccessful();
-									sqLiteDatabase.endTransaction();
-									if (starOrPraiseHandler != null) {
-										starOrPraiseHandler.sendEmptyMessage(0x4692);
-									}
+									break;
 								}
-								break;
 							}
 						}
-					}
-				}).start();
+					}).start();
 
-				//测试用
-				//				Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM my_star", null);
-				//				if (cursor != null) {
-				//					if (cursor.moveToFirst()) {
-				//						Log.i("ZRH", "ItemId: " + cursor.getString(1));
-				//						Log.i("ZRH", "ItemImage: " + cursor.getString(2));
-				//						Log.i("ZRH", "ItemTitle: " + cursor.getString(3));
-				//					}
-				//				}
-				//				cursor.close();
+					//测试用
+					//				Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM my_star", null);
+					//				if (cursor != null) {
+					//					if (cursor.moveToFirst()) {
+					//						Log.i("ZRH", "ItemId: " + cursor.getString(1));
+					//						Log.i("ZRH", "ItemImage: " + cursor.getString(2));
+					//						Log.i("ZRH", "ItemTitle: " + cursor.getString(3));
+					//					}
+					//				}
+					//				cursor.close();
+				}else {
+					SnackbarUtility.getSnackbarDefault(coordinatorLayout, "登录后可使用收藏功能", Snackbar
+							.LENGTH_SHORT).show();
+				}
 			}
 		});
 	}
@@ -247,53 +250,53 @@ public class NewsAct extends AppCompatActivity {
 		imageView_praise.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						//						if (sqLiteDatabase == null) {
-						//							try {
-						//								sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(NewsAct.this
-						//										.getFilesDir().toString() + "/myInfo.db3", null);
-						//							} catch (Exception e) {
-						//								Log.i("ZRH", e.toString());
-						//							}
-						//						}
-						while (true) {
-							if (!sqLiteDatabase.inTransaction()) {
-								if (isPraise()) {
-									sqLiteDatabase.beginTransaction();
-									sqLiteDatabase.delete("my_praise", "ItemId like ?", new
-											String[]{String.valueOf(zhiHuNewsItemInfoFromHome.id)});
-									sqLiteDatabase.setTransactionSuccessful();
-									sqLiteDatabase.endTransaction();
-									if (starOrPraiseHandler != null) {
-										starOrPraiseHandler.sendEmptyMessage(0x9418);
+				if (HomeAct.userIsLogin) {
+					new Thread(new Runnable() {
+						@Override
+						public void run() {
+							while (true) {
+								if (!sqLiteDatabase.inTransaction()) {
+									if (isPraise()) {
+										sqLiteDatabase.beginTransaction();
+										sqLiteDatabase.delete("my_praise", "ItemId like ?", new
+												String[]{String.valueOf(zhiHuNewsItemInfoFromHome.id)});
+										sqLiteDatabase.setTransactionSuccessful();
+										sqLiteDatabase.endTransaction();
+										if (starOrPraiseHandler != null) {
+											starOrPraiseHandler.sendEmptyMessage(0x9418);
+										}
+									} else {
+										sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_PRAISE_TABLE);
+										ContentValues contentValues = new ContentValues();
+										contentValues.put("ItemId", zhiHuNewsItemInfoFromHome.id);
+										try {
+											contentValues.put("ItemImage", zhiHuNewsItemInfoFromHome.images.get(0));
+										} catch (Exception e) {
+											contentValues.put("ItemImage", zhiHuNewsItemInfoFromHome.image);
+										}
+										contentValues.put("ItemTitle", zhiHuNewsItemInfoFromHome.title);
+										sqLiteDatabase.beginTransaction();
+										sqLiteDatabase.insert("my_praise", null, contentValues);
+										sqLiteDatabase.setTransactionSuccessful();
+										sqLiteDatabase.endTransaction();
+										if (starOrPraiseHandler != null) {
+											starOrPraiseHandler.sendEmptyMessage(0x9419);
+										}
 									}
-								} else {
-									sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_PRAISE_TABLE);
-									ContentValues contentValues = new ContentValues();
-									contentValues.put("ItemId", zhiHuNewsItemInfoFromHome.id);
-									try {
-										contentValues.put("ItemImage", zhiHuNewsItemInfoFromHome.images.get(0));
-									} catch (Exception e) {
-										contentValues.put("ItemImage", zhiHuNewsItemInfoFromHome.image);
-									}
-									contentValues.put("ItemTitle", zhiHuNewsItemInfoFromHome.title);
-									sqLiteDatabase.beginTransaction();
-									sqLiteDatabase.insert("my_praise", null, contentValues);
-									sqLiteDatabase.setTransactionSuccessful();
-									sqLiteDatabase.endTransaction();
-									if (starOrPraiseHandler != null) {
-										starOrPraiseHandler.sendEmptyMessage(0x9419);
-									}
+									break;
 								}
-								break;
 							}
 						}
-					}
-				}).start();
+					}).start();
+				} else {
+					SnackbarUtility.getSnackbarDefault(coordinatorLayout, "登录后可使用点赞功能", Snackbar
+							.LENGTH_SHORT).show();
+				}
+
 			}
 		});
+
+
 	}
 
 	private void initToolbar() {
@@ -452,35 +455,39 @@ public class NewsAct extends AppCompatActivity {
 	}
 
 	private void judgeStarState() {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				Message msg = new Message();
-				Bundle bundle = new Bundle();
-				bundle.putBoolean("isStar", isStar());
-				msg.setData(bundle);
-				msg.what = 0x5555;
-				if (starOrPraiseHandler != null) {
-					starOrPraiseHandler.sendMessage(msg);
+		if (HomeAct.userIsLogin) {
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					Message msg = new Message();
+					Bundle bundle = new Bundle();
+					bundle.putBoolean("isStar", isStar());
+					msg.setData(bundle);
+					msg.what = 0x5555;
+					if (starOrPraiseHandler != null) {
+						starOrPraiseHandler.sendMessage(msg);
+					}
 				}
-			}
-		}).start();
+			}).start();
+		}
 	}
 
 	private void judgePraiseState() {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				Message msg = new Message();
-				Bundle bundle = new Bundle();
-				bundle.putBoolean("isPraise", isPraise());
-				msg.setData(bundle);
-				msg.what = 0x5556;
-				if (starOrPraiseHandler != null) {
-					starOrPraiseHandler.sendMessage(msg);
+		if (HomeAct.userIsLogin) {
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					Message msg = new Message();
+					Bundle bundle = new Bundle();
+					bundle.putBoolean("isPraise", isPraise());
+					msg.setData(bundle);
+					msg.what = 0x5556;
+					if (starOrPraiseHandler != null) {
+						starOrPraiseHandler.sendMessage(msg);
+					}
 				}
-			}
-		}).start();
+			}).start();
+		}
 	}
 
 	@Override
@@ -510,7 +517,7 @@ public class NewsAct extends AppCompatActivity {
 			webView.clearCache(true);
 			webView.loadUrl("about:blank");
 			webView.pauseTimers();
-//			webView.destroy();
+			//			webView.destroy();
 			webView = null;
 		}
 	}
