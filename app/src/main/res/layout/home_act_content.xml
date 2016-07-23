@@ -45,7 +45,7 @@
 
                 </android.support.v4.view.ViewPager>
 
-                <com.rainnka.zhkunews.CustomView.HomeActivityViewPagerIndicator
+                <com.rainnka.ZHNews.CustomView.HomeActivityViewPagerIndicator
                     android:id="@+id/homeActivity_Content_main_HomeActivityRecyclerViewIndicator"
                     android:layout_width="match_parent"
                     android:layout_height="22dp"
@@ -55,7 +55,7 @@
                     android:gravity="center"
                     android:padding="8dp">
 
-                </com.rainnka.zhkunews.CustomView.HomeActivityViewPagerIndicator>
+                </com.rainnka.ZHNews.CustomView.HomeActivityViewPagerIndicator>
 
             </FrameLayout>
 

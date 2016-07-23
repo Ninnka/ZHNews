@@ -1,4 +1,4 @@
-<manifest package="com.rainnka.zhkunews"
+<manifest package="com.rainnka.ZHNews"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -11,7 +11,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".Activity.HomeAct"
+            android:name="com.rainnka.ZHNews.Activity.HomeAct"
             android:screenOrientation="portrait"
             android:theme="@style/HomeTheme">
 
@@ -22,7 +22,7 @@
         </activity>
 
         <activity
-            android:name=".Activity.NewsAct"
+            android:name="com.rainnka.ZHNews.Activity.NewsAct"
             android:screenOrientation="portrait"
             android:theme="@style/NewsTheme">
 
@@ -33,7 +33,7 @@
         </activity>
 
         <activity
-            android:name=".Activity.Star_History_PraiseAct"
+            android:name="com.rainnka.ZHNews.Activity.Star_History_PraiseAct"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
 
@@ -44,7 +44,7 @@
         </activity>
 
         <activity
-            android:name=".Activity.LoginAct"
+            android:name="com.rainnka.ZHNews.Activity.LoginAct"
             android:screenOrientation="portrait"
             android:theme="@style/LoginTheme"
             android:windowSoftInputMode="adjustResize">
@@ -56,7 +56,7 @@
         </activity>
 
         <activity
-            android:name=".Activity.ProfilePageAct"
+            android:name="com.rainnka.ZHNews.Activity.ProfilePageAct"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize">
@@ -67,7 +67,7 @@
         </activity>
 
         <activity
-            android:name=".Activity.NotificationAct"
+            android:name="com.rainnka.ZHNews.Activity.NotificationAct"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.NotificationPage"/>
@@ -76,9 +76,26 @@
         </activity>
 
         <activity
-            android:name=".Activity.WelcomeAct"
-            android:theme="@style/WelcomeTheme">
+            android:name="com.rainnka.ZHNews.Activity.FeedbackAct"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.Feedback"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
 
+        <activity
+            android:name="com.rainnka.ZHNews.Activity.AboutAct"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.AboutPage"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.rainnka.ZHNews.Activity.WelcomeAct"
+            android:theme="@style/WelcomeTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
