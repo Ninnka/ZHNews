@@ -128,7 +128,7 @@
         app:fab_labelsPosition="left"
         app:layout_anchor="@id/homeActivity_Content_main_RecyclerView"
         app:layout_anchorGravity="end|bottom"
-        app:layout_behavior="com.rainnka.zhkunews.Behavior.FABScrollToHaWBehavior">
+        app:layout_behavior="com.rainnka.ZHNews.Behavior.FABScrollToHaWBehavior">
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/homeActivity_Content_main_FABMenu_item_FAB_quickUp"

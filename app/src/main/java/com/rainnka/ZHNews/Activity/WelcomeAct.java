@@ -60,7 +60,7 @@ public class WelcomeAct extends AppCompatActivity {
 //		});
 		setContentView(R.layout.welcome_act);
 		linearLayout = (LinearLayout) findViewById(R.id.welCome_Activity_welcomeBackgroud);
-		welcomeHandler.sendEmptyMessageDelayed(0x123, 3500);
+		welcomeHandler.sendEmptyMessageDelayed(0x123, 3000);
 	}
 
 	@Override

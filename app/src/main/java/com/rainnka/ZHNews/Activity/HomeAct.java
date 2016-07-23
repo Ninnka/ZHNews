@@ -168,6 +168,10 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 	public final static String INTENT_TO_NOTIFICATION_KEY = "android.intent.action" +
 			".NotificationPage";
 
+	public final static String INTENT_TO_FEEDBACK_KEY = "android.intent.action.FeedbackPage";
+
+	public final static String INTENT_TO_ABOUT_KEY = "android.intent.action.AboutPage";
+
 	public final static String INTENT_STRING_DATA_KEY = "STRING_DATA_KEY";
 	public final static String STAR_KEY = "star";
 	public final static String HISTORY_KEY = "history";
@@ -446,7 +450,7 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 					final ZhiHuNewsItemInfo temp_zhiHuNewsItemInfo = homeActivityRecyclerViewAdapter
 							.zhiHuNewsItemInfoList.get(viewHolder.getAdapterPosition());
 
-					if(userIsLogin){
+					if (userIsLogin) {
 						sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_HISTORY_TABLE);
 						try {
 							sqLiteDatabase.beginTransaction();
@@ -1080,7 +1084,6 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 			case R.id.drawer_home:
 				drawerLayout.closeDrawers();
 				onRefresh();
-
 				break;
 
 			case R.id.drawer_star:
@@ -1122,12 +1125,14 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 
 				break;
 			case R.id.drawer_response:
-				actionForNavigationItemSelected(item);
-
+				intent = new Intent();
+				intent.setAction(INTENT_TO_FEEDBACK_KEY);
+				startActivity(intent);
 				break;
 			case R.id.drawer_about:
-				actionForNavigationItemSelected(item);
-
+				intent = new Intent();
+				intent.setAction(INTENT_TO_ABOUT_KEY);
+				startActivity(intent);
 				break;
 			case R.id.drawer_exit:
 				finish();

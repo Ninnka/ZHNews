@@ -14,7 +14,7 @@
     android:foreground="@drawable/home_act_recv_touch_ripper"
     app:cardCornerRadius="3.5dp"
     app:cardElevation="1dp"
-    app:cardMaxElevation="2dp"
+    app:cardMaxElevation="3dp"
     app:cardPreventCornerOverlap="true"
     app:contentPadding="12dp">
 

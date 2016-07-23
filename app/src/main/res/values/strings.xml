@@ -1,13 +1,12 @@
 <resources>
-    <string name="app_name">ZHKUNews</string>
+    <string name="app_name">ZHNews</string>
     <string name="home_activity_content_collapsingtoolbar_title">Home</string>
     <string name="open_drawer">OpenDrawer</string>
     <string name="close_drawer">CloseDrawer</string>
     <string name="testText">这是title之类的！这是title之类的！这是title之类的！这是title之类的！这是title之类的！</string>
-    <string name="bg1_title">ZHKU news (一)</string>
-    <string name="bg2_title">ZHKU news (二)</string>
-    <string name="bg3_title">ZHKU news (三)</string>
     <string name="imageViewContentDescribtion">pic</string>
+    <string name="about_act_sources">https://github.com/Rennzh/ZHNews</string>
+    <string name="about_act_author_email"><![CDATA[Rainnka <hennzr@gmail.com>]]></string>
     <string-array name="bg_title">
         <item>this is title about bg1</item>
         <item>this is title about bg2</item>
