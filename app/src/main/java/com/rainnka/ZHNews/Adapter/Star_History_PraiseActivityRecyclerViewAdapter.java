@@ -114,6 +114,21 @@ public class Star_History_PraiseActivityRecyclerViewAdapter extends RecyclerView
 		mIsSelected = selectable;
 	}
 
+	public void setMultiSelectable(RecyclerView.ViewHolder viewHolder) {
+		int lastPostionInSparse = mSelectedPositions.keyAt(mSelectedPositions.size() - 1);
+		int position = viewHolder.getAdapterPosition();
+		if (position > lastPostionInSparse) {
+			for (int i = lastPostionInSparse + 1; i <= position; i++) {
+				setItemChecked(i, true);
+			}
+		} else {
+			for (int i = position; i < lastPostionInSparse; i++) {
+				setItemChecked(i, true);
+			}
+		}
+
+	}
+
 	public boolean getSelectable() {
 		return mIsSelected;
 	}
@@ -124,6 +139,17 @@ public class Star_History_PraiseActivityRecyclerViewAdapter extends RecyclerView
 
 	public boolean getItemChecked(int position) {
 		return mSelectedPositions.get(position, false);
+	}
+
+	public void setSignVisibility(RecyclerView.ViewHolder viewHolder, int visibility) {
+		((Star_History_PraiseActivityRecyclerViewAdapter
+				.RecyclerViewContentViewHolder) viewHolder).check_tv.setVisibility
+				(visibility);
+//		if (visibility == View.GONE || visibility == View.INVISIBLE) {
+//			removeSelectedItem(viewHolder.getAdapterPosition());
+//		} else {
+//			setItemChecked(viewHolder.getAdapterPosition(), true);
+//		}
 	}
 
 	public void removeSelectedItem(int position) {

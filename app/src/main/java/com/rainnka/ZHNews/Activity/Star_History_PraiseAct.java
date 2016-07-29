@@ -24,6 +24,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.rainnka.ZHNews.Adapter.Star_History_PraiseActivityRecyclerViewAdapter;
@@ -50,6 +51,7 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 	protected RecyclerView recyclerView;
 	protected SwipeRefreshLayout swipeRefreshLayout;
 	protected ImageView imageView_MultChoice;
+	protected TextView textView_Clear;
 
 	public ActionMode actionMode;
 
@@ -317,6 +319,8 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 		swipeRefreshLayout.setEnabled(false);
 		imageView_MultChoice = (ImageView) findViewById(R.id
 				.star_history_praiseActivity_Content_main_MultChoice_ImageView);
+		textView_Clear = (TextView) findViewById(R.id
+				.star_history_praiseActivity_Content_main_clear_TextView);
 	}
 
 	private void initToolbar() {
@@ -340,7 +344,19 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 		if (HomeAct.userIsLogin) {
 			if (title.equals(HomeAct.HISTORY_KEY)) {
 				imageView_MultChoice.setVisibility(View.GONE);
+				textView_Clear.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						new Thread(new Runnable() {
+							@Override
+							public void run() {
+								deleteAllItem();
+							}
+						}).start();
+					}
+				});
 			} else {
+				textView_Clear.setVisibility(View.GONE);
 				imageView_MultChoice.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
@@ -439,17 +455,15 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 
 					if (star_history_praiseActivityRecyclerViewAdapter.getItemChecked(viewHolder
 							.getAdapterPosition())) {
-						((Star_History_PraiseActivityRecyclerViewAdapter
-								.RecyclerViewContentViewHolder) viewHolder).check_tv.setVisibility
-								(View.GONE);
 						star_history_praiseActivityRecyclerViewAdapter.removeSelectedItem
 								(viewHolder.getAdapterPosition());
+						star_history_praiseActivityRecyclerViewAdapter.setSignVisibility
+								(viewHolder, View.GONE);
 					} else {
-						((Star_History_PraiseActivityRecyclerViewAdapter
-								.RecyclerViewContentViewHolder) viewHolder).check_tv.setVisibility
-								(View.VISIBLE);
 						star_history_praiseActivityRecyclerViewAdapter.setItemChecked(viewHolder
 								.getAdapterPosition(), true);
+						star_history_praiseActivityRecyclerViewAdapter.setSignVisibility
+								(viewHolder, View.VISIBLE);
 					}
 					setActionModeTitle();
 
@@ -469,7 +483,59 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 			@Override
 			public void onItemLongClick(RecyclerView.ViewHolder viewHolder) {
 				if (!title.equals(HomeAct.HISTORY_KEY)) {
-					itemTouchHelper.startSwipe(viewHolder);
+					if (!star_history_praiseActivityRecyclerViewAdapter.mIsSelected) {
+						itemTouchHelper.startSwipe(viewHolder);
+					} else {
+						//						star_history_praiseActivityRecyclerViewAdapter.setItemChecked(viewHolder
+						//								.getAdapterPosition(),true);
+						if (!star_history_praiseActivityRecyclerViewAdapter.getItemChecked(viewHolder
+								.getAdapterPosition())) {
+
+							LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
+							int lastPositionBeChecked =
+									star_history_praiseActivityRecyclerViewAdapter
+											.mSelectedPositions.keyAt
+											(star_history_praiseActivityRecyclerViewAdapter
+													.mSelectedPositions.size() - 1);
+							int position = viewHolder.getAdapterPosition();
+							if (position > lastPositionBeChecked) {
+								for (int i = lastPositionBeChecked + 1; i <= position; i++) {
+									if (manager.findViewByPosition(i) != null) {
+										View view = manager.findViewByPosition(i);
+										if (recyclerView.getChildViewHolder(view) != null) {
+											Star_History_PraiseActivityRecyclerViewAdapter.RecyclerViewContentViewHolder
+													recyclerViewContentViewHolder =
+													(Star_History_PraiseActivityRecyclerViewAdapter
+															.RecyclerViewContentViewHolder) recyclerView.getChildViewHolder(view);
+											star_history_praiseActivityRecyclerViewAdapter
+													.setSignVisibility
+															(recyclerViewContentViewHolder, View.VISIBLE);
+
+										}
+									}
+								}
+							} else {
+								for (int i = position; i < lastPositionBeChecked; i++) {
+									if (manager.findViewByPosition(i) != null) {
+										View view = manager.findViewByPosition(i);
+										if (recyclerView.getChildViewHolder(view) != null) {
+											Star_History_PraiseActivityRecyclerViewAdapter.RecyclerViewContentViewHolder
+													recyclerViewContentViewHolder =
+													(Star_History_PraiseActivityRecyclerViewAdapter
+															.RecyclerViewContentViewHolder) recyclerView.getChildViewHolder(view);
+											star_history_praiseActivityRecyclerViewAdapter
+													.setSignVisibility
+															(recyclerViewContentViewHolder, View.VISIBLE);
+
+										}
+									}
+								}
+							}
+							star_history_praiseActivityRecyclerViewAdapter.setMultiSelectable
+									(viewHolder);
+							setActionModeTitle();
+						}
+					}
 				}
 			}
 		});
@@ -897,17 +963,23 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 	protected void deleteAllItem() {
 		if (title.equals(HomeAct.STAR_KEY)) {
 			sqLiteDatabase.delete("my_star", null, null);
-		} else {
+		} else if (title.equals(HomeAct.PRAISE_KEY)) {
 			sqLiteDatabase.delete("my_praise", null, null);
+		} else {
+			sqLiteDatabase.delete("my_history", null, null);
 		}
-		int deleteCount = star_history_praiseActivityRecyclerViewAdapter.zhiHuNewsItemInfoList.size();
+		int deleteCount = star_history_praiseActivityRecyclerViewAdapter.getItemCount();
 		star_history_praiseActivityRecyclerViewAdapter.zhiHuNewsItemInfoList.clear();
 		star_history_praiseActivityRecyclerViewAdapter.clearCheckedItem();
 		Message msg = new Message();
 		Bundle bundle = new Bundle();
 		bundle.putInt("deleteCount", deleteCount);
 		msg.setData(bundle);
-		msg.what = 0x999;
+		if (!title.equals(HomeAct.HISTORY_KEY)) {
+			msg.what = 0x999;
+		}else {
+			msg.what = 0x777;
+		}
 		if (loadZhiHuNewsItemHandler != null) {
 			loadZhiHuNewsItemHandler.sendMessage(msg);
 		}
@@ -995,6 +1067,9 @@ public class Star_History_PraiseAct extends AppCompatActivity {
 							.notifyItemRangeRemoved(0, msg.getData().getInt("deleteCount"));
 					star_history_praiseAct.setActionModeTitle();
 					break;
+				case 0x777:
+					star_history_praiseAct.star_history_praiseActivityRecyclerViewAdapter
+							.notifyItemRangeRemoved(0, msg.getData().getInt("deleteCount"));
 			}
 
 		}
