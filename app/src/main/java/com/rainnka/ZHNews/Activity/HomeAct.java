@@ -30,7 +30,6 @@ import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.transition.Fade;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -102,6 +101,8 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 	protected com.getbase.floatingactionbutton.FloatingActionButton
 			floatingActionButton_quickDown;
 	protected FloatingActionsMenu floatingActionsMenu;
+
+	public TextView textView_netStatus;
 
 	public RemoteViews remoteViews_notification;
 
@@ -184,6 +185,8 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 
 	public final static int PENDINGINTENT_NEWS_REQUESTCODE = 0x87;
 
+	private Boolean isFirstLoadingContent = true;
+
 	private Boolean isLoadBanner = false;
 
 	protected OkHttpClient okHttpClient;
@@ -205,12 +208,12 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 
 		setContentView(R.layout.home_act);
 
-		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-			Fade slideTransition = new Fade();
-			slideTransition.setDuration(400);
-			getWindow().setReenterTransition(slideTransition);
-			getWindow().setExitTransition(slideTransition);
-		}
+		//		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+		//			Fade slideTransition = new Fade();
+		//			slideTransition.setDuration(400);
+		//			getWindow().setReenterTransition(slideTransition);
+		//			getWindow().setExitTransition(slideTransition);
+		//		}
 
 		//		ViewStubCompat viewStubCompat = (ViewStubCompat) findViewById(R.id.home_activity_content_viewstub);
 		//		viewStubCompat.setVisibility(View.VISIBLE);
@@ -219,6 +222,21 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 		* 初始化网络连接管理器
 		* */
 		initConnectivityManager();
+
+		/*
+		* 初始化Gson
+		* */
+		initGson();
+
+		/*
+		* 初始化日期
+		* */
+		initDate();
+
+		/*
+		* 初始化 Handler
+		* */
+		initHandler();
 
 		/*
 		* 初始化网络连接客户端
@@ -245,10 +263,6 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 		* */
 		initToolbar();
 
-		/*
-		* 初始化 Handler
-		* */
-		initHandler();
 
 		/*
 		* 初始化通知管理器
@@ -256,22 +270,12 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 		initNotificationManager();
 
 		/*
-		* 初始化 线程
+		* 初始化后退键状态监控线程
 		* */
 		initThreadORRunnable();
 
 		/*
-		* 初始化Gson
-		* */
-		initGson();
-
-		/*
-		* 初始化日期
-		* */
-		initDate();
-
-		/*
-		* 设置NavigationView Toggle
+		* 设置 NavigationView Toggle
 		* */
 		initActionBarDrawerToggle();
 
@@ -314,18 +318,15 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 		* */
 		addRecyclerViewOnItemClickListener();
 
-
 		/*
 		* 首次启动时加载最新的内容
 		* */
 		initZhiHuContent();
 
-
 		/*
 		* 设置 swipeRefreshLayout 监听事件
 		* */
 		initSettingSwipeRefreshLayout();
-
 
 		/*
 		* 设置appbar下的fab按钮的点击事件
@@ -521,18 +522,20 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 	* 获取已登录的用户
 	* */
 	private void initUser() {
-		sharedPreferences = getSharedPreferences("up", MODE_PRIVATE);
-		if (sharedPreferences.getString("isLogin", " ").equals("Y")) {
-			userIsLogin = true;
-			username = sharedPreferences.getString("username", " ");
-			password = sharedPreferences.getString("password", " ");
-			if (username.equals("admin") && password.equals("root")) {
-				nickname = sharedPreferences.getString("nickname", "");
-				profile_tv.setText(nickname);
-				navigationView.getMenu().setGroupVisible(R.id.group2, true);
-				username = "";
-				password = "";
-				nickname = "";
+		if (getConnectivityStatus()) {
+			sharedPreferences = getSharedPreferences("up", MODE_PRIVATE);
+			if (sharedPreferences.getString("isLogin", " ").equals("Y")) {
+				userIsLogin = true;
+				username = sharedPreferences.getString("username", " ");
+				password = sharedPreferences.getString("password", " ");
+				if (username.equals("admin") && password.equals("root")) {
+					nickname = sharedPreferences.getString("nickname", "");
+					profile_tv.setText(nickname);
+					navigationView.getMenu().setGroupVisible(R.id.group2, true);
+					username = "";
+					password = "";
+					nickname = "";
+				}
 			}
 		}
 	}
@@ -747,15 +750,11 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 	/*
 	* 获取网络连接相关状况
 	* */
-	private boolean getConnectivityCondition() {
+	private boolean getConnectivityStatus() {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			Network[] networks = connectivityManager.getAllNetworks();
 			if (networks != null && networks.length > 0) {
 				for (int i = 0; i < networks.length; i++) {
-					//					Log.i("ZRH", "network status: " + connectivityManager.getNetworkInfo
-					//							(networks[i]).getState());
-					//					Log.i("ZRH", "network tyoe: " + connectivityManager.getNetworkInfo(networks[i]
-					//					).getType());
 					if (connectivityManager.getNetworkInfo(networks[i]).getState() == NetworkInfo
 							.State.CONNECTED) {
 						return true;
@@ -765,6 +764,13 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 				Snackbar snackbar = SnackbarUtility.getSnackbarDefault(coordinatorLayout,
 						"咦，没有可用的网络吔", 3000);
 				snackbar.show();
+				if (textView_netStatus.getVisibility() == View.GONE) {
+					textView_netStatus.setVisibility(View.VISIBLE);
+				}
+				textView_netStatus.setText("无可用网络\n\n点击刷新咯");
+				if (floatingActionsMenu.getVisibility() == View.VISIBLE) {
+					floatingActionsMenu.setVisibility(View.GONE);
+				}
 				//				Log.i("ZRH", "无可用网络");
 				return false;
 			}
@@ -772,8 +778,6 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 			NetworkInfo[] networkInfos = connectivityManager.getAllNetworkInfo();
 			if (networkInfos != null && networkInfos.length > 0) {
 				for (int i = 0; i < networkInfos.length; i++) {
-					//					Log.i("ZRH", "network status: " + networkInfos[i].getState());
-					//					Log.i("ZRH", "network type: " + networkInfos[i].getType());
 					if (networkInfos[i].getState() == NetworkInfo.State.CONNECTED) {
 						return true;
 					}
@@ -782,6 +786,13 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 				Snackbar snackbar = SnackbarUtility.getSnackbarDefault(coordinatorLayout,
 						"咦，没有可用的网络吔", 3000);
 				snackbar.show();
+				if (textView_netStatus.getVisibility() == View.GONE) {
+					textView_netStatus.setVisibility(View.VISIBLE);
+				}
+				textView_netStatus.setText("无可用网络\n\n点击刷新咯");
+				if (floatingActionsMenu.getVisibility() == View.VISIBLE) {
+					floatingActionsMenu.setVisibility(View.GONE);
+				}
 				return false;
 			}
 		}
@@ -792,39 +803,48 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 	* 首次启动时加载最新的内容
 	* */
 	private void initZhiHuContent() {
-		if (getConnectivityCondition()) {
-			Request request = new Request.Builder()
-					.url(ZHIHUAPI_LATEST)
-					.build();
-
-			Call call = okHttpClient.newCall(request);
-			call.enqueue(new Callback() {
-				@Override
-				public void onFailure(Request request, IOException e) {
-					Snackbar snackbar = SnackbarUtility.getSnackbarDefault(coordinatorLayout,
-							"咦，网络不太顺畅吔", 3000);
-					snackbar.show();
-				}
-
-				@Override
-				public void onResponse(Response response) throws IOException {
-					if (response.code() == 200) {
-						//						Log.i("ZRH", "success in access url: " + response.request().urlString());
-						zhiHuNewsLatestItemInfo = gson.fromJson(response.body().string(),
-								ZhiHuNewsLatestItemInfo.class);
-						zhiHuNewsTopItemInfoList = zhiHuNewsLatestItemInfo
-								.top_stories;
-						current_date_from_zhihu = zhiHuNewsLatestItemInfo.date + "";
-						current_date_year = current_date_from_zhihu.substring(0, 4);
-						current_date_month = current_date_from_zhihu.substring(4, 6);
-						current_date_day = current_date_from_zhihu.substring(6, 8);
-						Message message = new Message();
-						message.what = RECYCLER_REFRESH_LATEST;
-						recyclerRefreshHandler.sendMessage(message);
-
+		if (getConnectivityStatus()) {
+			if (isFirstLoadingContent) {
+				swipeRefreshLayout.setEnabled(false);
+				Request request = new Request.Builder()
+						.url(ZHIHUAPI_LATEST)
+						.build();
+				Call call = okHttpClient.newCall(request);
+				call.enqueue(new Callback() {
+					@Override
+					public void onFailure(Request request, IOException e) {
+						Snackbar snackbar = SnackbarUtility.getSnackbarDefault(coordinatorLayout,
+								"咦，网络不太顺畅吔", 3000);
+						snackbar.show();
+						if (textView_netStatus.getVisibility() == View.GONE) {
+							textView_netStatus.setVisibility(View.VISIBLE);
+						}
+						textView_netStatus.setText("咦，网络不太顺畅吔\n\n点击刷新咯");
+						if (floatingActionsMenu.getVisibility() == View.VISIBLE) {
+							floatingActionsMenu.setVisibility(View.GONE);
+						}
 					}
-				}
-			});
+
+					@Override
+					public void onResponse(Response response) throws IOException {
+						if (response.code() == 200) {
+							//						Log.i("ZRH", "success in access url: " + response.request().urlString());
+							zhiHuNewsLatestItemInfo = gson.fromJson(response.body().string(),
+									ZhiHuNewsLatestItemInfo.class);
+							zhiHuNewsTopItemInfoList = zhiHuNewsLatestItemInfo
+									.top_stories;
+							current_date_from_zhihu = zhiHuNewsLatestItemInfo.date + "";
+							current_date_year = current_date_from_zhihu.substring(0, 4);
+							current_date_month = current_date_from_zhihu.substring(4, 6);
+							current_date_day = current_date_from_zhihu.substring(6, 8);
+							Message message = new Message();
+							message.what = RECYCLER_REFRESH_LATEST;
+							recyclerRefreshHandler.sendMessage(message);
+							isFirstLoadingContent = false;
+						}
+					}
+				});
+			}
 		}
 	}
 
@@ -900,6 +920,8 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 				.home_activity_drawer_header_login_info_profile_iv);
 		profile_tv = (TextView) navigationView.getHeaderView(0).findViewById(R.id
 				.home_activity_drawer_header_login_info_profile_tv);
+
+		textView_netStatus = (TextView) findViewById(R.id.home_act_netstatus_TextView);
 	}
 
 	/*
@@ -930,7 +952,18 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 				.close_drawer);
 		actionBarDrawerToggle.syncState();
 
-		drawerLayout.addDrawerListener(actionBarDrawerToggle);
+//		drawerLayout.addDrawerListener(actionBarDrawerToggle);
+		drawerLayout.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+			@Override
+			public void onDrawerOpened(View drawerView) {
+				super.onDrawerOpened(drawerView);
+				if(!userIsLogin){
+					if(getConnectivityStatus()){
+						initUser();
+					}
+				}
+			}
+		});
 	}
 
 	/*
@@ -1009,7 +1042,7 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 		if (!swipeRefreshLayout.isRefreshing()) {
 			swipeRefreshLayout.setRefreshing(true);
 		}
-		if (getConnectivityCondition()) {
+		if (getConnectivityStatus()) {
 			Request request = new Request.Builder()
 					.url(ZHIHUAPI_LATEST)
 					.build();
@@ -1033,6 +1066,7 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 						Message message = new Message();
 						message.what = RECYCLER_REFRESH_NEW;
 						recyclerRefreshHandler.sendMessage(message);
+
 					}
 				}
 			});
@@ -1043,7 +1077,7 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 	public void refreshOldNews() {
 		swipeRefreshLayout.setRefreshing(true);
 
-		if (getConnectivityCondition()) {
+		if (getConnectivityStatus()) {
 			refressh_old_date = current_simple_date_format;
 			String oldUrl = ZHIHUAPI_BEFORE + refressh_old_date;
 			Request request = new Request.Builder()
@@ -1083,7 +1117,12 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 
 			case R.id.drawer_home:
 				drawerLayout.closeDrawers();
-				onRefresh();
+				if (isFirstLoadingContent) {
+					initZhiHuContent();
+				} else {
+					onRefresh();
+				}
+
 				break;
 
 			case R.id.drawer_star:
@@ -1278,6 +1317,12 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 			super.handleMessage(msg);
 			switch (msg.what) {
 				case RECYCLER_REFRESH_LATEST:
+					if (homeAct.textView_netStatus.getVisibility() == View.VISIBLE) {
+						homeAct.textView_netStatus.setVisibility(View.GONE);
+					}
+					if (homeAct.floatingActionsMenu.getVisibility() == View.GONE) {
+						homeAct.floatingActionsMenu.setVisibility(View.VISIBLE);
+					}
 
 					/*
 					* 加载顶部banner的内容
@@ -1382,11 +1427,19 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 					homeAct.recyclerView.setAdapter(homeAct.homeActivityRecyclerViewAdapter);
 					homeAct.recyclerView.setLayoutManager(homeAct.linearLayoutManager);
 
+					homeAct.swipeRefreshLayout.setEnabled(true);
+
 					homeAct.notificationHandler.sendEmptyMessage(0x4826);
 
 					break;
 
 				case RECYCLER_REFRESH_NEW:
+					if (homeAct.textView_netStatus.getVisibility() == View.VISIBLE) {
+						homeAct.textView_netStatus.setVisibility(View.GONE);
+					}
+					if (homeAct.floatingActionsMenu.getVisibility() == View.GONE) {
+						homeAct.floatingActionsMenu.setVisibility(View.VISIBLE);
+					}
 
 					/*
 					* 更新顶部banner的内容

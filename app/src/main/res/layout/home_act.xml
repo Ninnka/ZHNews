@@ -9,15 +9,18 @@
     android:fitsSystemWindows="true"
     tools:context=".Activity.HomeAct">
 
+
     <!-- main content -->
     <include layout="@layout/home_act_content"/>
 
-    <!--<android.support.v7.widget.ViewStubCompat-->
-    <!--android:id="@+id/home_activity_content_viewstub"-->
-    <!--layout="@layout/home_activity_content"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"/>-->
-
+    <TextView
+        android:id="@+id/home_act_netstatus_TextView"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="无可用网络\n\n点击刷新"
+        android:textSize="20sp"/>
 
     <!-- navigation -->
     <android.support.design.widget.NavigationView
