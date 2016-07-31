@@ -6,15 +6,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     tools:context=".Activity.HomeAct"
+    android:fitsSystemWindows="true"
     tools:showIn="@layout/home_act">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/homeActivity_Content_main_AppBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        android:layout_height="wrap_content">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/homeActivity_Content_main_CollapsingToolbarLayout"
@@ -88,6 +88,8 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/homeActivity_Content_main_RecyclerView"
                 android:layout_width="match_parent"
+                android:fitsSystemWindows="true"
+                android:clipToPadding="false"
                 android:layout_height="match_parent"
                 android:background="@color/homeActivityRecyclerViewBackgroud"
                 android:scrollbars="none"
@@ -148,10 +150,5 @@
             app:fab_title="快速底部"/>
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
-
-    <!--<TextView-->
-    <!--android:background="@color/md_blue_300"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"/>-->
 
 </android.support.design.widget.CoordinatorLayout>

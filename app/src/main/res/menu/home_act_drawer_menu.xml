@@ -92,6 +92,10 @@
             android:icon="@mipmap/exit"
             android:title="退出"/>
 
+        <item
+            android:title=""
+            android:id="@+id/drawer_null"/>
+
     </group>
 
 </menu>

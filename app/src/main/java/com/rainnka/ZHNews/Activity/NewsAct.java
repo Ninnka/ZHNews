@@ -113,6 +113,7 @@ public class NewsAct extends BaseAct {
 		* 适应 （API19） android4.4的版本
 		* */
 		if (Build.VERSION.SDK_INT == 19) {
+			coordinatorLayout.setFitsSystemWindows(false);
 			appBarLayout.setFitsSystemWindows(false);
 			CollapsingToolbarLayout.LayoutParams layoutParams = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
 			layoutParams.setMargins(0, LengthTransitionUtility.getStatusBarHeight(this), 0, 0);

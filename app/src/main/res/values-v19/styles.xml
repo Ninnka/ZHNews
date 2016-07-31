@@ -5,17 +5,22 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorPrimaryDark</item>
 
         <!--<item name="android:textColorPrimary">@color/colorPrimary</item>-->
         <item name="android:windowNoTitle">true</item>
+        <!--<item name="navigationBarColor">#AA555555</item>-->
 
         <!-- navigationview toggle 的颜色 -->
         <item name="colorControlNormal">#FFFFFF</item>
 
         <!-- 防止actionMode情况下 toolbar移位 -->
         <item name="windowActionModeOverlay">true</item>
+
+
+        <!--<item name="android:windowTranslucentStatus">true</item>-->
+        <!--<item name="android:windowTranslucentNavigation">true</item>-->
 
     </style>
 
@@ -26,34 +31,34 @@
     <style name="HomeTheme" parent="AppTheme">
 
         <!-- statusbar设置 -->
-        <item name="android:windowTranslucentStatus">true</item>
+        <!--<item name="android:windowTranslucentStatus">true</item>-->
         <!--<item name="android:windowTranslucentNavigation">true</item>-->
 
-        <item name="colorPrimary">@android:color/white</item>
-        <item name="colorPrimaryDark">@android:color/white</item>
+        <!--<item name="colorPrimary">@android:color/white</item>-->
+        <!--<item name="colorPrimaryDark">@android:color/white</item>-->
 
     </style>
 
     <style name="NewsTheme" parent="AppTheme">
 
-        <item name="colorPrimary">@android:color/white</item>
-        <item name="colorPrimaryDark">@android:color/white</item>
+        <!--<item name="colorPrimary">@android:color/white</item>-->
+        <!--<item name="colorPrimaryDark">@android:color/white</item>-->
 
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowTranslucentNavigation">true</item>
+        <!--<item name="android:windowTranslucentStatus">true</item>-->
+        <!--<item name="android:windowTranslucentNavigation">true</item>-->
 
     </style>
 
     <style name="WelcomeTheme" parent="Theme.AppCompat.Light.NoActionBar">
 
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowTranslucentNavigation">true</item>
+        <!--<item name="android:windowTranslucentStatus">true</item>-->
+        <!--<item name="android:windowTranslucentNavigation">true</item>-->
 
     </style>
 
     <style name="LoginTheme" parent="AppTheme">
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorPrimaryDark</item>
     </style>
 

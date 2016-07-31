@@ -5,7 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
+
     tools:context=".Activity.AboutAct">
 
     <android.support.design.widget.AppBarLayout
@@ -24,9 +26,9 @@
     </android.support.design.widget.AppBarLayout>
 
     <LinearLayout
-        android:background="@color/md_grey_100"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/md_grey_100"
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 

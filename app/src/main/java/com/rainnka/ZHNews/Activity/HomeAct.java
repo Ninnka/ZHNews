@@ -872,9 +872,9 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 			viewPager.setFitsSystemWindows(false);
 			frameLayout.setFitsSystemWindows(false);
 			appBarLayout.setFitsSystemWindows(false);
-			drawerLayout.setFitsSystemWindows(false);
 			coordinatorLayout.setFitsSystemWindows(false);
-			navigationView.setFitsSystemWindows(false);
+//			drawerLayout.setFitsSystemWindows(false);
+//			navigationView.setFitsSystemWindows(false);
 
 			CollapsingToolbarLayout.LayoutParams layoutParams = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
 			layoutParams.setMargins(0, LengthTransitionUtility.getStatusBarHeight(this), 0, 0);

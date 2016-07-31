@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context=".Activity.NotificationAct">
@@ -16,10 +17,10 @@
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/notificationpage_act_Toolbar"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
             android:layout_width="match_parent"
             android:layout_height="?android:actionBarSize"
-            android:background="@color/colorPrimary">
+            android:background="@color/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
 
         </android.support.v7.widget.Toolbar>
 

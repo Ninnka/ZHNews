@@ -16,7 +16,7 @@
 
     <TextView
         android:id="@+id/home_notification_content_text"
-        android:textColor="@color/md_white_1000"
+        android:textColor="#FFFFFF"
         android:gravity="left|top"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
