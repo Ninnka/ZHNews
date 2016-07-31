@@ -5,9 +5,13 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorPrimaryDark</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+
+        <!-- 修改 navigationbar 的颜色 -->
+        <item name="android:navigationBarColor">#AA555555</item>
+        <!--<item name="android:customNavigationLayout">@layout/navigationbarlayout</item>-->
 
         <!--<item name="android:textColorPrimary">@color/colorPrimary</item>-->
         <item name="android:windowNoTitle">true</item>
@@ -36,12 +40,15 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
     <style name="HomeTheme" parent="AppTheme">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
+
         <!--状态栏透明-->
         <item name="android:statusBarColor">@android:color/transparent</item>
 
         <!-- statusbar设置 -->
-        <item name="android:windowTranslucentStatus">false</item>
-        <item name="android:windowTranslucentNavigation">true</item>
+        <!--<item name="android:windowTranslucentStatus">false</item>-->
+        <!--<item name="android:windowTranslucentNavigation">true</item>-->
 
         <!--以下属性用于控制NavigationView的全屏显示-->
         <!--<item name="android:windowTranslucentStatus">true</item>-->
@@ -50,11 +57,13 @@
     </style>
 
     <style name="NewsTheme" parent="AppTheme">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
 
         <item name="android:statusBarColor">@android:color/transparent</item>
 
-        <item name="android:windowTranslucentStatus">false</item>
-        <item name="android:windowTranslucentNavigation">true</item>
+        <!--<item name="android:windowTranslucentStatus">false</item>-->
+        <!--<item name="android:windowTranslucentNavigation">false</item>-->
 
     </style>
 
@@ -70,7 +79,7 @@
     <style name="LoginTheme" parent="AppTheme">
         <!--<item name="android:editTextStyle">@style/Login_TextInputEditTextTheme</item>-->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorPrimaryDark</item>
     </style>
 

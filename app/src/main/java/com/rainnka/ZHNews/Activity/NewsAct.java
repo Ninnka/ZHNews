@@ -13,7 +13,6 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -44,7 +43,7 @@ import java.lang.ref.WeakReference;
  * Created by rainnka on 2016/5/15 16:19
  * Project name is ZHKUNews
  */
-public class NewsAct extends AppCompatActivity {
+public class NewsAct extends BaseAct {
 
 	protected CoordinatorLayout coordinatorLayout;
 	protected AppBarLayout appBarLayout;

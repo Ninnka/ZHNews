@@ -41,6 +41,14 @@ public class BaseAct extends AppCompatActivity {
 			firstChildView.addView(statusBarInstead, 0, layoutParams);
 
 		}
+
+		/*
+		* 控制底部导航栏半透明
+		* */
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+			getWindow().getDecorView().setSystemUiVisibility(View
+					.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+		}
 	}
 
 	private int getStatusBarHeight() {

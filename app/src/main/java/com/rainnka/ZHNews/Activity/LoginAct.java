@@ -9,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -24,7 +23,7 @@ import com.rainnka.ZHNews.Utility.SnackbarUtility;
  * Created by rainnka on 2016/6/26 21:52
  * Project name is ZHKUNews
  */
-public class LoginAct extends AppCompatActivity {
+public class LoginAct extends BaseAct {
 
 	SharedPreferences sharedPreferences;
 	SharedPreferences.Editor editor;

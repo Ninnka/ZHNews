@@ -27,7 +27,7 @@
             app:expandedTitleMarginBottom="0dp"
             app:expandedTitleTextAppearance="@style/expandedTitleTextAppearance"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:statusBarScrim="@color/colorPrimaryDark">
+            app:statusBarScrim="@color/colorPrimary">
 
             <FrameLayout
                 android:id="@+id/homeActivity_Content_main_FrameLayout"
@@ -86,7 +86,6 @@
             android:layout_marginTop="5dp">
 
             <android.support.v7.widget.RecyclerView
-
                 android:id="@+id/homeActivity_Content_main_RecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -150,5 +149,9 @@
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
+    <!--<TextView-->
+    <!--android:background="@color/md_blue_300"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"/>-->
 
 </android.support.design.widget.CoordinatorLayout>

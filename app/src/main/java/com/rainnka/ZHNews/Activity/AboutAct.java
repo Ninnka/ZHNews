@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -16,7 +15,7 @@ import com.rainnka.ZHNews.R;
  * Created by rainnka on 2016/7/23 13:46
  * Project name is ZHKUNews
  */
-public class AboutAct extends AppCompatActivity {
+public class AboutAct extends BaseAct {
 
 	Toolbar toolbar;
 	CardView cardView_sources;

@@ -2,7 +2,6 @@ package com.rainnka.ZHNews.Activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.ViewStubCompat;
 import android.view.MenuItem;
@@ -16,7 +15,7 @@ import com.rainnka.ZHNews.R;
  * Created by rainnka on 2016/7/22 10:40
  * Project name is ZHKUNews
  */
-public class NotificationAct extends AppCompatActivity {
+public class NotificationAct extends BaseAct {
 
 	Toolbar toolbar;
 	ViewStubCompat viewStubCompat;

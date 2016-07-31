@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
@@ -22,7 +21,7 @@ import java.lang.ref.WeakReference;
  * Created by rainnka on 2016/5/18 20:58
  * Project name is MaterialDesign
  */
-public class WelcomeAct extends AppCompatActivity {
+public class WelcomeAct extends BaseAct {
 
 	WelcomeHandler welcomeHandler;
 	CallResponseHandler callResponseHandler;

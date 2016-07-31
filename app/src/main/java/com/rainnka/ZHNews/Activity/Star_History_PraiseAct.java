@@ -12,7 +12,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -43,7 +42,7 @@ import java.util.List;
  * Created by rainnka on 2016/5/21 14:10
  * Project name is ZHKUNews
  */
-public class Star_History_PraiseAct extends AppCompatActivity {
+public class Star_History_PraiseAct extends BaseAct {
 
 	public CoordinatorLayout coordinatorLayout;
 	protected AppBarLayout appBarLayout;

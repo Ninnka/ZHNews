@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,7 +16,7 @@ import com.rainnka.ZHNews.R;
  * Created by rainnka on 2016/7/23 13:48
  * Project name is ZHKUNews
  */
-public class FeedbackAct extends AppCompatActivity {
+public class FeedbackAct extends BaseAct {
 
 	public Toolbar toolbar;
 	public ImageView imageView_sent;

@@ -25,7 +25,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -78,7 +77,7 @@ import java.util.concurrent.TimeUnit;
  * Created by rainnka on 2016/5/12 20:45
  * Project name is ZHKUNews
  */
-public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChangeListener,
+public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 		HomeActivityRecyclerViewAdapter.HomeActivityRecyclerViewAdapterCallback, SwipeRefreshLayout
 				.OnRefreshListener, AppBarLayout.OnOffsetChangedListener, NavigationView
 				.OnNavigationItemSelectedListener {
@@ -208,6 +207,7 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 
 		setContentView(R.layout.home_act);
 
+
 		//		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
 		//			Fade slideTransition = new Fade();
 		//			slideTransition.setDuration(400);
@@ -262,7 +262,6 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 		* 用toolBar代替actionBar
 		* */
 		initToolbar();
-
 
 		/*
 		* 初始化通知管理器
@@ -352,6 +351,11 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 		* 侧栏头像点击事件
 		* */
 		initDrawerNavigationProfileOnClickListener();
+
+		/*
+		* 重新刷新按钮点击事件
+		* */
+		addNetStatusTextClickListener();
 
 		/*
 		* 设置单个item可见
@@ -698,6 +702,18 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 	}
 
 	/*
+	*
+	* */
+	private void addNetStatusTextClickListener() {
+		textView_netStatus.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				initZhiHuContent();
+			}
+		});
+	}
+
+	/*
 	* 初始化notification
 	* */
 	public void initNotification() {
@@ -952,13 +968,13 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 				.close_drawer);
 		actionBarDrawerToggle.syncState();
 
-//		drawerLayout.addDrawerListener(actionBarDrawerToggle);
+		//		drawerLayout.addDrawerListener(actionBarDrawerToggle);
 		drawerLayout.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
 			@Override
 			public void onDrawerOpened(View drawerView) {
 				super.onDrawerOpened(drawerView);
-				if(!userIsLogin){
-					if(getConnectivityStatus()){
+				if (!userIsLogin) {
+					if (getConnectivityStatus()) {
 						initUser();
 					}
 				}
@@ -1253,6 +1269,7 @@ public class HomeAct extends AppCompatActivity implements ViewPager.OnPageChange
 
 		}
 	}
+
 
 	/*
 	* 静态内部类 BannerHandler
