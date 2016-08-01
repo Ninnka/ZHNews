@@ -5,15 +5,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:layout_height="match_parent"
     tools:context=".Activity.NewsAct">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/newsActivity_AppBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        app:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/newsActivity_CollapsingToolbarLayout"
@@ -28,11 +29,11 @@
             app:statusBarScrim="@color/colorPrimary">
 
             <ImageView
+                android:fitsSystemWindows="true"
                 android:id="@+id/newsActivity_ImageView_InCollapsingToolbarLayout"
                 android:layout_width="match_parent"
                 android:layout_height="230dp"
                 android:contentDescription="@string/imageViewContentDescribtion"
-                android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
                 app:layout_collapseMode="parallax"
                 app:layout_collapseParallaxMultiplier="0.7"/>
@@ -46,19 +47,19 @@
 
                 <ImageView
                     android:id="@+id/newsActivity_praise_ImageView"
-                    android:layout_marginRight="18dp"
-                    android:layout_gravity="end"
-                    android:src="@drawable/ungood"
                     android:layout_width="26dp"
-                    android:layout_height="26dp"/>
+                    android:layout_height="26dp"
+                    android:layout_gravity="end"
+                    android:layout_marginRight="18dp"
+                    android:src="@drawable/ungood"/>
 
                 <ImageView
                     android:id="@+id/newsActivity_star_ImageView"
-                    android:layout_marginRight="24dp"
-                    android:layout_gravity="end"
-                    android:src="@drawable/unstared"
                     android:layout_width="26dp"
-                    android:layout_height="26dp"/>
+                    android:layout_height="26dp"
+                    android:layout_gravity="end"
+                    android:layout_marginRight="24dp"
+                    android:src="@drawable/unstared"/>
 
             </android.support.v7.widget.Toolbar>
 
@@ -89,6 +90,11 @@
                 android:layout_marginTop="-200dp">
 
             </WebView>
+
+            <!--<TextView-->
+            <!--android:background="#00000000"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"/>-->
 
         </LinearLayout>
 

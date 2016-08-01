@@ -67,6 +67,7 @@
         </activity>
 
         <activity
+            android:theme="@style/AppTheme"
             android:name=".Activity.NotificationAct"
             android:screenOrientation="portrait">
             <intent-filter>

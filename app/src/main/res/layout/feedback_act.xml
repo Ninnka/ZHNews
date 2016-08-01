@@ -5,14 +5,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
     android:fitsSystemWindows="true"
-
-    android:orientation="vertical"
     tools:context=".Activity.FeedbackAct">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/Feedback_act_Toolbar"
@@ -36,9 +36,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:background="@color/md_white_1000"
         android:focusable="true"
         android:focusableInTouchMode="true"
+        android:orientation="vertical"
         android:padding="6dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 

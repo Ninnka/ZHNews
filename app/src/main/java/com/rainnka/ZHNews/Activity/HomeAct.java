@@ -53,7 +53,6 @@ import com.rainnka.ZHNews.Bean.ZhiHuNewsLatestItemInfo;
 import com.rainnka.ZHNews.Callback_Listener.onHActRecyclerItemClickListener;
 import com.rainnka.ZHNews.CustomView.HomeActivityViewPagerIndicator;
 import com.rainnka.ZHNews.R;
-import com.rainnka.ZHNews.Utility.LengthTransitionUtility;
 import com.rainnka.ZHNews.Utility.SQLiteCreateTableHelper;
 import com.rainnka.ZHNews.Utility.SnackbarUtility;
 import com.squareup.okhttp.Call;
@@ -204,7 +203,10 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			getWindow().getDecorView().setSystemUiVisibility(View
+					.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+		}
 		setContentView(R.layout.home_act);
 
 
@@ -832,13 +834,13 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 						Snackbar snackbar = SnackbarUtility.getSnackbarDefault(coordinatorLayout,
 								"咦，网络不太顺畅吔", 3000);
 						snackbar.show();
-						if (textView_netStatus.getVisibility() == View.GONE) {
-							textView_netStatus.setVisibility(View.VISIBLE);
-						}
-						textView_netStatus.setText("咦，网络不太顺畅吔\n\n点击刷新咯");
-						if (floatingActionsMenu.getVisibility() == View.VISIBLE) {
-							floatingActionsMenu.setVisibility(View.GONE);
-						}
+						//						if (textView_netStatus.getVisibility() == View.GONE) {
+						//							textView_netStatus.setVisibility(View.VISIBLE);
+						//						}
+						//						textView_netStatus.setText("咦，网络不太顺畅吔\n\n点击刷新咯");
+						//						if (floatingActionsMenu.getVisibility() == View.VISIBLE) {
+						//							floatingActionsMenu.setVisibility(View.GONE);
+						//						}
 					}
 
 					@Override
@@ -869,16 +871,16 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 	* */
 	private void changeUIBySDK_VER() {
 		if (Build.VERSION.SDK_INT == 19) {
-			viewPager.setFitsSystemWindows(false);
-			frameLayout.setFitsSystemWindows(false);
-			appBarLayout.setFitsSystemWindows(false);
-			coordinatorLayout.setFitsSystemWindows(false);
-//			drawerLayout.setFitsSystemWindows(false);
-//			navigationView.setFitsSystemWindows(false);
+			//			viewPager.setFitsSystemWindows(false);
+			//			appBarLayout.setFitsSystemWindows(false);
+			//			coordinatorLayout.setFitsSystemWindows(false);
+			//			collapsingToolbarLayout.setFitsSystemWindows(false);
+			//			drawerLayout.setFitsSystemWindows(true);
+			//			navigationView.setFitsSystemWindows(false);
 
-			CollapsingToolbarLayout.LayoutParams layoutParams = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
-			layoutParams.setMargins(0, LengthTransitionUtility.getStatusBarHeight(this), 0, 0);
-			toolbar.setLayoutParams(layoutParams);
+			//			CollapsingToolbarLayout.LayoutParams layoutParams = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
+			//			layoutParams.setMargins(0, LengthTransitionUtility.getStatusBarHeight(this), 0, 0);
+			//			toolbar.setLayoutParams(layoutParams);
 		}
 	}
 
@@ -924,7 +926,7 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 				.homeActivity_Content_main_HomeActivityRecyclerViewIndicator);
 		floatingActionButton = (FloatingActionButton) findViewById(R.id
 				.homeActivity_Content_main_FAB_anchorInAppBar);
-		frameLayout = (FrameLayout) findViewById(R.id.homeActivity_Content_main_FrameLayout);
+		//		frameLayout = (FrameLayout) findViewById(R.id.homeActivity_Content_main_FrameLayout);
 		floatingActionButton_quickUp = (com.getbase.floatingactionbutton.FloatingActionButton)
 				findViewById(R.id.homeActivity_Content_main_FABMenu_item_FAB_quickUp);
 		floatingActionButton_quickDown = (com.getbase.floatingactionbutton.FloatingActionButton) findViewById(R.id

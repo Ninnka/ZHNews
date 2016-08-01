@@ -27,7 +27,6 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.rainnka.ZHNews.Bean.ZhiHuNewsItemInfo;
 import com.rainnka.ZHNews.R;
-import com.rainnka.ZHNews.Utility.LengthTransitionUtility;
 import com.rainnka.ZHNews.Utility.SQLiteCreateTableHelper;
 import com.rainnka.ZHNews.Utility.SnackbarUtility;
 import com.squareup.okhttp.Call;
@@ -83,7 +82,10 @@ public class NewsAct extends BaseAct {
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//			getWindow().getDecorView().setSystemUiVisibility(View
+//					.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+//		}
 		setContentView(R.layout.news_act);
 
 		//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -113,11 +115,11 @@ public class NewsAct extends BaseAct {
 		* 适应 （API19） android4.4的版本
 		* */
 		if (Build.VERSION.SDK_INT == 19) {
-			coordinatorLayout.setFitsSystemWindows(false);
-			appBarLayout.setFitsSystemWindows(false);
-			CollapsingToolbarLayout.LayoutParams layoutParams = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
-			layoutParams.setMargins(0, LengthTransitionUtility.getStatusBarHeight(this), 0, 0);
-			toolbar.setLayoutParams(layoutParams);
+//			coordinatorLayout.setFitsSystemWindows(false);
+//			appBarLayout.setFitsSystemWindows(false);
+//			CollapsingToolbarLayout.LayoutParams layoutParams = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
+//			layoutParams.setMargins(0, LengthTransitionUtility.getStatusBarHeight(this), 0, 0);
+//			toolbar.setLayoutParams(layoutParams);
 		}
 
 		/*

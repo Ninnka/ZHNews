@@ -10,13 +10,14 @@
 
         <!--<item name="android:textColorPrimary">@color/colorPrimary</item>-->
         <item name="android:windowNoTitle">true</item>
-        <!--<item name="navigationBarColor">#AA555555</item>-->
 
         <!-- navigationview toggle 的颜色 -->
         <item name="colorControlNormal">#FFFFFF</item>
 
         <!-- 防止actionMode情况下 toolbar移位 -->
         <item name="windowActionModeOverlay">true</item>
+
+        <item name="android:fitsSystemWindows">true</item>
 
 
         <!--<item name="android:windowTranslucentStatus">true</item>-->

@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
@@ -57,6 +59,14 @@ public class WelcomeAct extends BaseAct {
 //				callResponseHandler.sendEmptyMessage(0x234);
 //			}
 //		});
+		if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
+			Window window = getWindow();
+			// Translucent status bar
+			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager
+					.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager
+					.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+		}
 		setContentView(R.layout.welcome_act);
 		linearLayout = (LinearLayout) findViewById(R.id.welCome_Activity_welcomeBackgroud);
 		welcomeHandler.sendEmptyMessageDelayed(0x123, 3000);

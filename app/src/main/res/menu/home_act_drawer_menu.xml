@@ -93,8 +93,8 @@
             android:title="退出"/>
 
         <item
-            android:title=""
-            android:id="@+id/drawer_null"/>
+            android:id="@+id/drawer_null"
+            android:title=""/>
 
     </group>
 
