@@ -18,7 +18,7 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/notificationpage_act_Toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?android:actionBarSize"
+            android:layout_height="?attr/actionBarSize"
             android:background="@color/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
