@@ -35,7 +35,7 @@
         <activity
             android:name=".Activity.Star_History_PraiseAct"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
+            android:theme="@style/SHPTheme">
 
             <intent-filter>
                 <action android:name="android.intent.action.Star_History_Praise"/>

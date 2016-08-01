@@ -91,8 +91,8 @@ public class Star_History_PraiseAct extends BaseAct {
 			// Translucent status bar
 			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager
 					.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager
-//					.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+			//			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager
+			//					.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 		}
 
 		setContentView(R.layout.star_history_praise_act);
@@ -501,46 +501,53 @@ public class Star_History_PraiseAct extends BaseAct {
 						//								.getAdapterPosition(),true);
 						if (!star_history_praiseActivityRecyclerViewAdapter.getItemChecked(viewHolder
 								.getAdapterPosition())) {
+							if (star_history_praiseActivityRecyclerViewAdapter.mSelectedPositions
+									.size() != 0) {
+								LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
+								int lastPositionBeChecked =
+										star_history_praiseActivityRecyclerViewAdapter
+												.mSelectedPositions.keyAt
+												(star_history_praiseActivityRecyclerViewAdapter
+														.mSelectedPositions.size() - 1);
+								int position = viewHolder.getAdapterPosition();
+								if (position > lastPositionBeChecked) {
+									for (int i = lastPositionBeChecked + 1; i <= position; i++) {
+										if (manager.findViewByPosition(i) != null) {
+											View view = manager.findViewByPosition(i);
+											if (recyclerView.getChildViewHolder(view) != null) {
+												Star_History_PraiseActivityRecyclerViewAdapter.RecyclerViewContentViewHolder
+														recyclerViewContentViewHolder =
+														(Star_History_PraiseActivityRecyclerViewAdapter
+																.RecyclerViewContentViewHolder) recyclerView.getChildViewHolder(view);
+												star_history_praiseActivityRecyclerViewAdapter
+														.setSignVisibility
+																(recyclerViewContentViewHolder, View.VISIBLE);
 
-							LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
-							int lastPositionBeChecked =
-									star_history_praiseActivityRecyclerViewAdapter
-											.mSelectedPositions.keyAt
-											(star_history_praiseActivityRecyclerViewAdapter
-													.mSelectedPositions.size() - 1);
-							int position = viewHolder.getAdapterPosition();
-							if (position > lastPositionBeChecked) {
-								for (int i = lastPositionBeChecked + 1; i <= position; i++) {
-									if (manager.findViewByPosition(i) != null) {
-										View view = manager.findViewByPosition(i);
-										if (recyclerView.getChildViewHolder(view) != null) {
-											Star_History_PraiseActivityRecyclerViewAdapter.RecyclerViewContentViewHolder
-													recyclerViewContentViewHolder =
-													(Star_History_PraiseActivityRecyclerViewAdapter
-															.RecyclerViewContentViewHolder) recyclerView.getChildViewHolder(view);
-											star_history_praiseActivityRecyclerViewAdapter
-													.setSignVisibility
-															(recyclerViewContentViewHolder, View.VISIBLE);
+											}
+										}
+									}
+								} else {
+									for (int i = position; i < lastPositionBeChecked; i++) {
+										if (manager.findViewByPosition(i) != null) {
+											View view = manager.findViewByPosition(i);
+											if (recyclerView.getChildViewHolder(view) != null) {
+												Star_History_PraiseActivityRecyclerViewAdapter.RecyclerViewContentViewHolder
+														recyclerViewContentViewHolder =
+														(Star_History_PraiseActivityRecyclerViewAdapter
+																.RecyclerViewContentViewHolder) recyclerView.getChildViewHolder(view);
+												star_history_praiseActivityRecyclerViewAdapter
+														.setSignVisibility
+																(recyclerViewContentViewHolder, View.VISIBLE);
 
+											}
 										}
 									}
 								}
 							} else {
-								for (int i = position; i < lastPositionBeChecked; i++) {
-									if (manager.findViewByPosition(i) != null) {
-										View view = manager.findViewByPosition(i);
-										if (recyclerView.getChildViewHolder(view) != null) {
-											Star_History_PraiseActivityRecyclerViewAdapter.RecyclerViewContentViewHolder
-													recyclerViewContentViewHolder =
-													(Star_History_PraiseActivityRecyclerViewAdapter
-															.RecyclerViewContentViewHolder) recyclerView.getChildViewHolder(view);
-											star_history_praiseActivityRecyclerViewAdapter
-													.setSignVisibility
-															(recyclerViewContentViewHolder, View.VISIBLE);
-
-										}
-									}
-								}
+								star_history_praiseActivityRecyclerViewAdapter.setItemChecked
+										(viewHolder.getAdapterPosition(), true);
+								star_history_praiseActivityRecyclerViewAdapter.setSignVisibility
+										(viewHolder, View.VISIBLE);
 							}
 							star_history_praiseActivityRecyclerViewAdapter.setMultiSelectable
 									(viewHolder);
@@ -568,7 +575,7 @@ public class Star_History_PraiseAct extends BaseAct {
 					actionMode = mode;
 
 					MenuItem menuItem_delete = menu.add(0, 0x428, Menu.NONE, "");
-					menuItem_delete.setIcon(R.mipmap.delete_84px);
+					menuItem_delete.setIcon(R.mipmap.delete_85px_white);
 					menuItem_delete.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 					menuItem_delete.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
 						@Override
@@ -598,7 +605,7 @@ public class Star_History_PraiseAct extends BaseAct {
 					});
 
 					MenuItem menuItem_selectAll = menu.add(0, 0x427, Menu.NONE, "");
-					menuItem_selectAll.setIcon(R.mipmap.select_all_filled_75px);
+					menuItem_selectAll.setIcon(R.mipmap.select_all_72px_white);
 					menuItem_selectAll.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 					menuItem_selectAll.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
 						@Override
@@ -988,7 +995,7 @@ public class Star_History_PraiseAct extends BaseAct {
 		msg.setData(bundle);
 		if (!title.equals(HomeAct.HISTORY_KEY)) {
 			msg.what = 0x999;
-		}else {
+		} else {
 			msg.what = 0x777;
 		}
 		if (loadZhiHuNewsItemHandler != null) {

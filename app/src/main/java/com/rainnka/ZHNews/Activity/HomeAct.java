@@ -733,7 +733,7 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 				.setContent(remoteViews_notification)
 				.setPriority(NotificationCompat.PRIORITY_DEFAULT)
 				.setContentIntent(getPendingIntent_News(targetNum))
-				.setWhen(System.currentTimeMillis())
+//				.setWhen(System.currentTimeMillis())
 				.setDefaults(Notification.DEFAULT_LIGHTS);
 		notification = mBuilder.build();
 		notification.flags = Notification.FLAG_AUTO_CANCEL;
