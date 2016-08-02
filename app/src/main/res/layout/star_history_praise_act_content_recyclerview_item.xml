@@ -13,6 +13,7 @@
     android:focusable="true"
     android:foreground="@drawable/home_act_recv_touch_ripper"
     app:cardCornerRadius="3.5dp"
+    app:cardBackgroundColor="@color/CardViewInrecvBackground"
     app:cardElevation="1dp"
     app:cardMaxElevation="3dp"
     app:cardPreventCornerOverlap="true"
@@ -52,7 +53,7 @@
                 android:gravity="start|top"
                 android:maxLines="3"
                 android:singleLine="false"
-                android:textColor="#424242"
+                android:textColor="@color/shp_recv_text_main"
                 android:textSize="16sp"/>
 
         </LinearLayout>

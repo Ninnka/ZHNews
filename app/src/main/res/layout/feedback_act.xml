@@ -36,7 +36,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/md_white_1000"
+        android:background="@color/feedback_linearLayout_background"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:orientation="vertical"
@@ -62,7 +62,7 @@
             android:paddingRight="10dp"
             android:paddingTop="6dp"
             android:text="正文："
-            android:textColor="@color/md_grey_600"
+            android:textColor="@color/md_grey_700"
             android:textSize="18sp"/>
 
         <EditText

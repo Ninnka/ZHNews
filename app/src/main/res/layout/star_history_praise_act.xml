@@ -41,7 +41,7 @@
                 android:layout_marginRight="20dp"
                 android:gravity="center"
                 android:text="清空"
-                android:textColor="@color/md_white_1000"
+                android:textColor="@color/shp_text_main"
                 android:textSize="15sp"/>
 
         </android.support.v7.widget.Toolbar>
@@ -51,7 +51,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/homeActivityRecyclerViewBackgroud"
+        android:background="@color/RecyclerViewBackgroud"
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -66,7 +66,7 @@
                 android:id="@+id/star_history_praiseActivity_Content_main_RecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/homeActivityRecyclerViewBackgroud"
+                android:background="@color/RecyclerViewBackgroud"
                 android:scrollbars="none"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior">
 

@@ -12,8 +12,8 @@
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        app:theme="@style/AppTheme.AppBarOverlay"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/about_act_Toolbar"
@@ -29,7 +29,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/md_grey_100"
+        android:background="@color/about_linearLayout_background"
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -38,7 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:foreground="@drawable/home_act_recv_touch_ripper"
-            app:cardBackgroundColor="@color/md_white_1000"
+            app:cardBackgroundColor="@color/about_cardView_background"
             app:cardElevation="1dp"
             app:cardPreventCornerOverlap="true"
             app:contentPadding="16dp">
@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="left"
                 android:text="作者"
-                android:textColor="@color/md_grey_700"
+                android:textColor="@color/about_text_main"
                 android:textSize="18sp"/>
 
             <TextView
@@ -58,7 +58,7 @@
                 android:layout_marginTop="32dp"
                 android:gravity="left"
                 android:text="@string/about_act_author_email"
-                android:textColor="@color/md_grey_500"
+                android:textColor="@color/about_text_other"
                 android:textSize="13sp"/>
 
         </android.support.v7.widget.CardView>
@@ -69,6 +69,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="0.4dp"
             android:foreground="@drawable/home_act_recv_touch_ripper"
+            app:cardBackgroundColor="@color/about_cardView_background"
             app:cardElevation="1dp"
             app:cardPreventCornerOverlap="true"
             app:contentPadding="16dp">
@@ -78,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="left"
                 android:text="源码"
-                android:textColor="@color/md_grey_700"
+                android:textColor="@color/about_text_main"
                 android:textSize="18sp"/>
 
             <TextView
@@ -88,7 +89,7 @@
                 android:layout_marginTop="32dp"
                 android:gravity="left"
                 android:text="@string/about_act_sources"
-                android:textColor="@color/md_grey_500"
+                android:textColor="@color/about_text_other"
                 android:textSize="13sp"/>
 
         </android.support.v7.widget.CardView>
@@ -99,6 +100,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="0.4dp"
             android:foreground="@drawable/home_act_recv_touch_ripper"
+            app:cardBackgroundColor="@color/about_cardView_background"
             app:cardElevation="1dp"
             app:cardPreventCornerOverlap="true"
             app:contentPadding="16dp">
@@ -108,7 +110,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="left"
                 android:text="版本"
-                android:textColor="@color/md_grey_700"
+                android:textColor="@color/about_text_main"
                 android:textSize="18sp"/>
 
             <TextView
@@ -117,8 +119,8 @@
                 android:layout_marginLeft="3dp"
                 android:layout_marginTop="32dp"
                 android:gravity="left"
-                android:text="0.8.1"
-                android:textColor="@color/md_grey_500"
+                android:text="0.80.0"
+                android:textColor="@color/about_text_other"
                 android:textSize="13sp"/>
 
         </android.support.v7.widget.CardView>

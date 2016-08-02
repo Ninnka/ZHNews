@@ -558,7 +558,7 @@ public class NewsAct extends BaseAct {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.news_act_menu, menu);
+//		getMenuInflater().inflate(R.menu.news_act_menu, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 

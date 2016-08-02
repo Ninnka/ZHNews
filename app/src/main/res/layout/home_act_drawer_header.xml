@@ -24,7 +24,7 @@
         android:layout_marginTop="10dp"
         android:text="点击头像登录"
         android:layout_marginLeft="5dp"
-        android:textColor="#757575"
+        android:textColor="@color/home_drawer_header_text_main"
         android:textSize="16sp"/>
 
 </LinearLayout>

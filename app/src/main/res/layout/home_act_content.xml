@@ -77,7 +77,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/homeActivityRecyclerViewBackgroud"
+        android:background="@color/RecyclerViewBackgroud"
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -91,7 +91,7 @@
                 android:id="@+id/homeActivity_Content_main_RecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/homeActivityRecyclerViewBackgroud"
+                android:background="@color/RecyclerViewBackgroud"
                 android:clipToPadding="false"
                 android:scrollbars="none"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -115,7 +115,7 @@
         app:layout_anchor="@id/homeActivity_Content_main_AppBarLayout"
         app:layout_anchorGravity="end|bottom"
         app:pressedTranslationZ="12dp"
-        app:rippleColor="#7C4DFF"/>
+        app:rippleColor="@color/home_content_fb_ripple"/>
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/homeActivity_Content_main_FABMenu"
@@ -125,7 +125,7 @@
         android:layout_marginEnd="24dp"
         android:layout_marginRight="24dp"
         android:transitionName="transition"
-        app:fab_addButtonColorNormal="#607D8B"
+        app:fab_addButtonColorNormal="@color/home_content_fb_menu_normal"
         app:fab_labelStyle="@style/fab_menu_labels_style"
         app:fab_labelsPosition="left"
         app:layout_anchor="@id/homeActivity_Content_main_RecyclerView"

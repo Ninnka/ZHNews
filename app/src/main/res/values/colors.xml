@@ -2,11 +2,50 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#6699ff</color>
+
+    <color name="navigationBarColor">#99C2C2C2</color>
 
     <color name="homeActivityBannerIndicatorSelected">#FFE9E9E9</color>
     <color name="homeActivityBannerIndicatorUnSelected">#999E9E9E</color>
-    <color name="homeActivityRecyclerViewBackgroud">#F8F8F8</color>
+
+    <color name="RecyclerViewBackgroud">#F8F8F8</color>
+    <color name="CardViewInrecvBackground">#FFFFFF</color>
 
     <color name="statusBarInsteadDefaultColor">#00FFFFFF</color>
+
+    <color name="about_linearLayout_background">#f5f5f5</color>
+    <color name="about_cardView_background">#ffffff</color>
+    <color name="about_text_main">#616161</color>
+    <color name="about_text_other">#9e9e9e</color>
+
+    <color name="feedback_linearLayout_background">#FFFFFF</color>
+    <color name="feedback_text_main">#757575</color>
+
+    <color name="shp_text_main">#FFFFFF</color>
+    <color name="shp_recv_text_main">#424242</color>
+
+    <color name="profile_text_main">#9e9e9e</color>
+    <color name="profile_line">#757575</color>
+    <color name="profile_text_blue">#1E88E5</color>
+    <color name="profile_button_quit">#EF5350</color>
+
+    <color name="notification_text_main">#FFFFFF</color>
+    <color name="notification_linearLayout_background">#FFFFFF</color>
+
+    <color name="login_nestedScrollView_background">#f5f5f5</color>
+    <color name="login_text_inToolbar">#FFFFFF</color>
+    <color name="login_text_button_signUp">#90A4AE</color>
+    <color name="login_text_button_signIn">#FFFFFF</color>
+
+    <color name="home_content_fb_ripple">#7C4DFF</color>
+    <color name="home_content_fb_menu_normal">#607D8B</color>
+    <color name="home_content_recv_card_content_text">#424242</color>
+    <color name="home_content_recv_card_date_text">#757575</color>
+    <color name="home_drawer_header_text_main">#757575</color>
+    <color name="home_notification_content_text_main">#FFFFFF</color>
+
+    <color name="setting_detail_textSelectHandleLeft">#757575</color>
+    <color name="setting_detail_textSelectHandleRight">#42A5F5</color>
+
 </resources>

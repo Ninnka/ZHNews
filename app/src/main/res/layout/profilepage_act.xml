@@ -46,7 +46,7 @@
             android:layout_height="50dp"
             android:layout_marginTop="24dp"
             android:gravity="center"
-            android:textColor="@color/md_grey_500"
+            android:textColor="@color/profile_text_main"
             android:textSize="22sp"/>
 
         <TextView
@@ -54,7 +54,7 @@
             android:layout_height="0.2dp"
             android:layout_gravity="center"
             android:layout_marginTop="42dp"
-            android:background="@color/md_grey_600"/>
+            android:background="@color/profile_line"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -62,7 +62,7 @@
             android:layout_marginTop="20dp"
             android:gravity="center"
             android:text="绑定QQ"
-            android:textColor="@color/md_blue_600"
+            android:textColor="@color/profile_text_blue"
             android:textSize="18sp"/>
 
         <TextView
@@ -70,7 +70,7 @@
             android:layout_height="0.2dp"
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
-            android:background="@color/md_grey_600"/>
+            android:background="@color/profile_line"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -78,7 +78,7 @@
             android:layout_marginTop="20dp"
             android:gravity="center"
             android:text="绑定新浪微博"
-            android:textColor="@color/md_blue_600"
+            android:textColor="@color/profile_text_blue"
             android:textSize="18sp"/>
 
         <TextView
@@ -86,7 +86,7 @@
             android:layout_height="0.2dp"
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
-            android:background="@color/md_grey_600"/>
+            android:background="@color/profile_line"/>
 
         <TextView
             android:id="@+id/profilepage_act_logout_textView"
@@ -96,7 +96,7 @@
             android:background="@drawable/profilepage_logout_button"
             android:gravity="center"
             android:text="退出"
-            android:textColor="@color/md_red_400"
+            android:textColor="@color/profile_button_quit"
             android:textSize="18dp"/>
 
     </LinearLayout>

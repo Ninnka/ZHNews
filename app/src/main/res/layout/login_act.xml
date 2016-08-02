@@ -28,16 +28,16 @@
                 android:layout_marginRight="12dp"
                 android:gravity="center"
                 android:text="Forget PW?"
-                android:textColor="@color/md_white_1000"/>
+                android:textColor="@color/login_text_inToolbar"/>
 
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.widget.NestedScrollView
-        android:background="@color/md_grey_100"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/login_nestedScrollView_background"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -64,8 +64,6 @@
                 android:layout_marginTop="4dp"
                 android:gravity="center"
                 android:hint="enter your email-address (admin)"
-                app:counterEnabled="true"
-                app:counterMaxLength="32"
                 app:hintAnimationEnabled="true"
                 app:hintEnabled="true">
 
@@ -89,8 +87,6 @@
                 android:layout_marginTop="4dp"
                 android:gravity="center"
                 android:hint="enter your password (root)"
-                app:counterEnabled="true"
-                app:counterMaxLength="14"
                 app:hintAnimationEnabled="true"
                 app:hintEnabled="true">
 
@@ -122,7 +118,7 @@
                     android:background="@drawable/login_act_normal_button"
                     android:gravity="center"
                     android:text="SIGN UP"
-                    android:textColor="@color/md_blue_grey_300"/>
+                    android:textColor="@color/login_text_button_signUp"/>
 
                 <TextView
                     android:id="@+id/login_activity_signInButton"
@@ -135,7 +131,7 @@
                     android:clickable="false"
                     android:gravity="center"
                     android:text="SIGN IN"
-                    android:textColor="@color/md_white_1000"/>
+                    android:textColor="@color/login_text_button_signIn"/>
 
             </LinearLayout>
 

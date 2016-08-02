@@ -67,9 +67,9 @@
         </activity>
 
         <activity
-            android:theme="@style/AppTheme"
             android:name=".Activity.NotificationAct"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.NotificationPage"/>
                 <category android:name="android.intent.category.DEFAULT"/>
@@ -78,8 +78,8 @@
 
         <activity
             android:name=".Activity.FeedbackAct"
-            android:theme="@style/LoginTheme"
             android:screenOrientation="portrait"
+            android:theme="@style/LoginTheme"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.FeedbackPage"/>
@@ -92,6 +92,15 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.AboutPage"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".Activity.Setting_DetailAct"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.Setting_Detail"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>

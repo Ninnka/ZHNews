@@ -12,7 +12,7 @@
         android:layout_height="30dp"
         android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"
-        android:textColor="#757575"
+        android:textColor="@color/home_content_recv_card_date_text"
         android:textSize="16sp"/>
 
 </LinearLayout>

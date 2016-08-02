@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#212121</color>
+    <color name="colorPrimaryDark">#2B2B2B</color>
+    <color name="colorAccent">#87CEFF</color>
+
+    <color name="navigationBarColor">#664D4D4D</color>
+
+    <color name="homeActivityBannerIndicatorSelected">#FFE9E9E9</color>
+    <color name="homeActivityBannerIndicatorUnSelected">#999E9E9E</color>
+
+    <color name="RecyclerViewBackgroud">#333333</color>
+    <color name="CardViewInrecvBackground">#2A2A2A</color>
+
+    <color name="statusBarInsteadDefaultColor">#00FFFFFF</color>
+
+    <color name="about_linearLayout_background">#1E1E1E</color>
+    <color name="about_cardView_background">#292929</color>
+    <color name="about_text_main">#FFFFFF</color>
+    <color name="about_text_other">#FAFAFA</color>
+
+    <color name="feedback_linearLayout_background">#1E1E1E</color>
+    <color name="feedback_text_main">#FBFBFB</color>
+
+    <color name="shp_text_main">#1E1E1E</color>
+    <color name="shp_recv_text_main">#FFFFFF</color>
+
+    <color name="profile_text_main">#FAFAFA</color>
+    <color name="profile_line">#959595</color>
+    <color name="profile_text_blue">#1E88E5</color>
+    <color name="profile_button_quit">#EF5350</color>
+
+    <color name="notification_text_main">#292929</color>
+    <color name="notification_linearLayout_background">#1E1E1E</color>
+
+    <color name="login_nestedScrollView_background">#2B2B2B</color>
+    <color name="login_text_inToolbar">#FFFFFF</color>
+    <color name="login_text_button_signUp">#90A4AE</color>
+    <color name="login_text_button_signIn">#FFFFFF</color>
+
+    <color name="home_content_fb_ripple">#7C4DFF</color>
+    <color name="home_content_fb_menu_normal">#607D8B</color>
+    <color name="home_content_recv_card_content_text">#FAFAFA</color>
+    <color name="home_content_recv_card_date_text">#FAFAFA</color>
+    <color name="home_drawer_header_text_main">#757575</color>
+    <color name="home_notification_content_text_main">#FFFFFF</color>
+
+    <color name="setting_detail_textSelectHandleLeft">#757575</color>
+    <color name="setting_detail_textSelectHandleRight">#42A5F5</color>
+
+</resources>

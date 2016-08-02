@@ -25,6 +25,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -168,6 +169,7 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 			".NotificationPage";
 
 	public final static String INTENT_TO_FEEDBACK_KEY = "android.intent.action.FeedbackPage";
+	public final static String INTENT_TO_SETTINGDETAIL_KEY = "android.intent.action.Setting_Detail";
 
 	public final static String INTENT_TO_ABOUT_KEY = "android.intent.action.AboutPage";
 
@@ -445,7 +447,20 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		return super.onOptionsItemSelected(item);
+		Intent intent;
+		switch (item.getItemId()) {
+			case R.id.home_activity_menu_setting:
+				intent = new Intent();
+				intent.setAction(INTENT_TO_SETTINGDETAIL_KEY);
+				startActivity(intent);
+				break;
+			case R.id.home_activity_menu_about:
+				intent = new Intent();
+				intent.setAction(INTENT_TO_ABOUT_KEY);
+				startActivity(intent);
+				break;
+		}
+		return true;
 	}
 
 	private void addRecyclerViewOnItemClickListener() {
@@ -733,7 +748,7 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 				.setContent(remoteViews_notification)
 				.setPriority(NotificationCompat.PRIORITY_DEFAULT)
 				.setContentIntent(getPendingIntent_News(targetNum))
-//				.setWhen(System.currentTimeMillis())
+				//				.setWhen(System.currentTimeMillis())
 				.setDefaults(Notification.DEFAULT_LIGHTS);
 		notification = mBuilder.build();
 		notification.flags = Notification.FLAG_AUTO_CANCEL;
@@ -1174,12 +1189,23 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 
 				break;
 			case R.id.drawer_theme:
-				actionForNavigationItemSelected(item);
-
+				SharedPreferences preferences = getSharedPreferences("NightMode", MODE_PRIVATE);
+				SharedPreferences.Editor editor = preferences.edit();
+				if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_NO) {
+					editor.putInt("nightmode", AppCompatDelegate.MODE_NIGHT_YES);
+					editor.apply();
+					AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+				} else {
+					editor.putInt("nightmode", AppCompatDelegate.MODE_NIGHT_NO);
+					editor.apply();
+					AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+				}
+				HomeAct.this.recreate();
 				break;
 			case R.id.drawer_setting:
-				actionForNavigationItemSelected(item);
-
+				intent = new Intent();
+				intent.setAction(INTENT_TO_SETTINGDETAIL_KEY);
+				startActivity(intent);
 				break;
 			case R.id.drawer_response:
 				intent = new Intent();
@@ -1198,10 +1224,10 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 		return true;
 	}
 
-	private void actionForNavigationItemSelected(MenuItem item) {
-		drawerLayout.closeDrawer(navigationView);
-		Snackbar.make(coordinatorLayout, item.getTitle(), Snackbar.LENGTH_SHORT).show();
-	}
+	//	private void actionForNavigationItemSelected(MenuItem item) {
+	//		drawerLayout.closeDrawer(navigationView);
+	//		Snackbar.make(coordinatorLayout, item.getTitle(), Snackbar.LENGTH_SHORT).show();
+	//	}
 
 	/*
 	* 首页顶部banner开始自动轮播
