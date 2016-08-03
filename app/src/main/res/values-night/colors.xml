@@ -22,7 +22,7 @@
     <color name="feedback_linearLayout_background">#1E1E1E</color>
     <color name="feedback_text_main">#FBFBFB</color>
 
-    <color name="shp_text_main">#1E1E1E</color>
+    <color name="shp_text_main">#FFFFFF</color>
     <color name="shp_recv_text_main">#FFFFFF</color>
 
     <color name="profile_text_main">#FAFAFA</color>

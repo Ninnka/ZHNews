@@ -106,21 +106,23 @@ public class HomeActivityViewPagerAdapter extends PagerAdapter {
 				if (((HomeAct) appCompatActivity).sqLiteDatabase.isOpen()) {
 					((HomeAct) appCompatActivity).closeSQLiteDatabase();
 				}
-				if(HomeAct.userIsLogin){
+				if (HomeAct.userIsLogin) {
 					sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(appCompatActivity
 							.getFilesDir().toString() + "/myInfo.db3", null);
 					sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_HISTORY_TABLE);
 					sqLiteDatabase.delete("my_history", "ItemId like ?", new
-							String[]{String.valueOf(zhiHuNewsTopItemInfoList.get(position).id)});
+							String[]{String.valueOf(zhiHuNewsTopItemInfoList.get(position - 1).id)});
 					ContentValues contentValues = new ContentValues();
-					contentValues.put("ItemId", zhiHuNewsTopItemInfoList.get(position).id);
+					contentValues.put("ItemId", zhiHuNewsTopItemInfoList.get(position - 1).id);
 					try {
-						contentValues.put("ItemImage", zhiHuNewsTopItemInfoList.get(position).images
+						contentValues.put("ItemImage", zhiHuNewsTopItemInfoList.get(position - 1)
+								.images
 								.get(0));
 					} catch (Exception e) {
-						contentValues.put("ItemImage", zhiHuNewsTopItemInfoList.get(position).image);
+						contentValues.put("ItemImage", zhiHuNewsTopItemInfoList.get(position - 1)
+								.image);
 					}
-					contentValues.put("ItemTitle", zhiHuNewsTopItemInfoList.get(position).title);
+					contentValues.put("ItemTitle", zhiHuNewsTopItemInfoList.get(position - 1).title);
 					sqLiteDatabase.insert("my_history", null, contentValues);
 					sqLiteDatabase.close();
 

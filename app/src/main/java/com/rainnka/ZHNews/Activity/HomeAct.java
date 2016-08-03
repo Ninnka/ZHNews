@@ -36,7 +36,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RemoteViews;
 import android.widget.TextView;
@@ -95,7 +94,6 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 	protected SwipeRefreshLayout swipeRefreshLayout;
 	protected HomeActivityViewPagerIndicator homeActivityViewPagerIndicator;
 	protected FloatingActionButton floatingActionButton;
-	protected FrameLayout frameLayout;
 	protected com.getbase.floatingactionbutton.FloatingActionButton floatingActionButton_quickUp;
 	protected com.getbase.floatingactionbutton.FloatingActionButton
 			floatingActionButton_quickDown;
@@ -130,7 +128,7 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 
 	public static boolean userIsLogin = false;
 
-	public Runnable mRunnable;
+	public Runnable mRunnableBackPressStatus;
 
 	public Date date;
 	public String current_simple_date_format;
@@ -401,9 +399,10 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 		if (sqLiteDatabase != null) {
 			sqLiteDatabase.close();
 		}
-		mhandler.removeCallbacks(mRunnable);
+		mhandler.removeCallbacks(mRunnableBackPressStatus);
 		bannerHandler.removeMessages(BANNER_SCROLL_KEY);
 		recyclerRefreshHandler.removeCallbacksAndMessages(null);
+		notificationHandler.removeCallbacksAndMessages(null);
 	}
 
 	@Override
@@ -913,7 +912,7 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 		* 初始化 线程
 		* */
 	private void initThreadORRunnable() {
-		mRunnable = new Runnable() {
+		mRunnableBackPressStatus = new Runnable() {
 			@Override
 			public void run() {
 				BACKPRESS_STATUS = false;
@@ -1028,12 +1027,12 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 			}
 			if (!BACKPRESS_STATUS) {
 				BACKPRESS_STATUS = true;
-				Snackbar snackbar = SnackbarUtility.getSnackbarLight(coordinatorLayout, "再次点击退出键退出",
+				Snackbar snackbar = SnackbarUtility.getSnackbarDefault(coordinatorLayout, "再次点击退出键退出",
 						Snackbar.LENGTH_SHORT);
 				snackbar.show();
 			}
 
-			mhandler.postDelayed(mRunnable, 2000);
+			mhandler.postDelayed(mRunnableBackPressStatus, 2000);
 		}
 	}
 
