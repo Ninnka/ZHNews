@@ -10,8 +10,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.rainnka.ZHNews.Activity.HomeAct;
-import com.rainnka.ZHNews.R;
 import com.rainnka.ZHNews.Bean.ZhiHuNewsItemInfo;
+import com.rainnka.ZHNews.R;
 
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
@@ -34,10 +34,10 @@ public class HomeActivityRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
 	String cd;
 
-//	public enum ITEM_TYPE {
-//		ITEM_DATE,
-//		ITEM_CONTENT
-//	}
+	//	public enum ITEM_TYPE {
+	//		ITEM_DATE,
+	//		ITEM_CONTENT
+	//	}
 
 	public interface HomeActivityRecyclerViewAdapterCallback {
 		void refreshOldNews();

@@ -90,7 +90,7 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 	protected AppBarLayout appBarLayout;
 	protected CollapsingToolbarLayout collapsingToolbarLayout;
 	protected ViewPager viewPager;
-	protected RecyclerView recyclerView;
+	public RecyclerView recyclerView;
 	protected SwipeRefreshLayout swipeRefreshLayout;
 	protected HomeActivityViewPagerIndicator homeActivityViewPagerIndicator;
 	protected FloatingActionButton floatingActionButton;
@@ -1521,7 +1521,7 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 						/*
 						* 加载完后滚动到新的最高那一列
 						* */
-						homeAct.recyclerView.scrollToPosition(0);
+//						homeAct.recyclerView.scrollToPosition(0);
 						SnackbarUtility.getSnackbarDefault(homeAct.coordinatorLayout,
 								"成功更新" + tempList.size() + "条日报", 2000).show();
 					} else {
@@ -1560,9 +1560,9 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 					/*
 					* 加载完后滚动到加载出的那一行
 					* */
-					homeAct.recyclerView.scrollToPosition(homeAct
-							.homeActivityRecyclerViewAdapter.getItemCount() - homeAct
-							.zhiHuNewsLatestItemInfo_old.stories.size() + 1);
+//					homeAct.recyclerView.scrollToPosition(homeAct
+//							.homeActivityRecyclerViewAdapter.getItemCount() - homeAct
+//							.zhiHuNewsLatestItemInfo_old.stories.size() + 1);
 
 					break;
 

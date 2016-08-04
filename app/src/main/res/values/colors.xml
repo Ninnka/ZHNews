@@ -42,6 +42,7 @@
     <color name="home_content_fb_menu_normal">#607D8B</color>
     <color name="home_content_recv_card_content_text">#424242</color>
     <color name="home_content_recv_card_date_text">#757575</color>
+    <color name="home_content_vp">#F8F8F8</color>
     <color name="home_drawer_header_text_main">#757575</color>
     <color name="home_notification_content_text_main">#FFFFFF</color>
 
