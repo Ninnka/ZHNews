@@ -1,9 +1,9 @@
 package com.rainnka.ZHNews.Activity;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningServiceInfo;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -26,10 +27,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatDelegate;
-import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -37,22 +38,23 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.target.NotificationTarget;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.gson.Gson;
 import com.rainnka.ZHNews.Adapter.HomeActivityRecyclerViewAdapter;
 import com.rainnka.ZHNews.Adapter.HomeActivityViewPagerAdapter;
 import com.rainnka.ZHNews.Animation_Transformer.DepthPageTransformer;
+import com.rainnka.ZHNews.Application.BaseApplication;
 import com.rainnka.ZHNews.Bean.ZhiHuNewsItemInfo;
 import com.rainnka.ZHNews.Bean.ZhiHuNewsLatestItemInfo;
 import com.rainnka.ZHNews.Callback_Listener.onHActRecyclerItemClickListener;
 import com.rainnka.ZHNews.CustomView.HomeActivityViewPagerIndicator;
 import com.rainnka.ZHNews.R;
+import com.rainnka.ZHNews.Service.InitNotiRecService;
+import com.rainnka.ZHNews.Utility.ConstantUtility;
 import com.rainnka.ZHNews.Utility.SQLiteCreateTableHelper;
 import com.rainnka.ZHNews.Utility.SnackbarUtility;
 import com.squareup.okhttp.Call;
@@ -68,8 +70,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -101,7 +103,7 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 
 	public TextView textView_netStatus;
 
-	public RemoteViews remoteViews_notification;
+	//	public RemoteViews remoteViews_notification;
 
 	protected ImageView profile_iv;
 	protected TextView profile_tv;
@@ -112,21 +114,11 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 	public Handler mhandler;
 	public BannerHandler bannerHandler;
 	public RecyclerRefreshHandler recyclerRefreshHandler;
-	public NotificationHandler notificationHandler;
+	//	public NotificationHandler notificationHandler;
 
 	public int viewPagerStatusPosition = 1;
-	public final static int BANNER_SCROLL_INTERVAL = 4000;
-	public final static int BANNER_SCROLL_KEY = 0x123;
-
-	public final static int RECYCLER_REFRESH_NEW = 0x111111;
-	public final static int RECYCLER_REFRESH_NEW_FAILURE = 0x111222;
-	public final static int RECYCLER_REFRESH_OLD = 0x222222;
-	public final static int RECYCLER_REFRESH_OLD_FAILURE = 0x222333;
-	public final static int RECYCLER_REFRESH_LATEST = 0x333333;
 
 	public boolean BACKPRESS_STATUS = false;
-
-	public static boolean userIsLogin = false;
 
 	public Runnable mRunnableBackPressStatus;
 
@@ -142,46 +134,13 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 
 	public LinearLayoutManager linearLayoutManager;
 
-	public NotificationManager notificationManager;
-	public NotificationCompat.Builder mBuilder;
-	public Notification notification;
-
-	public PendingIntent pendingIntent_News;
+	public Intent intent_notirec;
 
 	public Gson gson;
 
 	String username = "";
 	String password = "";
 	String nickname = "";
-
-	public final static String INTENT_TO_NEWS_KEY = "android.intent.action.NewsActivity";
-	public final static String INTENT_TO_STAR_HISTORY_PRAISE_KEY = "android.intent.action" +
-			".Star_History_Praise";
-	public final static String INTENT_TO_LOGIN_KEY = "android.intent.action.Login";
-	public final static int ITENT_TO_LOGIN_REQUESTCODE = 0x1234;
-
-	public final static String INTENT_TO_PROFILE_KEY = "android.intent.action.ProfilePage";
-	public final static int ITENT_TO_PROFILE_REQUESTCODE = 0x7654;
-
-	public final static String INTENT_TO_NOTIFICATION_KEY = "android.intent.action" +
-			".NotificationPage";
-
-	public final static String INTENT_TO_FEEDBACK_KEY = "android.intent.action.FeedbackPage";
-	public final static String INTENT_TO_SETTINGDETAIL_KEY = "android.intent.action.Setting_Detail";
-
-	public final static String INTENT_TO_ABOUT_KEY = "android.intent.action.AboutPage";
-
-	public final static String INTENT_STRING_DATA_KEY = "STRING_DATA_KEY";
-	public final static String STAR_KEY = "star";
-	public final static String HISTORY_KEY = "history";
-	public final static String PRAISE_KEY = "praise";
-
-	public final static String SER_KEY = "SER";
-
-	public final static String ZHIHUAPI_LATEST = "http://news-at.zhihu.com/api/4/news/latest";
-	public final static String ZHIHUAPI_BEFORE = "http://news.at.zhihu.com/api/4/news/before/";
-
-	public final static int PENDINGINTENT_NEWS_REQUESTCODE = 0x87;
 
 	private Boolean isFirstLoadingContent = true;
 
@@ -199,7 +158,6 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 
 	public SQLiteDatabase sqLiteDatabase;
 
-
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -216,9 +174,6 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 		//			getWindow().setReenterTransition(slideTransition);
 		//			getWindow().setExitTransition(slideTransition);
 		//		}
-
-		//		ViewStubCompat viewStubCompat = (ViewStubCompat) findViewById(R.id.home_activity_content_viewstub);
-		//		viewStubCompat.setVisibility(View.VISIBLE);
 
 		/*
 		* 初始化网络连接管理器
@@ -266,11 +221,6 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 		initToolbar();
 
 		/*
-		* 初始化通知管理器
-		* */
-		initNotificationManager();
-
-		/*
 		* 初始化后退键状态监控线程
 		* */
 		initThreadORRunnable();
@@ -300,9 +250,6 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 		* */
 		addViewPagerOnTouchListener();
 
-		//		item_layout = getApplicationContext().getResources().getIntArray(R.array
-		//				.recyclerview_iteminfo_type);
-
 		/*
 		* 准备LinearLayoutManager
 		* */
@@ -323,6 +270,11 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 		* 首次启动时加载最新的内容
 		* */
 		initZhiHuContent();
+
+		/*
+		* 初始化推荐服务
+		* */
+		initNotificationService();
 
 		/*
 		* 设置 swipeRefreshLayout 监听事件
@@ -400,9 +352,11 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 			sqLiteDatabase.close();
 		}
 		mhandler.removeCallbacks(mRunnableBackPressStatus);
-		bannerHandler.removeMessages(BANNER_SCROLL_KEY);
+		bannerHandler.removeMessages(ConstantUtility.BANNER_SCROLL_KEY);
 		recyclerRefreshHandler.removeCallbacksAndMessages(null);
-		notificationHandler.removeCallbacksAndMessages(null);
+		if(getServiceStatus("com.rainnka.ZHNews.Service.InitNotiRecService")){
+			stopService(intent_notirec);
+		}
 	}
 
 	@Override
@@ -423,21 +377,21 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == ITENT_TO_LOGIN_REQUESTCODE && resultCode == LoginAct.RESULTCODE) {
-			userIsLogin = true;
+		if (requestCode == ConstantUtility.ITENT_TO_LOGIN_REQUESTCODE && resultCode == LoginAct.RESULTCODE) {
+			ConstantUtility.userIsLogin = true;
 			profile_tv.setText(sharedPreferences.getString("nickname", ""));
 			navigationView.getMenu().setGroupVisible(R.id.group2, true);
 			Snackbar.make(coordinatorLayout, "你已经成功登录", Snackbar.LENGTH_SHORT).show();
 		}
-		if (requestCode == ITENT_TO_PROFILE_REQUESTCODE && resultCode == ProfilePageAct.RESULTCODE_NORMALBACK) {
+		if (requestCode == ConstantUtility.ITENT_TO_PROFILE_REQUESTCODE && resultCode == ProfilePageAct.RESULTCODE_NORMALBACK) {
 			String nn = sharedPreferences.getString("nickname", "");
 			if (!profile_tv.getText().equals(nn)) {
 				profile_tv.setText(nn);
 				Snackbar.make(coordinatorLayout, "修改昵称成功", Snackbar.LENGTH_SHORT).show();
 			}
 		}
-		if (requestCode == ITENT_TO_PROFILE_REQUESTCODE && resultCode == ProfilePageAct.RESULTCODE) {
-			userIsLogin = false;
+		if (requestCode == ConstantUtility.ITENT_TO_PROFILE_REQUESTCODE && resultCode == ProfilePageAct.RESULTCODE) {
+			ConstantUtility.userIsLogin = false;
 			profile_tv.setText("点击头像登录");
 			navigationView.getMenu().setGroupVisible(R.id.group2, false);
 			Snackbar.make(coordinatorLayout, "你已经成功退出登录", Snackbar.LENGTH_SHORT).show();
@@ -450,12 +404,12 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 		switch (item.getItemId()) {
 			case R.id.home_activity_menu_setting:
 				intent = new Intent();
-				intent.setAction(INTENT_TO_SETTINGDETAIL_KEY);
+				intent.setAction(ConstantUtility.INTENT_TO_SETTINGDETAIL_KEY);
 				startActivity(intent);
 				break;
 			case R.id.home_activity_menu_about:
 				intent = new Intent();
-				intent.setAction(INTENT_TO_ABOUT_KEY);
+				intent.setAction(ConstantUtility.INTENT_TO_ABOUT_KEY);
 				startActivity(intent);
 				break;
 		}
@@ -471,7 +425,7 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 					final ZhiHuNewsItemInfo temp_zhiHuNewsItemInfo = homeActivityRecyclerViewAdapter
 							.zhiHuNewsItemInfoList.get(viewHolder.getAdapterPosition());
 
-					if (userIsLogin) {
+					if (ConstantUtility.userIsLogin) {
 						sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_HISTORY_TABLE);
 						try {
 							sqLiteDatabase.beginTransaction();
@@ -509,9 +463,9 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 					}
 
 					Intent intent = new Intent();
-					intent.setAction(INTENT_TO_NEWS_KEY);
+					intent.setAction(ConstantUtility.INTENT_TO_NEWS_KEY);
 					Bundle bundle = new Bundle();
-					bundle.putSerializable(SER_KEY, temp_zhiHuNewsItemInfo);
+					bundle.putSerializable(ConstantUtility.SER_KEY, temp_zhiHuNewsItemInfo);
 					intent.putExtras(bundle);
 
 					startActivity(intent);
@@ -545,7 +499,7 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 		if (getConnectivityStatus()) {
 			sharedPreferences = getSharedPreferences("up", MODE_PRIVATE);
 			if (sharedPreferences.getString("isLogin", " ").equals("Y")) {
-				userIsLogin = true;
+				ConstantUtility.userIsLogin = true;
 				username = sharedPreferences.getString("username", " ");
 				password = sharedPreferences.getString("password", " ");
 				if (username.equals("admin") && password.equals("root")) {
@@ -560,21 +514,16 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 		}
 	}
 
-	public PendingIntent getPendingIntent_News(int targetNum) {
-		Bundle bundle = new Bundle();
-		bundle.putSerializable(HomeAct.SER_KEY, zhiHuNewsLatestItemInfo.stories.get
-				(targetNum));
-		Intent intent = new Intent();
-		intent.setAction(INTENT_TO_NEWS_KEY);
-		intent.putExtras(bundle);
-		pendingIntent_News = PendingIntent.getActivity(HomeAct.this,
-				PENDINGINTENT_NEWS_REQUESTCODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-		return pendingIntent_News;
-	}
 
 	private void initSQLiteDatabase() {
-		sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(HomeAct.this
-				.getFilesDir().toString() + "/myInfo.db3", null);
+		try {
+			sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(BaseApplication.getDATABASE_PATH() +
+					"/myInfo.db3", null);
+		} catch (Exception e) {
+			Log.i("ZRH", e.getMessage());
+			Log.i("ZRH", e.toString());
+		}
+
 	}
 
 	public void closeSQLiteDatabase() {
@@ -661,13 +610,13 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 					//					Log.i("ZRH","isLogin"+sharedPreferences.getString("isLogin",""));
 					drawerLayout.closeDrawer(navigationView);
 					Intent intent_to_login = new Intent();
-					intent_to_login.setAction(INTENT_TO_LOGIN_KEY);
-					startActivityForResult(intent_to_login, ITENT_TO_LOGIN_REQUESTCODE);
+					intent_to_login.setAction(ConstantUtility.INTENT_TO_LOGIN_KEY);
+					startActivityForResult(intent_to_login, ConstantUtility.ITENT_TO_LOGIN_REQUESTCODE);
 				} else {
 					drawerLayout.closeDrawer(navigationView);
 					Intent intent_to_profile = new Intent();
-					intent_to_profile.setAction(INTENT_TO_PROFILE_KEY);
-					startActivityForResult(intent_to_profile, ITENT_TO_PROFILE_REQUESTCODE);
+					intent_to_profile.setAction(ConstantUtility.INTENT_TO_PROFILE_KEY);
+					startActivityForResult(intent_to_profile, ConstantUtility.ITENT_TO_PROFILE_REQUESTCODE);
 				}
 			}
 		});
@@ -706,7 +655,7 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 			public boolean onTouch(View v, MotionEvent event) {
 				switch (event.getAction()) {
 					case MotionEvent.ACTION_MOVE:
-						bannerHandler.removeMessages(BANNER_SCROLL_KEY);
+						bannerHandler.removeMessages(ConstantUtility.BANNER_SCROLL_KEY);
 						break;
 					case MotionEvent.ACTION_UP:
 						bannerStartAutoScroll();
@@ -728,40 +677,6 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 			}
 		});
 	}
-
-	/*
-	* 初始化notification
-	* */
-	public void initNotification() {
-		int maxLength = zhiHuNewsLatestItemInfo.stories.size();
-		Random random = new Random();
-		int targetNum = random.nextInt(maxLength - 1) + 1;
-
-		remoteViews_notification = new RemoteViews(getPackageName(), R.layout
-				.home_notification_content_remoteview);
-		remoteViews_notification.setTextViewText(R.id.home_notification_content_text,
-				zhiHuNewsLatestItemInfo.stories.get(targetNum).title);
-
-		mBuilder = new NotificationCompat.Builder(HomeAct.this);
-		mBuilder.setSmallIcon(R.mipmap.app_icon)
-				.setContent(remoteViews_notification)
-				.setPriority(NotificationCompat.PRIORITY_DEFAULT)
-				.setContentIntent(getPendingIntent_News(targetNum))
-				//				.setWhen(System.currentTimeMillis())
-				.setDefaults(Notification.DEFAULT_LIGHTS);
-		notification = mBuilder.build();
-		notification.flags = Notification.FLAG_AUTO_CANCEL;
-		notificationManager.notify(1, notification);
-
-		NotificationTarget notificationTarget;
-		notificationTarget = new NotificationTarget(HomeAct.this, remoteViews_notification, R.id
-				.home_notification_content_image, notification, 1);
-		Glide.with(HomeAct.this.getApplicationContext())
-				.load(zhiHuNewsLatestItemInfo.stories.get(targetNum).images.get(0))
-				.asBitmap()
-				.into(notificationTarget);
-	}
-
 
 	/*
 	* 初始化网络连接客户端
@@ -839,7 +754,7 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 			if (isFirstLoadingContent) {
 				swipeRefreshLayout.setEnabled(false);
 				Request request = new Request.Builder()
-						.url(ZHIHUAPI_LATEST)
+						.url(ConstantUtility.ZHIHUAPI_LATEST)
 						.build();
 				Call call = okHttpClient.newCall(request);
 				call.enqueue(new Callback() {
@@ -848,13 +763,8 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 						Snackbar snackbar = SnackbarUtility.getSnackbarDefault(coordinatorLayout,
 								"咦，网络不太顺畅吔", 3000);
 						snackbar.show();
-						//						if (textView_netStatus.getVisibility() == View.GONE) {
-						//							textView_netStatus.setVisibility(View.VISIBLE);
-						//						}
-						//						textView_netStatus.setText("咦，网络不太顺畅吔\n\n点击刷新咯");
-						//						if (floatingActionsMenu.getVisibility() == View.VISIBLE) {
-						//							floatingActionsMenu.setVisibility(View.GONE);
-						//						}
+						recyclerRefreshHandler.sendEmptyMessage(0x7629);
+
 					}
 
 					@Override
@@ -870,7 +780,7 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 							current_date_month = current_date_from_zhihu.substring(4, 6);
 							current_date_day = current_date_from_zhihu.substring(6, 8);
 							Message message = new Message();
-							message.what = RECYCLER_REFRESH_LATEST;
+							message.what = ConstantUtility.RECYCLER_REFRESH_LATEST;
 							recyclerRefreshHandler.sendMessage(message);
 							isFirstLoadingContent = false;
 						}
@@ -963,11 +873,17 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 		mhandler = new Handler();
 		bannerHandler = new BannerHandler(this);
 		recyclerRefreshHandler = new RecyclerRefreshHandler(this);
-		notificationHandler = new NotificationHandler(this);
+		//		notificationHandler = new NotificationHandler(this);
 	}
 
-	public void initNotificationManager() {
-		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+	public void initNotificationService() {
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences
+				(getApplicationContext());
+		boolean lr = preferences.getBoolean("loadRecommendation", true);
+		if (lr) {
+			intent_notirec = new Intent(this, InitNotiRecService.class);
+			startService(intent_notirec);
+		}
 	}
 
 	/*
@@ -989,7 +905,7 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 			@Override
 			public void onDrawerOpened(View drawerView) {
 				super.onDrawerOpened(drawerView);
-				if (!userIsLogin) {
+				if (!ConstantUtility.userIsLogin) {
 					if (getConnectivityStatus()) {
 						initUser();
 					}
@@ -1014,6 +930,24 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 		int day = calendar.get(Calendar.DATE);
 		calendar.set(Calendar.DATE, day - 1);
 		return simpleDateFormat.format(calendar.getTime());
+	}
+
+	public boolean getServiceStatus(String serviceName) {
+		if (!TextUtils.isEmpty(serviceName)) {
+			ActivityManager activityManager
+					= (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
+			ArrayList<RunningServiceInfo> runningServiceInfoList
+					= (ArrayList<ActivityManager.RunningServiceInfo>) activityManager.getRunningServices(100);
+			for (Iterator<RunningServiceInfo> iterator = runningServiceInfoList.iterator(); iterator.hasNext();) {
+				RunningServiceInfo runningServiceInfo = iterator.next();
+				if (serviceName.equals(runningServiceInfo.service.getClassName())) {
+					return true;
+				}
+			}
+		} else {
+			return false;
+		}
+		return false;
 	}
 
 
@@ -1076,7 +1010,7 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 		}
 		if (getConnectivityStatus()) {
 			Request request = new Request.Builder()
-					.url(ZHIHUAPI_LATEST)
+					.url(ConstantUtility.ZHIHUAPI_LATEST)
 					.build();
 
 			Call call = okHttpClient.newCall(request);
@@ -1087,7 +1021,7 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 					Snackbar snackbar = SnackbarUtility.getSnackbarDefault(coordinatorLayout,
 							"咦，网络不太顺畅吔", 3000);
 					snackbar.show();
-					recyclerRefreshHandler.sendEmptyMessage(RECYCLER_REFRESH_NEW_FAILURE);
+					recyclerRefreshHandler.sendEmptyMessage(ConstantUtility.RECYCLER_REFRESH_NEW_FAILURE);
 				}
 
 				@Override
@@ -1096,7 +1030,7 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 						zhiHuNewsLatestItemInfo_new = gson.fromJson(response.body().string(),
 								ZhiHuNewsLatestItemInfo.class);
 						Message message = new Message();
-						message.what = RECYCLER_REFRESH_NEW;
+						message.what = ConstantUtility.RECYCLER_REFRESH_NEW;
 						recyclerRefreshHandler.sendMessage(message);
 
 					}
@@ -1111,7 +1045,7 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 
 		if (getConnectivityStatus()) {
 			refressh_old_date = current_simple_date_format;
-			String oldUrl = ZHIHUAPI_BEFORE + refressh_old_date;
+			String oldUrl = ConstantUtility.ZHIHUAPI_BEFORE + refressh_old_date;
 			Request request = new Request.Builder()
 					.url(oldUrl)
 					.build();
@@ -1123,7 +1057,7 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 					Snackbar snackbar = SnackbarUtility.getSnackbarDefault(coordinatorLayout,
 							"咦，网络不太顺畅吔", 3000);
 					snackbar.show();
-					recyclerRefreshHandler.sendEmptyMessage(RECYCLER_REFRESH_OLD_FAILURE);
+					recyclerRefreshHandler.sendEmptyMessage(ConstantUtility.RECYCLER_REFRESH_OLD_FAILURE);
 				}
 
 				@Override
@@ -1133,7 +1067,7 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 						zhiHuNewsLatestItemInfo_old = gson.fromJson(response.body
 								().string(), ZhiHuNewsLatestItemInfo.class);
 						Message message = new Message();
-						message.what = RECYCLER_REFRESH_OLD;
+						message.what = ConstantUtility.RECYCLER_REFRESH_OLD;
 						recyclerRefreshHandler.sendMessage(message);
 					}
 				}
@@ -1159,35 +1093,38 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 
 			case R.id.drawer_star:
 				intent = new Intent();
-				intent.setAction(INTENT_TO_STAR_HISTORY_PRAISE_KEY);
-				intent.putExtra(INTENT_STRING_DATA_KEY, STAR_KEY);
+				intent.setAction(ConstantUtility.INTENT_TO_STAR_HISTORY_PRAISE_KEY);
+				intent.putExtra(ConstantUtility.INTENT_STRING_DATA_KEY, ConstantUtility.STAR_KEY);
 				startActivity(intent);
 
 				break;
 
 			case R.id.drawer_good:
 				intent = new Intent();
-				intent.setAction(INTENT_TO_STAR_HISTORY_PRAISE_KEY);
-				intent.putExtra(INTENT_STRING_DATA_KEY, PRAISE_KEY);
+				intent.setAction(ConstantUtility.INTENT_TO_STAR_HISTORY_PRAISE_KEY);
+				intent.putExtra(ConstantUtility.INTENT_STRING_DATA_KEY, ConstantUtility.PRAISE_KEY);
 				startActivity(intent);
 
 				break;
 
 			case R.id.drawer_history:
 				intent = new Intent();
-				intent.setAction(INTENT_TO_STAR_HISTORY_PRAISE_KEY);
-				intent.putExtra(INTENT_STRING_DATA_KEY, HISTORY_KEY);
+				intent.setAction(ConstantUtility.INTENT_TO_STAR_HISTORY_PRAISE_KEY);
+				intent.putExtra(ConstantUtility.INTENT_STRING_DATA_KEY, ConstantUtility.HISTORY_KEY);
 				startActivity(intent);
 
 				break;
 
 			case R.id.drawer_notification:
 				intent = new Intent();
-				intent.setAction(INTENT_TO_NOTIFICATION_KEY);
+				intent.setAction(ConstantUtility.INTENT_TO_NOTIFICATION_KEY);
 				startActivity(intent);
 
 				break;
 			case R.id.drawer_theme:
+				if(getServiceStatus("com.rainnka.ZHNews.Service.InitNotiRecService")){
+					stopService(intent_notirec);
+				}
 				SharedPreferences preferences = getSharedPreferences("NightMode", MODE_PRIVATE);
 				SharedPreferences.Editor editor = preferences.edit();
 				if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_NO) {
@@ -1203,17 +1140,17 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 				break;
 			case R.id.drawer_setting:
 				intent = new Intent();
-				intent.setAction(INTENT_TO_SETTINGDETAIL_KEY);
+				intent.setAction(ConstantUtility.INTENT_TO_SETTINGDETAIL_KEY);
 				startActivity(intent);
 				break;
 			case R.id.drawer_response:
 				intent = new Intent();
-				intent.setAction(INTENT_TO_FEEDBACK_KEY);
+				intent.setAction(ConstantUtility.INTENT_TO_FEEDBACK_KEY);
 				startActivity(intent);
 				break;
 			case R.id.drawer_about:
 				intent = new Intent();
-				intent.setAction(INTENT_TO_ABOUT_KEY);
+				intent.setAction(ConstantUtility.INTENT_TO_ABOUT_KEY);
 				startActivity(intent);
 				break;
 			case R.id.drawer_exit:
@@ -1223,25 +1160,20 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 		return true;
 	}
 
-	//	private void actionForNavigationItemSelected(MenuItem item) {
-	//		drawerLayout.closeDrawer(navigationView);
-	//		Snackbar.make(coordinatorLayout, item.getTitle(), Snackbar.LENGTH_SHORT).show();
-	//	}
-
 	/*
 	* 首页顶部banner开始自动轮播
 	* */
 	protected void bannerStartAutoScroll() {
-		bannerHandler.sendEmptyMessageDelayed(BANNER_SCROLL_KEY, BANNER_SCROLL_INTERVAL);
+		bannerHandler.sendEmptyMessageDelayed(ConstantUtility.BANNER_SCROLL_KEY, ConstantUtility.BANNER_SCROLL_INTERVAL);
 	}
 
 	/*
 	* 发送自动滚动的消息
 	* */
 	protected void sendScrollMessage() {
-		bannerHandler.removeMessages(BANNER_SCROLL_KEY);
-		bannerHandler.sendEmptyMessageDelayed(BANNER_SCROLL_KEY,
-				BANNER_SCROLL_INTERVAL);
+		bannerHandler.removeMessages(ConstantUtility.BANNER_SCROLL_KEY);
+		bannerHandler.sendEmptyMessageDelayed(ConstantUtility.BANNER_SCROLL_KEY,
+				ConstantUtility.BANNER_SCROLL_INTERVAL);
 	}
 
 	/*
@@ -1255,7 +1187,7 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 	* 手动停止轮播图的自动滚动
 	* */
 	protected void bannerStopAutoScroll() {
-		bannerHandler.removeMessages(BANNER_SCROLL_KEY);
+		bannerHandler.removeMessages(ConstantUtility.BANNER_SCROLL_KEY);
 	}
 
 	@Override
@@ -1265,7 +1197,7 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 					.string.home_activity_content_collapsingtoolbar_title));
 			bannerStopAutoScroll();
 		} else {
-			if (!bannerHandler.hasMessages(BANNER_SCROLL_KEY)) {
+			if (!bannerHandler.hasMessages(ConstantUtility.BANNER_SCROLL_KEY)) {
 				bannerStartAutoScroll();
 			}
 			if (collapsingToolbarLayout.getTitle() == getApplicationContext().getResources()
@@ -1297,7 +1229,6 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 		}
 	}
 
-
 	/*
 	* 静态内部类 BannerHandler
 	* 处理轮播图
@@ -1316,29 +1247,10 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 			switch (msg.what) {
-				case BANNER_SCROLL_KEY:
+				case ConstantUtility.BANNER_SCROLL_KEY:
 					homeAct.bannerScrollToNext();
 					homeAct.sendScrollMessage();
 			}
-		}
-	}
-
-	/*
-	* 静态内部类
-	* 处理notification
-	* */
-	static class NotificationHandler extends Handler {
-		WeakReference<HomeAct> homeActivityWeakReference;
-		HomeAct homeAct;
-
-		public NotificationHandler(HomeAct homeAct) {
-			this.homeActivityWeakReference = new WeakReference<>(homeAct);
-			this.homeAct = this.homeActivityWeakReference.get();
-		}
-
-		@Override
-		public void handleMessage(Message msg) {
-			homeAct.initNotification();
 		}
 	}
 
@@ -1360,7 +1272,7 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 			switch (msg.what) {
-				case RECYCLER_REFRESH_LATEST:
+				case ConstantUtility.RECYCLER_REFRESH_LATEST:
 					if (homeAct.textView_netStatus.getVisibility() == View.VISIBLE) {
 						homeAct.textView_netStatus.setVisibility(View.GONE);
 					}
@@ -1473,11 +1385,11 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 
 					homeAct.swipeRefreshLayout.setEnabled(true);
 
-					homeAct.notificationHandler.sendEmptyMessage(0x4826);
+					//					homeAct.notificationHandler.sendEmptyMessage(0x4826);
 
 					break;
 
-				case RECYCLER_REFRESH_NEW:
+				case ConstantUtility.RECYCLER_REFRESH_NEW:
 					if (homeAct.textView_netStatus.getVisibility() == View.VISIBLE) {
 						homeAct.textView_netStatus.setVisibility(View.GONE);
 					}
@@ -1521,7 +1433,7 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 						/*
 						* 加载完后滚动到新的最高那一列
 						* */
-//						homeAct.recyclerView.scrollToPosition(0);
+						//						homeAct.recyclerView.scrollToPosition(0);
 						SnackbarUtility.getSnackbarDefault(homeAct.coordinatorLayout,
 								"成功更新" + tempList.size() + "条日报", 2000).show();
 					} else {
@@ -1534,11 +1446,11 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 
 					break;
 
-				case RECYCLER_REFRESH_NEW_FAILURE:
+				case ConstantUtility.RECYCLER_REFRESH_NEW_FAILURE:
 					homeAct.swipeRefreshLayout.setRefreshing(false);
 					break;
 
-				case RECYCLER_REFRESH_OLD:
+				case ConstantUtility.RECYCLER_REFRESH_OLD:
 
 					homeAct.current_simple_date_format = homeAct.getPrecedingDate
 							(homeAct.current_simple_date_format);
@@ -1560,14 +1472,23 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 					/*
 					* 加载完后滚动到加载出的那一行
 					* */
-//					homeAct.recyclerView.scrollToPosition(homeAct
-//							.homeActivityRecyclerViewAdapter.getItemCount() - homeAct
-//							.zhiHuNewsLatestItemInfo_old.stories.size() + 1);
+					//					homeAct.recyclerView.scrollToPosition(homeAct
+					//							.homeActivityRecyclerViewAdapter.getItemCount() - homeAct
+					//							.zhiHuNewsLatestItemInfo_old.stories.size() + 1);
 
 					break;
 
-				case RECYCLER_REFRESH_OLD_FAILURE:
+				case ConstantUtility.RECYCLER_REFRESH_OLD_FAILURE:
 					homeAct.swipeRefreshLayout.setRefreshing(false);
+					break;
+				case 0x7629:
+					if (homeAct.textView_netStatus.getVisibility() == View.GONE) {
+						homeAct.textView_netStatus.setVisibility(View.VISIBLE);
+					}
+					homeAct.textView_netStatus.setText("咦，网络不太顺畅吔\n\n点击刷新咯");
+					if (homeAct.floatingActionsMenu.getVisibility() == View.VISIBLE) {
+						homeAct.floatingActionsMenu.setVisibility(View.GONE);
+					}
 					break;
 			}
 		}

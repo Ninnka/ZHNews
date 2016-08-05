@@ -25,8 +25,10 @@ import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.rainnka.ZHNews.Application.BaseApplication;
 import com.rainnka.ZHNews.Bean.ZhiHuNewsItemInfo;
 import com.rainnka.ZHNews.R;
+import com.rainnka.ZHNews.Utility.ConstantUtility;
 import com.rainnka.ZHNews.Utility.SQLiteCreateTableHelper;
 import com.rainnka.ZHNews.Utility.SnackbarUtility;
 import com.squareup.okhttp.Call;
@@ -191,7 +193,7 @@ public class NewsAct extends BaseAct {
 		imageView_star.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(HomeAct.userIsLogin){
+				if(ConstantUtility.userIsLogin){
 					new Thread(new Runnable() {
 						@Override
 						public void run() {
@@ -252,7 +254,7 @@ public class NewsAct extends BaseAct {
 		imageView_praise.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (HomeAct.userIsLogin) {
+				if (ConstantUtility.userIsLogin) {
 					new Thread(new Runnable() {
 						@Override
 						public void run() {
@@ -335,14 +337,14 @@ public class NewsAct extends BaseAct {
 
 	private void initSQLiteDatabase() {
 		if (sqLiteDatabase == null) {
-			sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(NewsAct.this
-					.getFilesDir().toString() + "/myInfo.db3", null);
+			sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(BaseApplication.getDATABASE_PATH
+					() + "/myInfo.db3", null);
 		}
 	}
 
 	private void getInfomationFromIntent() {
 		Intent intent = getIntent();
-		zhiHuNewsItemInfoFromHome = (ZhiHuNewsItemInfo) intent.getSerializableExtra(HomeAct.SER_KEY);
+		zhiHuNewsItemInfoFromHome = (ZhiHuNewsItemInfo) intent.getSerializableExtra(ConstantUtility.SER_KEY);
 	}
 
 	/*
@@ -457,7 +459,7 @@ public class NewsAct extends BaseAct {
 	}
 
 	private void judgeStarState() {
-		if (HomeAct.userIsLogin) {
+		if (ConstantUtility.userIsLogin) {
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
@@ -475,7 +477,7 @@ public class NewsAct extends BaseAct {
 	}
 
 	private void judgePraiseState() {
-		if (HomeAct.userIsLogin) {
+		if (ConstantUtility.userIsLogin) {
 			new Thread(new Runnable() {
 				@Override
 				public void run() {

@@ -4,4 +4,16 @@
         <item>0x3456</item>
         <item>0x8764</item>
     </integer-array>
+
+    <string-array name="listpreference_recInterval">
+        <item>10 min</item>
+        <item>30 min</item>
+        <item>1 hour</item>
+    </string-array>
+
+    <string-array name="listpreference_recInterval_values">
+        <item>30</item>
+        <item>60</item>
+        <item>120</item>
+    </string-array>
 </resources>

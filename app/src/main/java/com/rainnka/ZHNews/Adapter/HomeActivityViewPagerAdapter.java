@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.rainnka.ZHNews.Activity.HomeAct;
 import com.rainnka.ZHNews.Bean.ZhiHuNewsItemInfo;
 import com.rainnka.ZHNews.R;
+import com.rainnka.ZHNews.Utility.ConstantUtility;
 import com.rainnka.ZHNews.Utility.SQLiteCreateTableHelper;
 
 import java.lang.ref.WeakReference;
@@ -106,7 +107,7 @@ public class HomeActivityViewPagerAdapter extends PagerAdapter {
 				if (((HomeAct) appCompatActivity).sqLiteDatabase.isOpen()) {
 					((HomeAct) appCompatActivity).closeSQLiteDatabase();
 				}
-				if (HomeAct.userIsLogin) {
+				if (ConstantUtility.userIsLogin) {
 					sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(appCompatActivity
 							.getFilesDir().toString() + "/myInfo.db3", null);
 					sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_HISTORY_TABLE);
@@ -128,10 +129,10 @@ public class HomeActivityViewPagerAdapter extends PagerAdapter {
 
 				}
 				Intent intent = new Intent();
-				intent.setAction(HomeAct.INTENT_TO_NEWS_KEY);
+				intent.setAction(ConstantUtility.INTENT_TO_NEWS_KEY);
 				Bundle bundle = new Bundle();
 				try {
-					bundle.putSerializable(HomeAct.SER_KEY, zhiHuNewsTopItemInfoList.get
+					bundle.putSerializable(ConstantUtility.SER_KEY, zhiHuNewsTopItemInfoList.get
 							(position - 1));
 					intent.putExtras(bundle);
 					appCompatActivity.startActivity(intent);

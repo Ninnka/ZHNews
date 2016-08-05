@@ -13,10 +13,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.rainnka.ZHNews.Activity.HomeAct;
 import com.rainnka.ZHNews.Activity.Star_History_PraiseAct;
+import com.rainnka.ZHNews.Application.BaseApplication;
 import com.rainnka.ZHNews.Bean.ZhiHuNewsItemInfo;
 import com.rainnka.ZHNews.R;
+import com.rainnka.ZHNews.Utility.ConstantUtility;
 import com.rainnka.ZHNews.Utility.SnackbarUtility;
 
 import java.lang.ref.WeakReference;
@@ -86,11 +87,11 @@ public class Star_History_PraiseActivityRecyclerViewAdapter extends RecyclerView
 		try {
 			int itemId = zhiHuNewsItemInfoList.get(targetPosition).id;
 			if (sqLiteDatabase == null) {
-				sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(this.appCompatActivity
-						.getFilesDir().toString() + "/myInfo.db3", null);
+				sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(BaseApplication
+						.getDATABASE_PATH() + "/myInfo.db3", null);
 			}
 			int deleteCount = 0;
-			if (((Star_History_PraiseAct) appCompatActivity).title.equals(HomeAct.STAR_KEY)) {
+			if (((Star_History_PraiseAct) appCompatActivity).title.equals(ConstantUtility.STAR_KEY)) {
 				deleteCount = sqLiteDatabase.delete("my_star", "ItemId like ?", new
 						String[]{String.valueOf
 						(itemId)});

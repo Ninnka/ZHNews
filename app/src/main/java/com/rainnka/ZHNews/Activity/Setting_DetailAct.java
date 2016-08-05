@@ -3,7 +3,11 @@ package com.rainnka.ZHNews.Activity;
 import android.app.FragmentManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
+import android.preference.ListPreference;
+import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceScreen;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -32,7 +36,7 @@ public class Setting_DetailAct extends AppCompatActivity {
 		initComponent();
 		initToolbarSetting();
 		initFrameLayoutContent();
-		
+
 	}
 
 	private void initFrameLayoutContent() {
@@ -45,7 +49,7 @@ public class Setting_DetailAct extends AppCompatActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()){
+		switch (item.getItemId()) {
 			case android.R.id.home:
 				finish();
 				break;
@@ -70,6 +74,22 @@ public class Setting_DetailAct extends AppCompatActivity {
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			addPreferencesFromResource(R.xml.setting_detail);
+		}
+
+		@Override
+		public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
+			if (preference.getKey().equals("loadRecommendation")) {
+				CheckBoxPreference checkBoxPreference = (CheckBoxPreference) getPreferenceManager().findPreference
+						(preference.getKey());
+				ListPreference listPreference = (ListPreference) getPreferenceManager().findPreference
+						("recommandInterval");
+				if (checkBoxPreference.isChecked()) {
+					listPreference.setEnabled(true);
+				}else {
+					listPreference.setEnabled(false);
+				}
+			}
+			return super.onPreferenceTreeClick(preferenceScreen, preference);
 		}
 	}
 

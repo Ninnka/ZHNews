@@ -17,6 +17,7 @@
 
         <!-- navigationview toggle 的颜色 -->
         <item name="colorControlNormal">#FFFFFF</item>
+        <item name="android:colorControlNormal">#FFFFFF</item>
 
         <!-- 开启transition -->
         <!--<item name="android:windowActivityTransitions">true</item>-->

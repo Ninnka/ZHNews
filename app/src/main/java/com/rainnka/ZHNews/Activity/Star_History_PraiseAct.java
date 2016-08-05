@@ -30,10 +30,12 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.rainnka.ZHNews.Adapter.Star_History_PraiseActivityRecyclerViewAdapter;
+import com.rainnka.ZHNews.Application.BaseApplication;
 import com.rainnka.ZHNews.Bean.ZhiHuNewsItemInfo;
 import com.rainnka.ZHNews.Callback_Listener.SimpleItemTouchHelperCallback;
 import com.rainnka.ZHNews.Callback_Listener.onSHPActRecyclerItemClickListener;
 import com.rainnka.ZHNews.R;
+import com.rainnka.ZHNews.Utility.ConstantUtility;
 import com.rainnka.ZHNews.Utility.SQLiteCreateTableHelper;
 import com.squareup.okhttp.OkHttpClient;
 
@@ -178,13 +180,13 @@ public class Star_History_PraiseAct extends BaseAct {
 
 	@Override
 	protected void onResume() {
-		if (HomeAct.userIsLogin) {
+		if (ConstantUtility.userIsLogin) {
 			if (hasPaused) {
 				switch (title) {
-					case HomeAct.STAR_KEY:
+					case ConstantUtility.STAR_KEY:
 						if (sqLiteDatabase == null) {
 							sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase
-									(Star_History_PraiseAct.this.getFilesDir().toString() + "/myInfo" +
+									(BaseApplication.getDATABASE_PATH() + "/myInfo" +
 											".db3", null);
 						}
 						new Thread(new Runnable() {
@@ -195,11 +197,11 @@ public class Star_History_PraiseAct extends BaseAct {
 							}
 						}).start();
 						break;
-					case HomeAct.PRAISE_KEY:
+					case ConstantUtility.PRAISE_KEY:
 						try {
 							if (sqLiteDatabase == null) {
 								sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase
-										(Star_History_PraiseAct.this.getFilesDir().toString() + "/myInfo" +
+										(BaseApplication.getDATABASE_PATH() + "/myInfo" +
 												".db3", null);
 							}
 							new Thread(new Runnable() {
@@ -216,11 +218,11 @@ public class Star_History_PraiseAct extends BaseAct {
 						}
 
 						break;
-					case HomeAct.HISTORY_KEY:
+					case ConstantUtility.HISTORY_KEY:
 						try {
 							if (sqLiteDatabase == null) {
 								sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase
-										(Star_History_PraiseAct.this.getFilesDir().toString() + "/myInfo" +
+										(BaseApplication.getDATABASE_PATH() + "/myInfo" +
 												".db3", null);
 							}
 							new Thread(new Runnable() {
@@ -277,11 +279,11 @@ public class Star_History_PraiseAct extends BaseAct {
 	* 从数据库获取信息
 	* */
 	private void initMyItemInfoFromDatabase() {
-		if (HomeAct.userIsLogin) {
-			if (title.equals(HomeAct.STAR_KEY)) {
+		if (ConstantUtility.userIsLogin) {
+			if (title.equals(ConstantUtility.STAR_KEY)) {
 				if (sqLiteDatabase == null) {
-					sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(Star_History_PraiseAct.this
-							.getFilesDir().toString() + "/myInfo.db3", null);
+					sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(BaseApplication
+							.getDATABASE_PATH() + "/myInfo.db3", null);
 					new Thread(new Runnable() {
 						@Override
 						public void run() {
@@ -290,10 +292,10 @@ public class Star_History_PraiseAct extends BaseAct {
 					}).start();
 				}
 			}
-			if (title.equals(HomeAct.PRAISE_KEY)) {
+			if (title.equals(ConstantUtility.PRAISE_KEY)) {
 				if (sqLiteDatabase == null) {
-					sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(Star_History_PraiseAct.this
-							.getFilesDir().toString() + "/myInfo.db3", null);
+					sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(BaseApplication.getDATABASE_PATH() +
+							"/myInfo.db3", null);
 					new Thread(new Runnable() {
 						@Override
 						public void run() {
@@ -302,10 +304,10 @@ public class Star_History_PraiseAct extends BaseAct {
 					}).start();
 				}
 			}
-			if (title.equals(HomeAct.HISTORY_KEY)) {
+			if (title.equals(ConstantUtility.HISTORY_KEY)) {
 				if (sqLiteDatabase == null) {
-					sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(Star_History_PraiseAct.this
-							.getFilesDir().toString() + "/myInfo.db3", null);
+					sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(BaseApplication.getDATABASE_PATH() +
+							"/myInfo.db3", null);
 				}
 				new Thread(new Runnable() {
 					@Override
@@ -336,13 +338,13 @@ public class Star_History_PraiseAct extends BaseAct {
 
 	private void initToolbar() {
 		switch (title) {
-			case HomeAct.STAR_KEY:
+			case ConstantUtility.STAR_KEY:
 				toolbar.setTitle("收藏");
 				break;
-			case HomeAct.HISTORY_KEY:
+			case ConstantUtility.HISTORY_KEY:
 				toolbar.setTitle("浏览历史");
 				break;
-			case HomeAct.PRAISE_KEY:
+			case ConstantUtility.PRAISE_KEY:
 				toolbar.setTitle("点赞");
 				break;
 		}
@@ -352,8 +354,8 @@ public class Star_History_PraiseAct extends BaseAct {
 	}
 
 	private void initMultChoiceClickListener() {
-		if (HomeAct.userIsLogin) {
-			if (title.equals(HomeAct.HISTORY_KEY)) {
+		if (ConstantUtility.userIsLogin) {
+			if (title.equals(ConstantUtility.HISTORY_KEY)) {
 				imageView_MultChoice.setVisibility(View.GONE);
 				textView_Clear.setOnClickListener(new View.OnClickListener() {
 					@Override
@@ -393,7 +395,7 @@ public class Star_History_PraiseAct extends BaseAct {
 	}
 
 	public String getInentInfo() {
-		return getIntent().getStringExtra(HomeAct.INTENT_STRING_DATA_KEY);
+		return getIntent().getStringExtra(ConstantUtility.INTENT_STRING_DATA_KEY);
 	}
 
 	private void initHandler() {
@@ -440,8 +442,9 @@ public class Star_History_PraiseAct extends BaseAct {
 			@Override
 			public void onItemClick(RecyclerView.ViewHolder viewHolder) {
 				if (sqLiteDatabase == null) {
-					sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(Star_History_PraiseAct
-							.this.getFilesDir().toString() + "/myInfo.db3", null);
+					sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(BaseApplication.getDATABASE_PATH() +
+							"/myInfo.db3",
+							null);
 				}
 				sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_HISTORY_TABLE);
 				sqLiteDatabase.delete("my_history", "ItemId like ?", new
@@ -480,9 +483,9 @@ public class Star_History_PraiseAct extends BaseAct {
 
 				} else {
 					Intent intent = new Intent();
-					intent.setAction(HomeAct.INTENT_TO_NEWS_KEY);
+					intent.setAction(ConstantUtility.INTENT_TO_NEWS_KEY);
 					Bundle bundle = new Bundle();
-					bundle.putSerializable(HomeAct.SER_KEY,
+					bundle.putSerializable(ConstantUtility.SER_KEY,
 							star_history_praiseActivityRecyclerViewAdapter.zhiHuNewsItemInfoList.get
 									(viewHolder.getAdapterPosition()));
 					intent.putExtras(bundle);
@@ -493,7 +496,7 @@ public class Star_History_PraiseAct extends BaseAct {
 
 			@Override
 			public void onItemLongClick(RecyclerView.ViewHolder viewHolder) {
-				if (!title.equals(HomeAct.HISTORY_KEY)) {
+				if (!title.equals(ConstantUtility.HISTORY_KEY)) {
 					if (!star_history_praiseActivityRecyclerViewAdapter.mIsSelected) {
 						itemTouchHelper.startSwipe(viewHolder);
 					} else {
@@ -584,8 +587,8 @@ public class Star_History_PraiseAct extends BaseAct {
 									&& star_history_praiseActivityRecyclerViewAdapter
 									.mSelectedPositions.size() != 0) {
 								if (sqLiteDatabase == null) {
-									sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(Star_History_PraiseAct.this
-											.getFilesDir().toString() + "/myInfo.db3", null);
+									sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase
+											(BaseApplication.getDATABASE_PATH() + "/myInfo.db3", null);
 								}
 								new Thread(new Runnable() {
 									@Override
@@ -936,7 +939,7 @@ public class Star_History_PraiseAct extends BaseAct {
 		for (int i = 0; i < sparseBooleanArray.size(); i++) {
 			int id = star_history_praiseActivityRecyclerViewAdapter.zhiHuNewsItemInfoList.get
 					(sparseBooleanArray.keyAt(i)).id;
-			if (title.equals(HomeAct.STAR_KEY)) {
+			if (title.equals(ConstantUtility.STAR_KEY)) {
 				sqLiteDatabase.delete("my_star", "ItemId like ?", new String[]{String.valueOf(id)});
 			} else {
 				sqLiteDatabase.delete("my_praise", "ItemId like ?", new String[]{String.valueOf(id)});
@@ -979,9 +982,9 @@ public class Star_History_PraiseAct extends BaseAct {
 	}
 
 	protected void deleteAllItem() {
-		if (title.equals(HomeAct.STAR_KEY)) {
+		if (title.equals(ConstantUtility.STAR_KEY)) {
 			sqLiteDatabase.delete("my_star", null, null);
-		} else if (title.equals(HomeAct.PRAISE_KEY)) {
+		} else if (title.equals(ConstantUtility.PRAISE_KEY)) {
 			sqLiteDatabase.delete("my_praise", null, null);
 		} else {
 			sqLiteDatabase.delete("my_history", null, null);
@@ -993,7 +996,7 @@ public class Star_History_PraiseAct extends BaseAct {
 		Bundle bundle = new Bundle();
 		bundle.putInt("deleteCount", deleteCount);
 		msg.setData(bundle);
-		if (!title.equals(HomeAct.HISTORY_KEY)) {
+		if (!title.equals(ConstantUtility.HISTORY_KEY)) {
 			msg.what = 0x999;
 		} else {
 			msg.what = 0x777;
