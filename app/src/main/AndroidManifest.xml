@@ -15,7 +15,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".Activity.HomeAct"
+            android:name=".Activity.HomeAty"
             android:screenOrientation="portrait"
             android:theme="@style/HomeTheme">
 
@@ -26,7 +26,7 @@
         </activity>
 
         <activity
-            android:name=".Activity.NewsAct"
+            android:name=".Activity.NewsAty"
             android:screenOrientation="portrait"
             android:theme="@style/NewsTheme">
 
@@ -37,7 +37,7 @@
         </activity>
 
         <activity
-            android:name=".Activity.Star_History_PraiseAct"
+            android:name=".Activity.Star_History_PraiseAty"
             android:screenOrientation="portrait"
             android:theme="@style/SHPTheme">
 
@@ -48,7 +48,7 @@
         </activity>
 
         <activity
-            android:name=".Activity.LoginAct"
+            android:name=".Activity.LoginAty"
             android:screenOrientation="portrait"
             android:theme="@style/LoginTheme"
             android:windowSoftInputMode="adjustResize">
@@ -60,7 +60,7 @@
         </activity>
 
         <activity
-            android:name=".Activity.ProfilePageAct"
+            android:name=".Activity.ProfilePageAty"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize">
@@ -71,7 +71,7 @@
         </activity>
 
         <activity
-            android:name=".Activity.NotificationAct"
+            android:name=".Activity.NotificationAty"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -81,7 +81,7 @@
         </activity>
 
         <activity
-            android:name=".Activity.FeedbackAct"
+            android:name=".Activity.FeedbackAty"
             android:screenOrientation="portrait"
             android:theme="@style/LoginTheme"
             android:windowSoftInputMode="adjustResize">
@@ -92,7 +92,7 @@
         </activity>
 
         <activity
-            android:name=".Activity.AboutAct"
+            android:name=".Activity.AboutAty"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.AboutPage"/>
@@ -101,7 +101,7 @@
         </activity>
 
         <activity
-            android:name=".Activity.Setting_DetailAct"
+            android:name=".Activity.Setting_DetailAty"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.Setting_Detail"/>
@@ -110,7 +110,7 @@
         </activity>
 
         <activity
-            android:name=".Activity.WelcomeAct"
+            android:name=".Activity.WelcomeAty"
             android:theme="@style/WelcomeTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

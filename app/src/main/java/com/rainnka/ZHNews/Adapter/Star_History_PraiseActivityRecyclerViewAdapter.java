@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.rainnka.ZHNews.Activity.Star_History_PraiseAct;
+import com.rainnka.ZHNews.Activity.Star_History_PraiseAty;
 import com.rainnka.ZHNews.Application.BaseApplication;
 import com.rainnka.ZHNews.Bean.ZhiHuNewsItemInfo;
 import com.rainnka.ZHNews.R;
@@ -91,7 +91,7 @@ public class Star_History_PraiseActivityRecyclerViewAdapter extends RecyclerView
 						.getDATABASE_PATH() + "/myInfo.db3", null);
 			}
 			int deleteCount = 0;
-			if (((Star_History_PraiseAct) appCompatActivity).title.equals(ConstantUtility.STAR_KEY)) {
+			if (((Star_History_PraiseAty) appCompatActivity).title.equals(ConstantUtility.STAR_KEY)) {
 				deleteCount = sqLiteDatabase.delete("my_star", "ItemId like ?", new
 						String[]{String.valueOf
 						(itemId)});
@@ -100,7 +100,7 @@ public class Star_History_PraiseActivityRecyclerViewAdapter extends RecyclerView
 						(itemId)});
 			}
 			if (deleteCount > 0) {
-				SnackbarUtility.getSnackbarDefault(((Star_History_PraiseAct) appCompatActivity)
+				SnackbarUtility.getSnackbarDefault(((Star_History_PraiseAty) appCompatActivity)
 						.coordinatorLayout, "删除成功", Snackbar.LENGTH_SHORT).show();
 			}
 		} catch (Exception e) {

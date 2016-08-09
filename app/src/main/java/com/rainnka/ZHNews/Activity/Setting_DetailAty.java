@@ -20,7 +20,7 @@ import com.rainnka.ZHNews.R;
  * Created by rainnka on 2016/8/2 15:32
  * Project name is ZHKUNews
  */
-public class Setting_DetailAct extends AppCompatActivity {
+public class Setting_DetailAty extends AppCompatActivity {
 
 	Toolbar toolbar;
 	FrameLayout frameLayout;

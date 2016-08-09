@@ -19,7 +19,7 @@ import com.rainnka.ZHNews.R;
  * Created by rainnka on 2016/7/23 13:48
  * Project name is ZHKUNews
  */
-public class FeedbackAct extends BaseAct {
+public class FeedbackAty extends BaseAty {
 
 	public Toolbar toolbar;
 	public ImageView imageView_sent;

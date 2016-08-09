@@ -1,5 +1,7 @@
 package com.rainnka.ZHNews.Utility;
 
+import android.animation.AnimatorSet;
+
 /**
  * Created by rainnka on 2016/8/4 15:48
  * Project name is ZHKUNews
@@ -45,5 +47,19 @@ public class ConstantUtility {
 	public final static String ZHIHUAPI_BEFORE = "http://news.at.zhihu.com/api/4/news/before/";
 
 	public final static int PENDINGINTENT_NEWS_REQUESTCODE = 0x87;
+
+	public static final String getInfoByAPI = "http://news-at.zhihu.com/api/4/news/";
+
+	public final static int NEWS_TO_UNSTARED = 0x4693;
+	public final static int NEWS_TO_STARED = 0x4692;
+	public final static int JUDGE_STAR_STATUS = 0x5555;
+
+	public final static int NEWS_TO_PRAISE = 0x9418;
+	public final static int NEWS_TO_UNPRAISE = 0x9419;
+	public final static int JUDGE_PRAISE_STATUS = 0x5556;
+
+	public static AnimatorSet getAnimatorDelegate(){
+		return new AnimatorSet();
+	}
 
 }

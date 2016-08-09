@@ -7,7 +7,7 @@
               android:layout_height="match_parent"
               android:fitsSystemWindows="true"
               android:orientation="vertical"
-              tools:context=".Activity.ProfilePageAct">
+              tools:context=".Activity.ProfilePageAty">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/profilepage_act_Toolbar"

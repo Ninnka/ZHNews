@@ -26,7 +26,7 @@ import java.lang.ref.WeakReference;
  * Created by rainnka on 2016/5/18 20:58
  * Project name is MaterialDesign
  */
-public class WelcomeAct extends BaseAct {
+public class WelcomeAty extends BaseAty {
 
 	WelcomeHandler welcomeHandler;
 	CallResponseHandler callResponseHandler;
@@ -114,10 +114,10 @@ public class WelcomeAct extends BaseAct {
 
 	static class WelcomeHandler extends Handler {
 
-		WeakReference<WelcomeAct> welcomeActivityWeakReference;
-		WelcomeAct welcomeAct;
+		WeakReference<WelcomeAty> welcomeActivityWeakReference;
+		WelcomeAty welcomeAct;
 
-		public WelcomeHandler(WelcomeAct welcomeAct) {
+		public WelcomeHandler(WelcomeAty welcomeAct) {
 			this.welcomeActivityWeakReference = new WeakReference<>(welcomeAct);
 			this.welcomeAct = this.welcomeActivityWeakReference.get();
 		}
@@ -134,10 +134,10 @@ public class WelcomeAct extends BaseAct {
 
 	static class CallResponseHandler extends Handler {
 
-		WeakReference<WelcomeAct> welcomeActivityWeakReference;
-		WelcomeAct welcomeAct;
+		WeakReference<WelcomeAty> welcomeActivityWeakReference;
+		WelcomeAty welcomeAct;
 
-		public CallResponseHandler(WelcomeAct welcomeAct) {
+		public CallResponseHandler(WelcomeAty welcomeAct) {
 			this.welcomeActivityWeakReference = new WeakReference<>(welcomeAct);
 			this.welcomeAct = this.welcomeActivityWeakReference.get();
 		}

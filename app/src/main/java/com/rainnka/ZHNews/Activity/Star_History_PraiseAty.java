@@ -47,7 +47,7 @@ import java.util.List;
  * Created by rainnka on 2016/5/21 14:10
  * Project name is ZHKUNews
  */
-public class Star_History_PraiseAct extends BaseAct {
+public class Star_History_PraiseAty extends BaseAty {
 
 	public CoordinatorLayout coordinatorLayout;
 	protected AppBarLayout appBarLayout;
@@ -386,11 +386,11 @@ public class Star_History_PraiseAct extends BaseAct {
 
 	private void initRecyclerViewAdapter() {
 		star_history_praiseActivityRecyclerViewAdapter = new
-				Star_History_PraiseActivityRecyclerViewAdapter(Star_History_PraiseAct.this);
+				Star_History_PraiseActivityRecyclerViewAdapter(Star_History_PraiseAty.this);
 	}
 
 	private void intiLinearLayoutManager() {
-		linearLayoutManager = new LinearLayoutManager(Star_History_PraiseAct.this);
+		linearLayoutManager = new LinearLayoutManager(Star_History_PraiseAty.this);
 		linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 	}
 
@@ -399,7 +399,7 @@ public class Star_History_PraiseAct extends BaseAct {
 	}
 
 	private void initHandler() {
-		loadZhiHuNewsItemHandler = new loadZhiHuNewsItemHandler(Star_History_PraiseAct.this);
+		loadZhiHuNewsItemHandler = new loadZhiHuNewsItemHandler(Star_History_PraiseAty.this);
 	}
 
 	private void initGson() {
@@ -1017,10 +1017,10 @@ public class Star_History_PraiseAct extends BaseAct {
 	* */
 	static class loadZhiHuNewsItemHandler extends Handler {
 
-		public WeakReference<Star_History_PraiseAct> star_history_praiseActivityWeakReference;
-		public Star_History_PraiseAct star_history_praiseAct;
+		public WeakReference<Star_History_PraiseAty> star_history_praiseActivityWeakReference;
+		public Star_History_PraiseAty star_history_praiseAct;
 
-		public loadZhiHuNewsItemHandler(Star_History_PraiseAct star_history_praiseAct) {
+		public loadZhiHuNewsItemHandler(Star_History_PraiseAty star_history_praiseAct) {
 			this.star_history_praiseActivityWeakReference = new WeakReference<>
 					(star_history_praiseAct);
 			this.star_history_praiseAct = this.star_history_praiseActivityWeakReference.get();

@@ -18,7 +18,7 @@ import com.rainnka.ZHNews.R;
  * Created by rainnka on 2016/7/23 13:46
  * Project name is ZHKUNews
  */
-public class AboutAct extends BaseAct {
+public class AboutAty extends BaseAty {
 
 	Toolbar toolbar;
 	CardView cardView_sources;

@@ -18,7 +18,7 @@ import com.rainnka.ZHNews.R;
  * Created by rainnka on 2016/7/22 10:40
  * Project name is ZHKUNews
  */
-public class NotificationAct extends BaseAct {
+public class NotificationAty extends BaseAty {
 
 	Toolbar toolbar;
 	ViewStubCompat viewStubCompat;

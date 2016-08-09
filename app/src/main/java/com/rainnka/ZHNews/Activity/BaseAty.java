@@ -9,7 +9,7 @@ import android.view.View;
  * Created by rainnka on 2016/5/17 14:11
  * Project name is ZHKUNews
  */
-public class BaseAct extends AppCompatActivity {
+public class BaseAty extends AppCompatActivity {
 
 	private View statusBarInstead;
 

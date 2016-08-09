@@ -78,7 +78,7 @@ import java.util.concurrent.TimeUnit;
  * Created by rainnka on 2016/5/12 20:45
  * Project name is ZHKUNews
  */
-public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
+public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 		HomeActivityRecyclerViewAdapter.HomeActivityRecyclerViewAdapterCallback, SwipeRefreshLayout
 				.OnRefreshListener, AppBarLayout.OnOffsetChangedListener, NavigationView
 				.OnNavigationItemSelectedListener {
@@ -377,20 +377,20 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == ConstantUtility.ITENT_TO_LOGIN_REQUESTCODE && resultCode == LoginAct.RESULTCODE) {
+		if (requestCode == ConstantUtility.ITENT_TO_LOGIN_REQUESTCODE && resultCode == LoginAty.RESULTCODE) {
 			ConstantUtility.userIsLogin = true;
 			profile_tv.setText(sharedPreferences.getString("nickname", ""));
 			navigationView.getMenu().setGroupVisible(R.id.group2, true);
 			Snackbar.make(coordinatorLayout, "你已经成功登录", Snackbar.LENGTH_SHORT).show();
 		}
-		if (requestCode == ConstantUtility.ITENT_TO_PROFILE_REQUESTCODE && resultCode == ProfilePageAct.RESULTCODE_NORMALBACK) {
+		if (requestCode == ConstantUtility.ITENT_TO_PROFILE_REQUESTCODE && resultCode == ProfilePageAty.RESULTCODE_NORMALBACK) {
 			String nn = sharedPreferences.getString("nickname", "");
 			if (!profile_tv.getText().equals(nn)) {
 				profile_tv.setText(nn);
 				Snackbar.make(coordinatorLayout, "修改昵称成功", Snackbar.LENGTH_SHORT).show();
 			}
 		}
-		if (requestCode == ConstantUtility.ITENT_TO_PROFILE_REQUESTCODE && resultCode == ProfilePageAct.RESULTCODE) {
+		if (requestCode == ConstantUtility.ITENT_TO_PROFILE_REQUESTCODE && resultCode == ProfilePageAty.RESULTCODE) {
 			ConstantUtility.userIsLogin = false;
 			profile_tv.setText("点击头像登录");
 			navigationView.getMenu().setGroupVisible(R.id.group2, false);
@@ -1136,7 +1136,7 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 					editor.apply();
 					AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 				}
-				HomeAct.this.recreate();
+				HomeAty.this.recreate();
 				break;
 			case R.id.drawer_setting:
 				intent = new Intent();
@@ -1235,10 +1235,10 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 	* */
 	static class BannerHandler extends Handler {
 
-		WeakReference<HomeAct> homeActivityWeakReference;
-		HomeAct homeAct;
+		WeakReference<HomeAty> homeActivityWeakReference;
+		HomeAty homeAct;
 
-		public BannerHandler(HomeAct homeAct) {
+		public BannerHandler(HomeAty homeAct) {
 			this.homeActivityWeakReference = new WeakReference<>(homeAct);
 			this.homeAct = this.homeActivityWeakReference.get();
 		}
@@ -1260,10 +1260,10 @@ public class HomeAct extends BaseAct implements ViewPager.OnPageChangeListener,
 	* */
 	static class RecyclerRefreshHandler extends Handler {
 
-		WeakReference<HomeAct> homeActivityWeakReference;
-		HomeAct homeAct;
+		WeakReference<HomeAty> homeActivityWeakReference;
+		HomeAty homeAct;
 
-		public RecyclerRefreshHandler(HomeAct homeAct) {
+		public RecyclerRefreshHandler(HomeAty homeAct) {
 			this.homeActivityWeakReference = new WeakReference<>(homeAct);
 			this.homeAct = this.homeActivityWeakReference.get();
 		}

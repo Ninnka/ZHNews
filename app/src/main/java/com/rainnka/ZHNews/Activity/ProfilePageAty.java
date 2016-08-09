@@ -27,7 +27,7 @@ import com.rainnka.ZHNews.Utility.SnackbarUtility;
  * Created by rainnka on 2016/7/10 15:26
  * Project name is ZHKUNews
  */
-public class ProfilePageAct extends BaseAct {
+public class ProfilePageAty extends BaseAty {
 
 	LinearLayout linearLayout;
 	Toolbar toolbar;
@@ -84,8 +84,8 @@ public class ProfilePageAct extends BaseAct {
 				editor.apply();
 				Intent intent = getIntent();
 				intent.putExtra("VALIDCODE", false);
-				ProfilePageAct.this.setResult(RESULTCODE, intent);
-				ProfilePageAct.this.finish();
+				ProfilePageAty.this.setResult(RESULTCODE, intent);
+				ProfilePageAty.this.finish();
 			}
 		});
 	}
@@ -137,8 +137,8 @@ public class ProfilePageAct extends BaseAct {
 		switch (item.getItemId()) {
 			case android.R.id.home:
 				Intent intent = getIntent();
-				ProfilePageAct.this.setResult(RESULTCODE_NORMALBACK, intent);
-				ProfilePageAct.this.finish();
+				ProfilePageAty.this.setResult(RESULTCODE_NORMALBACK, intent);
+				ProfilePageAty.this.finish();
 				break;
 		}
 		return true;

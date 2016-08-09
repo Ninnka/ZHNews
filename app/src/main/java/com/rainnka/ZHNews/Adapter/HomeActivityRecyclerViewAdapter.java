@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.rainnka.ZHNews.Activity.HomeAct;
+import com.rainnka.ZHNews.Activity.HomeAty;
 import com.rainnka.ZHNews.Bean.ZhiHuNewsItemInfo;
 import com.rainnka.ZHNews.R;
 
@@ -24,8 +24,8 @@ import java.util.List;
  */
 public class HomeActivityRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-	public WeakReference<HomeAct> homeActivityWeakReference;
-	public HomeAct homeAct;
+	public WeakReference<HomeAty> homeActivityWeakReference;
+	public HomeAty homeAct;
 	public LayoutInflater layoutInflater;
 	public List<ZhiHuNewsItemInfo> zhiHuNewsItemInfoList;
 
@@ -48,7 +48,7 @@ public class HomeActivityRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 		this.homeActivityRecyclerViewAdapterCallback = homeActivityRecyclerViewAdapterCallback;
 	}
 
-	public HomeActivityRecyclerViewAdapter(HomeAct homeAct) {
+	public HomeActivityRecyclerViewAdapter(HomeAty homeAct) {
 		this.homeActivityWeakReference = new WeakReference<>(homeAct);
 		this.homeAct = this.homeActivityWeakReference.get();
 		layoutInflater = LayoutInflater.from(this.homeAct);

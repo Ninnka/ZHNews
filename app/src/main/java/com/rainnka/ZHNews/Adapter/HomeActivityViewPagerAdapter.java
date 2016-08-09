@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.rainnka.ZHNews.Activity.HomeAct;
+import com.rainnka.ZHNews.Activity.HomeAty;
 import com.rainnka.ZHNews.Bean.ZhiHuNewsItemInfo;
 import com.rainnka.ZHNews.R;
 import com.rainnka.ZHNews.Utility.ConstantUtility;
@@ -104,8 +104,8 @@ public class HomeActivityViewPagerAdapter extends PagerAdapter {
 		view.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (((HomeAct) appCompatActivity).sqLiteDatabase.isOpen()) {
-					((HomeAct) appCompatActivity).closeSQLiteDatabase();
+				if (((HomeAty) appCompatActivity).sqLiteDatabase.isOpen()) {
+					((HomeAty) appCompatActivity).closeSQLiteDatabase();
 				}
 				if (ConstantUtility.userIsLogin) {
 					sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(appCompatActivity

@@ -26,7 +26,7 @@ import com.rainnka.ZHNews.Utility.SnackbarUtility;
  * Created by rainnka on 2016/6/26 21:52
  * Project name is ZHKUNews
  */
-public class LoginAct extends BaseAct {
+public class LoginAty extends BaseAty {
 
 	SharedPreferences sharedPreferences;
 	SharedPreferences.Editor editor;
@@ -142,8 +142,8 @@ public class LoginAct extends BaseAct {
 					editor.apply();
 					Intent intent = getIntent();
 					intent.putExtra(DATAKEY, VALIDCODE);
-					LoginAct.this.setResult(RESULTCODE, intent);
-					LoginAct.this.finish();
+					LoginAty.this.setResult(RESULTCODE, intent);
+					LoginAty.this.finish();
 				} else {
 					SnackbarUtility.getSnackbarDefault(coordinatorLayout, "username or password " +
 							"error", Snackbar.LENGTH_SHORT).show();

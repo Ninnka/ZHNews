@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
     android:fitsSystemWindows="true"
-    tools:context=".Activity.NotificationAct">
+    tools:context=".Activity.NotificationAty">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/notificationpage_act_AppBarLayout"

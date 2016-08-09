@@ -1,5 +1,7 @@
 package com.rainnka.ZHNews.Activity;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -44,7 +46,7 @@ import java.lang.ref.WeakReference;
  * Created by rainnka on 2016/5/15 16:19
  * Project name is ZHKUNews
  */
-public class NewsAct extends BaseAct {
+public class NewsAty extends BaseAty {
 
 	protected CoordinatorLayout coordinatorLayout;
 	protected AppBarLayout appBarLayout;
@@ -78,16 +80,14 @@ public class NewsAct extends BaseAct {
 	//	public Boolean isGood = false;
 	//	public Boolean isStar = false;
 
-	public static final String getInfoByAPI = "http://news-at.zhihu.com/api/4/news/";
-
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//			getWindow().getDecorView().setSystemUiVisibility(View
-//					.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-//		}
+		//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+		//			getWindow().getDecorView().setSystemUiVisibility(View
+		//					.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+		//		}
 		setContentView(R.layout.news_act);
 
 		//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -117,11 +117,11 @@ public class NewsAct extends BaseAct {
 		* 适应 （API19） android4.4的版本
 		* */
 		if (Build.VERSION.SDK_INT == 19) {
-//			coordinatorLayout.setFitsSystemWindows(false);
-//			appBarLayout.setFitsSystemWindows(false);
-//			CollapsingToolbarLayout.LayoutParams layoutParams = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
-//			layoutParams.setMargins(0, LengthTransitionUtility.getStatusBarHeight(this), 0, 0);
-//			toolbar.setLayoutParams(layoutParams);
+			//			coordinatorLayout.setFitsSystemWindows(false);
+			//			appBarLayout.setFitsSystemWindows(false);
+			//			CollapsingToolbarLayout.LayoutParams layoutParams = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
+			//			layoutParams.setMargins(0, LengthTransitionUtility.getStatusBarHeight(this), 0, 0);
+			//			toolbar.setLayoutParams(layoutParams);
 		}
 
 		/*
@@ -170,7 +170,7 @@ public class NewsAct extends BaseAct {
 		* 初始化okhttpclient相关
 		* */
 		okHttpClient = new OkHttpClient();
-		String getInfoUrl = getInfoByAPI + zhiHuNewsItemInfoFromHome.id;
+		String getInfoUrl = ConstantUtility.getInfoByAPI + zhiHuNewsItemInfoFromHome.id;
 		//		Log.i("ZRH","getInfoUrl: "+getInfoUrl);
 		request = new Request.Builder()
 				.url(getInfoUrl)
@@ -193,7 +193,7 @@ public class NewsAct extends BaseAct {
 		imageView_star.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(ConstantUtility.userIsLogin){
+				if (ConstantUtility.userIsLogin) {
 					new Thread(new Runnable() {
 						@Override
 						public void run() {
@@ -206,7 +206,8 @@ public class NewsAct extends BaseAct {
 										sqLiteDatabase.setTransactionSuccessful();
 										sqLiteDatabase.endTransaction();
 										if (starOrPraiseHandler != null) {
-											starOrPraiseHandler.sendEmptyMessage(0x4693);
+											starOrPraiseHandler.sendEmptyMessage(ConstantUtility
+													.NEWS_TO_UNSTARED);
 										}
 									} else {
 										sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_STAR_TABLE);
@@ -223,7 +224,8 @@ public class NewsAct extends BaseAct {
 										sqLiteDatabase.setTransactionSuccessful();
 										sqLiteDatabase.endTransaction();
 										if (starOrPraiseHandler != null) {
-											starOrPraiseHandler.sendEmptyMessage(0x4692);
+											starOrPraiseHandler.sendEmptyMessage(ConstantUtility
+													.NEWS_TO_STARED);
 										}
 									}
 									break;
@@ -242,7 +244,7 @@ public class NewsAct extends BaseAct {
 					//					}
 					//				}
 					//				cursor.close();
-				}else {
+				} else {
 					SnackbarUtility.getSnackbarDefault(coordinatorLayout, "登录后可使用收藏功能", Snackbar
 							.LENGTH_SHORT).show();
 				}
@@ -267,7 +269,8 @@ public class NewsAct extends BaseAct {
 										sqLiteDatabase.setTransactionSuccessful();
 										sqLiteDatabase.endTransaction();
 										if (starOrPraiseHandler != null) {
-											starOrPraiseHandler.sendEmptyMessage(0x9418);
+											starOrPraiseHandler.sendEmptyMessage(ConstantUtility
+													.NEWS_TO_UNPRAISE);
 										}
 									} else {
 										sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_PRAISE_TABLE);
@@ -284,7 +287,8 @@ public class NewsAct extends BaseAct {
 										sqLiteDatabase.setTransactionSuccessful();
 										sqLiteDatabase.endTransaction();
 										if (starOrPraiseHandler != null) {
-											starOrPraiseHandler.sendEmptyMessage(0x9419);
+											starOrPraiseHandler.sendEmptyMessage(ConstantUtility
+													.NEWS_TO_PRAISE);
 										}
 									}
 									break;
@@ -331,8 +335,8 @@ public class NewsAct extends BaseAct {
 	}
 
 	private void initHandler() {
-		starOrPraiseHandler = new StarOrPraiseHandler(NewsAct.this);
-		webViewHandler = new WebViewHandler(NewsAct.this);
+		starOrPraiseHandler = new StarOrPraiseHandler(NewsAty.this);
+		webViewHandler = new WebViewHandler(NewsAty.this);
 	}
 
 	private void initSQLiteDatabase() {
@@ -351,7 +355,7 @@ public class NewsAct extends BaseAct {
 	* 根据获取的信息类加载头布局实际信息
 	* */
 	private void loadCollapsingToolbarContent() {
-		Glide.with(NewsAct.this)
+		Glide.with(NewsAty.this)
 				.load(zhiHuNewsItemInfo.image)
 				.into(imageView);
 		collapsingToolbarLayout.setTitle(zhiHuNewsItemInfo.title);
@@ -383,6 +387,52 @@ public class NewsAct extends BaseAct {
 				}
 			}
 		});
+	}
+
+	public void starAnima() {
+		AnimatorSet animatorSet = ConstantUtility.getAnimatorDelegate();
+		ObjectAnimator fadeOut = ObjectAnimator.ofFloat(imageView_star, "alpha", 0f, 1f);
+		ObjectAnimator rotateOut = ObjectAnimator.ofFloat(imageView_star, "rotation", 0f, 360f);
+		ObjectAnimator scaleXOut = ObjectAnimator.ofFloat(imageView_star, "scaleX", 0.8f, 1.2f, 1f);
+		ObjectAnimator scaleYOut = ObjectAnimator.ofFloat(imageView_star, "scaleX", 0.8f, 1.2f, 1f);
+		animatorSet.playTogether(fadeOut, rotateOut, scaleXOut, scaleYOut);
+		animatorSet.setDuration(800);
+		animatorSet.start();
+	}
+
+	public void unStarAnima() {
+		AnimatorSet animatorSet = ConstantUtility.getAnimatorDelegate();
+		ObjectAnimator fadeIn = ObjectAnimator.ofFloat(imageView_star, "alpha", 0f, 1f);
+		ObjectAnimator rotateIn = ObjectAnimator.ofFloat(imageView_star, "rotation", 0f, -360f);
+		ObjectAnimator scaleXIn = ObjectAnimator.ofFloat(imageView_star, "scaleX", 1.2f, 0.8f, 1f);
+		ObjectAnimator scaleYIn = ObjectAnimator.ofFloat(imageView_star, "scaleX", 1.2f, 0.8f, 1f);
+		animatorSet.playTogether(fadeIn, rotateIn, scaleXIn, scaleYIn);
+		animatorSet.setDuration(800);
+		animatorSet.start();
+	}
+
+	public void praiseAnima() {
+		AnimatorSet animatorSet = ConstantUtility.getAnimatorDelegate();
+		ObjectAnimator scaleXOut = ObjectAnimator.ofFloat(imageView_praise, "scaleX", 0.8f, 1.3f,
+				1f);
+		ObjectAnimator scaleYOut = ObjectAnimator.ofFloat(imageView_praise, "scaleY", 0.8f, 1.3f,
+				1f);
+		ObjectAnimator fadeOut = ObjectAnimator.ofFloat(imageView_praise, "alpha", 0.5f, 1f);
+		animatorSet.playTogether(scaleXOut, scaleYOut, fadeOut);
+		animatorSet.setDuration(1000);
+		animatorSet.start();
+	}
+
+	public void unPraiseAnima() {
+		AnimatorSet animatorSet = ConstantUtility.getAnimatorDelegate();
+		ObjectAnimator scaleXIn = ObjectAnimator.ofFloat(imageView_praise, "scaleX", 1.3f, 0.8f,
+				1f);
+		ObjectAnimator scaleYIn = ObjectAnimator.ofFloat(imageView_praise, "scaleY", 1.3f, 0.8f,
+				1f);
+		ObjectAnimator fadeIn = ObjectAnimator.ofFloat(imageView_praise, "alpha", 0.5f, 1f);
+		animatorSet.playTogether(scaleXIn, scaleYIn, fadeIn);
+		animatorSet.setDuration(1000);
+		animatorSet.start();
 	}
 
 	/*
@@ -467,7 +517,7 @@ public class NewsAct extends BaseAct {
 					Bundle bundle = new Bundle();
 					bundle.putBoolean("isStar", isStar());
 					msg.setData(bundle);
-					msg.what = 0x5555;
+					msg.what = ConstantUtility.JUDGE_STAR_STATUS;
 					if (starOrPraiseHandler != null) {
 						starOrPraiseHandler.sendMessage(msg);
 					}
@@ -485,7 +535,7 @@ public class NewsAct extends BaseAct {
 					Bundle bundle = new Bundle();
 					bundle.putBoolean("isPraise", isPraise());
 					msg.setData(bundle);
-					msg.what = 0x5556;
+					msg.what = ConstantUtility.JUDGE_PRAISE_STATUS;
 					if (starOrPraiseHandler != null) {
 						starOrPraiseHandler.sendMessage(msg);
 					}
@@ -560,7 +610,7 @@ public class NewsAct extends BaseAct {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-//		getMenuInflater().inflate(R.menu.news_act_menu, menu);
+		//		getMenuInflater().inflate(R.menu.news_act_menu, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -569,10 +619,10 @@ public class NewsAct extends BaseAct {
 	* 判断是否收藏或点赞
 	* */
 	static class StarOrPraiseHandler extends Handler {
-		WeakReference<NewsAct> newsActivityWeakReference;
-		NewsAct newsAct;
+		WeakReference<NewsAty> newsActivityWeakReference;
+		NewsAty newsAct;
 
-		public StarOrPraiseHandler(NewsAct newsAct) {
+		public StarOrPraiseHandler(NewsAty newsAct) {
 			this.newsActivityWeakReference = new WeakReference<>(newsAct);
 			this.newsAct = this.newsActivityWeakReference.get();
 		}
@@ -580,31 +630,35 @@ public class NewsAct extends BaseAct {
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
-				case 0x5555:
+				case ConstantUtility.JUDGE_STAR_STATUS:
 					if (msg.getData().getBoolean("isStar")) {
 						newsAct.imageView_star.setImageResource(R.drawable.stared);
 					} else {
 						newsAct.imageView_star.setImageResource(R.drawable.unstared);
 					}
 					break;
-				case 0x5556:
+				case ConstantUtility.JUDGE_PRAISE_STATUS:
 					if (msg.getData().getBoolean("isPraise")) {
 						newsAct.imageView_praise.setImageResource(R.drawable.good);
 					} else {
 						newsAct.imageView_praise.setImageResource(R.drawable.ungood);
 					}
 					break;
-				case 0x4692:
+				case ConstantUtility.NEWS_TO_STARED:
 					newsAct.imageView_star.setImageResource(R.drawable.stared);
+					newsAct.starAnima();
 					break;
-				case 0x4693:
+				case ConstantUtility.NEWS_TO_UNSTARED:
 					newsAct.imageView_star.setImageResource(R.drawable.unstared);
+					newsAct.unStarAnima();
 					break;
-				case 0x9418:
-					newsAct.imageView_praise.setImageResource(R.drawable.ungood);
-					break;
-				case 0x9419:
+				case ConstantUtility.NEWS_TO_PRAISE:
 					newsAct.imageView_praise.setImageResource(R.drawable.good);
+					newsAct.praiseAnima();
+					break;
+				case ConstantUtility.NEWS_TO_UNPRAISE:
+					newsAct.imageView_praise.setImageResource(R.drawable.ungood);
+					newsAct.unPraiseAnima();
 					break;
 			}
 		}
@@ -616,10 +670,10 @@ public class NewsAct extends BaseAct {
 	* */
 	static class WebViewHandler extends Handler {
 
-		WeakReference<NewsAct> newsActivityWeakReference;
-		NewsAct newsAct;
+		WeakReference<NewsAty> newsActivityWeakReference;
+		NewsAty newsAct;
 
-		public WebViewHandler(NewsAct newsAct) {
+		public WebViewHandler(NewsAty newsAct) {
 			this.newsActivityWeakReference = new WeakReference<>(newsAct);
 			this.newsAct = this.newsActivityWeakReference.get();
 		}
