@@ -1,5 +1,6 @@
 package com.rainnka.ZHNews.Activity;
 
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -12,10 +13,13 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
@@ -37,6 +41,7 @@ import com.rainnka.ZHNews.Callback_Listener.onSHPActRecyclerItemClickListener;
 import com.rainnka.ZHNews.R;
 import com.rainnka.ZHNews.Utility.ConstantUtility;
 import com.rainnka.ZHNews.Utility.SQLiteCreateTableHelper;
+import com.rainnka.ZHNews.Utility.SnackbarUtility;
 import com.squareup.okhttp.OkHttpClient;
 
 import java.lang.ref.WeakReference;
@@ -55,9 +60,15 @@ public class Star_History_PraiseAty extends BaseAty {
 	protected RecyclerView recyclerView;
 	protected SwipeRefreshLayout swipeRefreshLayout;
 	protected ImageView imageView_MultChoice;
+	protected ImageView imageView_Search;
 	protected TextView textView_Clear;
+	protected SearchView searchView;
+
+	public ProgressDialog progressDialog;
 
 	public ActionMode actionMode;
+
+	public ActionMode searchActionMode = null;
 
 	public LinearLayoutManager linearLayoutManager;
 
@@ -67,16 +78,13 @@ public class Star_History_PraiseAty extends BaseAty {
 	public String title = "";
 
 	public List<ZhiHuNewsItemInfo> zhiHuNewsItemInfoList = new ArrayList<>();
+	public List<ZhiHuNewsItemInfo> zhiHuNewsItemInfoList_backup = new ArrayList<>();
 
 	public Gson gson;
 
 	public OkHttpClient okHttpClient;
 
 	public loadZhiHuNewsItemHandler loadZhiHuNewsItemHandler;
-
-	//	public final static int getStarItemInfoHandler_KEY = 0x643;
-
-	//	public GetStarItemInfoHandler getStarItemInfoHandler;
 
 	public SQLiteDatabase sqLiteDatabase;
 
@@ -148,6 +156,11 @@ public class Star_History_PraiseAty extends BaseAty {
 		* 多选按钮的点击事件
 		* */
 		initMultChoiceClickListener();
+
+		/*
+		* 搜索按钮点击事件
+		* */
+		initSearchImageView();
 
 		/*
 		* 网络访问资源
@@ -332,8 +345,12 @@ public class Star_History_PraiseAty extends BaseAty {
 		swipeRefreshLayout.setEnabled(false);
 		imageView_MultChoice = (ImageView) findViewById(R.id
 				.star_history_praiseActivity_Content_main_MultChoice_ImageView);
+		imageView_Search = (ImageView) findViewById(R.id
+				.star_history_praiseActivity_Content_main_Search_ImageView);
 		textView_Clear = (TextView) findViewById(R.id
 				.star_history_praiseActivity_Content_main_clear_TextView);
+		//		searchView = (SearchView) findViewById(R.id
+		//				.star_history_praiseActivity_Content_main_SearchView);
 	}
 
 	private void initToolbar() {
@@ -360,12 +377,41 @@ public class Star_History_PraiseAty extends BaseAty {
 				textView_Clear.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						new Thread(new Runnable() {
+						Snackbar snackbar = SnackbarUtility.getSnackbarDefault(coordinatorLayout,
+								"确认删除", Snackbar.LENGTH_LONG);
+						snackbar.setAction("删除", new View.OnClickListener() {
 							@Override
-							public void run() {
-								deleteAllItem();
+							public void onClick(View view) {
+								new Thread(new Runnable() {
+									@Override
+									public void run() {
+										deleteAllItem();
+									}
+								}).start();
 							}
-						}).start();
+						});
+						snackbar.show();
+
+						//						final PopupWindow popupWindow = new PopupWindow(getLayoutInflater().inflate(R
+						//								.layout.popup_delete_confirm,null), LengthTransitionUtility
+						//								.dip2px(BaseApplication.getBaseApplicationContext(),120),
+						//								LengthTransitionUtility
+						//								.dip2px(BaseApplication.getBaseApplicationContext(),40));
+						//						TextView textView = (TextView) popupWindow.getContentView().findViewById(R.id
+						//								.confirm_delete);
+						//						popupWindow.showAsDropDown(v);
+						//						textView.setOnClickListener(new View.OnClickListener() {
+						//							@Override
+						//							public void onClick(View view) {
+						//								new Thread(new Runnable() {
+						//									@Override
+						//									public void run() {
+						//										deleteAllItem();
+						//									}
+						//								}).start();
+						//								popupWindow.dismiss();
+						//							}
+						//						});
 					}
 				});
 			} else {
@@ -443,7 +489,7 @@ public class Star_History_PraiseAty extends BaseAty {
 			public void onItemClick(RecyclerView.ViewHolder viewHolder) {
 				if (sqLiteDatabase == null) {
 					sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(BaseApplication.getDATABASE_PATH() +
-							"/myInfo.db3",
+									"/myInfo.db3",
 							null);
 				}
 				sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_HISTORY_TABLE);
@@ -497,11 +543,14 @@ public class Star_History_PraiseAty extends BaseAty {
 			@Override
 			public void onItemLongClick(RecyclerView.ViewHolder viewHolder) {
 				if (!title.equals(ConstantUtility.HISTORY_KEY)) {
-					if (!star_history_praiseActivityRecyclerViewAdapter.mIsSelected) {
-						itemTouchHelper.startSwipe(viewHolder);
-					} else {
-						//						star_history_praiseActivityRecyclerViewAdapter.setItemChecked(viewHolder
-						//								.getAdapterPosition(),true);
+					if (!star_history_praiseActivityRecyclerViewAdapter.mIsSelected &&
+							searchActionMode == null) {
+						try {
+							itemTouchHelper.startSwipe(viewHolder);
+						} catch (Exception e) {
+							Log.i("ZRH", e.toString());
+						}
+					} else if (star_history_praiseActivityRecyclerViewAdapter.mIsSelected) {
 						if (!star_history_praiseActivityRecyclerViewAdapter.getItemChecked(viewHolder
 								.getAdapterPosition())) {
 							if (star_history_praiseActivityRecyclerViewAdapter.mSelectedPositions
@@ -562,6 +611,118 @@ public class Star_History_PraiseAty extends BaseAty {
 		});
 	}
 
+	private void initSearchImageView() {
+		imageView_Search.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				zhiHuNewsItemInfoList_backup.clear();
+				zhiHuNewsItemInfoList_backup.addAll(zhiHuNewsItemInfoList);
+				zhiHuNewsItemInfoList.clear();
+				//				star_history_praiseActivityRecyclerViewAdapter.notifyItemRangeRemoved(0,
+				//						zhiHuNewsItemInfoList_backup.size() - 1);
+				star_history_praiseActivityRecyclerViewAdapter.notifyDataSetChanged();
+				searchActionMode = startSupportActionMode(new ActionMode.Callback() {
+					@Override
+					public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+						if (searchActionMode == null) {
+							searchActionMode = mode;
+							//							MenuItem search = menu.add(0, 0x257, Menu.NONE, "");
+							//							search.setActionView()
+							//							search.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+							getMenuInflater().inflate(R.menu.shp_searchactionmode_menu, menu);
+							searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem
+									(R.id.search));
+							searchView.setIconifiedByDefault(false);
+							searchView.setSubmitButtonEnabled(true);
+							searchView.onActionViewExpanded();
+							searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+								@Override
+								public boolean onQueryTextSubmit(final String query) {
+									new Thread(new Runnable() {
+										@Override
+										public void run() {
+											searchItemByQuery(query);
+										}
+									}).start();
+									showProgressDialog();
+									return true;
+								}
+
+								@Override
+								public boolean onQueryTextChange(String newText) {
+									new Thread(new Runnable() {
+										@Override
+										public void run() {
+											if (zhiHuNewsItemInfoList.size() > 0) {
+												zhiHuNewsItemInfoList.clear();
+												loadZhiHuNewsItemHandler.sendEmptyMessage
+														(ConstantUtility.SEARCHITEM_FINISHED);
+											}
+										}
+									}).start();
+									return true;
+								}
+							});
+							return true;
+						}
+						return false;
+					}
+
+					@Override
+					public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+						return false;
+					}
+
+					@Override
+					public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+						return false;
+					}
+
+					@Override
+					public void onDestroyActionMode(ActionMode mode) {
+						if (searchActionMode != null) {
+							searchActionMode.finish();
+							searchActionMode = null;
+						}
+						zhiHuNewsItemInfoList.clear();
+						zhiHuNewsItemInfoList.addAll(zhiHuNewsItemInfoList_backup);
+						star_history_praiseActivityRecyclerViewAdapter.notifyDataSetChanged();
+						//						star_history_praiseActivityRecyclerViewAdapter.notifyItemRangeInserted(0,
+						//								zhiHuNewsItemInfoList.size() - 1);
+						zhiHuNewsItemInfoList_backup.clear();
+					}
+				});
+			}
+		});
+	}
+
+	public void SHPAdapterDataChanged() {
+		star_history_praiseActivityRecyclerViewAdapter.notifyDataSetChanged();
+		dismissProgress();
+	}
+
+	protected void searchItemByQuery(String query) {
+		for (int i = 0; i < zhiHuNewsItemInfoList_backup.size(); i++) {
+			if (zhiHuNewsItemInfoList_backup.get(i).title.contains(query)) {
+				zhiHuNewsItemInfoList.add(zhiHuNewsItemInfoList_backup.get(i));
+			}
+		}
+		loadZhiHuNewsItemHandler.sendEmptyMessage(ConstantUtility.SEARCHITEM_FINISHED);
+	}
+
+	protected void showProgressDialog() {
+		progressDialog = new ProgressDialog(this);
+		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		progressDialog.setMessage("waiting");
+		progressDialog.show();
+	}
+
+	protected void dismissProgress() {
+		if (progressDialog != null) {
+			progressDialog.dismiss();
+		}
+	}
+
 	protected void recyclerViewEnableMultChoice() {
 		star_history_praiseActivityRecyclerViewAdapter.setSelectable(true);
 	}
@@ -583,26 +744,34 @@ public class Star_History_PraiseAty extends BaseAty {
 					menuItem_delete.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
 						@Override
 						public boolean onMenuItemClick(MenuItem item) {
-							if (star_history_praiseActivityRecyclerViewAdapter.getItemCount() != 0
-									&& star_history_praiseActivityRecyclerViewAdapter
-									.mSelectedPositions.size() != 0) {
-								if (sqLiteDatabase == null) {
-									sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase
-											(BaseApplication.getDATABASE_PATH() + "/myInfo.db3", null);
-								}
-								new Thread(new Runnable() {
-									@Override
-									public void run() {
-										if (star_history_praiseActivityRecyclerViewAdapter
-												.mSelectedPositions.size() !=
-												star_history_praiseActivityRecyclerViewAdapter.getItemCount()) {
-											deleteChoiceItem();
-										} else {
-											deleteAllItem();
+							Snackbar snackbar = SnackbarUtility.getSnackbarDefault(coordinatorLayout,
+									"确认删除", Snackbar.LENGTH_LONG);
+							snackbar.setAction("删除", new View.OnClickListener() {
+								@Override
+								public void onClick(View view) {
+									if (star_history_praiseActivityRecyclerViewAdapter.getItemCount() != 0
+											&& star_history_praiseActivityRecyclerViewAdapter
+											.mSelectedPositions.size() != 0) {
+										if (sqLiteDatabase == null) {
+											sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase
+													(BaseApplication.getDATABASE_PATH() + "/myInfo.db3", null);
 										}
+										new Thread(new Runnable() {
+											@Override
+											public void run() {
+												if (star_history_praiseActivityRecyclerViewAdapter
+														.mSelectedPositions.size() !=
+														star_history_praiseActivityRecyclerViewAdapter.getItemCount()) {
+													deleteChoiceItem();
+												} else {
+													deleteAllItem();
+												}
+											}
+										}).start();
 									}
-								}).start();
-							}
+								}
+							});
+							snackbar.show();
 							return true;
 						}
 					});
@@ -1091,6 +1260,10 @@ public class Star_History_PraiseAty extends BaseAty {
 				case 0x777:
 					star_history_praiseAct.star_history_praiseActivityRecyclerViewAdapter
 							.notifyItemRangeRemoved(0, msg.getData().getInt("deleteCount"));
+					break;
+				case ConstantUtility.SEARCHITEM_FINISHED:
+					star_history_praiseAct.SHPAdapterDataChanged();
+					break;
 			}
 
 		}

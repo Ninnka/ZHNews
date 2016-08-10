@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.rainnka.ZHNews.R;
+import com.rainnka.ZHNews.Utility.ConstantUtility;
 import com.rainnka.ZHNews.Utility.SnackbarUtility;
 
 /**
@@ -35,10 +36,16 @@ public class ProfilePageAty extends BaseAty {
 	EditText editText_username;
 	TextView textViewLogout;
 
+	LinearLayout linearLayout_starCollection;
+	LinearLayout linearLayout_praiseCollection;
+	LinearLayout linearLayout_historyCollection;
+
 	SharedPreferences sharedPreferences;
 	SharedPreferences.Editor editor;
 
 	InputMethodManager imeManager;
+
+	Intent intent;
 
 	public final static int RESULTCODE = 0x638912;
 	public final static int RESULTCODE_NORMALBACK = 0x41985;
@@ -70,6 +77,39 @@ public class ProfilePageAty extends BaseAty {
 
 		//
 		addTextViewLogoutClickListener();
+
+		//
+		addCollectionClickListener();
+	}
+
+	private void addCollectionClickListener() {
+		linearLayout_starCollection.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				intent = new Intent();
+				intent.setAction(ConstantUtility.INTENT_TO_STAR_HISTORY_PRAISE_KEY);
+				intent.putExtra(ConstantUtility.INTENT_STRING_DATA_KEY, ConstantUtility.STAR_KEY);
+				startActivity(intent);
+			}
+		});
+		linearLayout_praiseCollection.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				intent = new Intent();
+				intent.setAction(ConstantUtility.INTENT_TO_STAR_HISTORY_PRAISE_KEY);
+				intent.putExtra(ConstantUtility.INTENT_STRING_DATA_KEY, ConstantUtility.PRAISE_KEY);
+				startActivity(intent);
+			}
+		});
+		linearLayout_historyCollection.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				intent = new Intent();
+				intent.setAction(ConstantUtility.INTENT_TO_STAR_HISTORY_PRAISE_KEY);
+				intent.putExtra(ConstantUtility.INTENT_STRING_DATA_KEY, ConstantUtility.HISTORY_KEY);
+				startActivity(intent);
+			}
+		});
 	}
 
 	private void addTextViewLogoutClickListener() {
@@ -152,6 +192,13 @@ public class ProfilePageAty extends BaseAty {
 		imageView_pencil = (ImageView) findViewById(R.id.profilepage_act_pencil_ImageView);
 		editText_username = (EditText) findViewById(R.id.profilepage_act_username_EditText);
 		textViewLogout = (TextView) findViewById(R.id.profilepage_act_logout_textView);
+
+		linearLayout_starCollection = (LinearLayout) findViewById(R.id
+				.profilepage_act_starcollection);
+		linearLayout_praiseCollection = (LinearLayout) findViewById(R.id
+				.profilepage_act_praisecollection);
+		linearLayout_historyCollection = (LinearLayout) findViewById(R.id
+				.profilepage_act_historycollection);
 
 		imeManager = (InputMethodManager) getSystemService
 				(Context.INPUT_METHOD_SERVICE);

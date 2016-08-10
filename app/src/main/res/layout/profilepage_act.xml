@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout android:id="@+id/profilepage_act_LinearLayout_root"
+              xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:tools="http://schemas.android.com/tools"
-              android:id="@+id/profilepage_act_LinearLayout_root"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:fitsSystemWindows="true"
@@ -26,80 +26,184 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <LinearLayout
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:focusableInTouchMode="true"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_height="match_parent"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp">
 
-        <ImageView
-            android:layout_width="66dp"
-            android:layout_height="66dp"
-            android:src="@mipmap/profile_dark"/>
-
-        <EditText
-            android:id="@+id/profilepage_act_username_EditText"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="24dp"
-            android:gravity="center"
-            android:textColor="@color/profile_text_main"
-            android:textSize="22sp"/>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:focusableInTouchMode="true"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-        <TextView
-            android:layout_width="160dp"
-            android:layout_height="0.2dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="42dp"
-            android:background="@color/profile_line"/>
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                app:contentPadding="8dp">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:text="绑定QQ"
-            android:textColor="@color/profile_text_blue"
-            android:textSize="18sp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="160dp"
-            android:layout_height="0.2dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:background="@color/profile_line"/>
+                    <com.makeramen.roundedimageview.RoundedImageView
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_gravity="left|center"
+                        android:scaleType="fitCenter"
+                        android:src="@mipmap/profile_login"
+                        app:riv_corner_radius="40dp"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:text="绑定新浪微博"
-            android:textColor="@color/profile_text_blue"
-            android:textSize="18sp"/>
+                    <EditText
+                        android:id="@+id/profilepage_act_username_EditText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center|right"
+                        android:layout_marginLeft="20dp"
+                        android:gravity="left"
+                        android:textColor="@color/profile_text_main"
+                        android:textSize="22sp"/>
 
-        <TextView
-            android:layout_width="160dp"
-            android:layout_height="0.2dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:background="@color/profile_line"/>
+                </LinearLayout>
 
-        <TextView
-            android:id="@+id/profilepage_act_logout_textView"
-            android:layout_width="120dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="30dp"
-            android:background="@drawable/profilepage_logout_button"
-            android:gravity="center"
-            android:text="退出"
-            android:textColor="@color/profile_button_quit"
-            android:textSize="18dp"/>
+            </android.support.v7.widget.CardView>
 
-    </LinearLayout>
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:contentPadding="8dp">
+
+                <LinearLayout
+                    android:id="@+id/profilepage_act_starcollection"
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="left"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:scaleType="fitCenter"
+                        android:src="@mipmap/star_collection"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:text="收藏"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/profilepage_act_praisecollection"
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:scaleType="fitCenter"
+                        android:src="@mipmap/praise_collection"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:text="点赞"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/profilepage_act_historycollection"
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:scaleType="fitCenter"
+                        android:src="@mipmap/history_collection"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:text="历史"/>
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <!--<TextView-->
+            <!--android:layout_width="160dp"-->
+            <!--android:layout_height="0.2dp"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:layout_marginTop="42dp"-->
+            <!--android:background="@color/profile_line"/>-->
+
+            <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="30dp"-->
+            <!--android:layout_marginTop="20dp"-->
+            <!--android:gravity="center"-->
+            <!--android:text="绑定QQ"-->
+            <!--android:textColor="@color/profile_text_blue"-->
+            <!--android:textSize="18sp"/>-->
+
+            <!--<TextView-->
+            <!--android:layout_width="160dp"-->
+            <!--android:layout_height="0.2dp"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:layout_marginTop="20dp"-->
+            <!--android:background="@color/profile_line"/>-->
+
+            <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="30dp"-->
+            <!--android:layout_marginTop="20dp"-->
+            <!--android:gravity="center"-->
+            <!--android:text="绑定新浪微博"-->
+            <!--android:textColor="@color/profile_text_blue"-->
+            <!--android:textSize="18sp"/>-->
+
+            <!--<TextView-->
+            <!--android:layout_width="160dp"-->
+            <!--android:layout_height="0.2dp"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:layout_marginTop="20dp"-->
+            <!--android:background="@color/profile_line"/>-->
+
+            <TextView
+                android:id="@+id/profilepage_act_logout_textView"
+                android:layout_width="120dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/profilepage_logout_button"
+                android:gravity="center"
+                android:text="退出"
+                android:textColor="@color/profile_button_quit"
+                android:textSize="18dp"/>
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
 
 
 </LinearLayout>

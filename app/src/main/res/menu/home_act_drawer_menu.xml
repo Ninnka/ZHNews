@@ -1,101 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- 第1个分组子菜单 -->
-    <group
-        android:id="@+id/group1"
-        android:checkableBehavior="single">
+    <item
+        android:title="推荐">
+        <menu>
+            <group
+                android:id="@+id/group1"
+                android:enabled="true"
+                android:checkableBehavior="single">
+                <item
+                    android:id="@+id/drawer_home"
+                    android:icon="@mipmap/home"
+                    android:title="主页"/>
 
-        <item
-            android:id="@+id/drawer_home"
-            android:checked="true"
-            android:icon="@mipmap/home"
-            android:title="主页"/>
+                <item
+                    android:id="@+id/drawer_popular"
+                    android:icon="@mipmap/popular"
+                    android:title="热门精选"/>
 
-    </group>
+                <item
+                    android:id="@+id/drawer_programa"
+                    android:icon="@mipmap/programa"
+                    android:title="栏目总览"/>
 
-    <!-- 第2个分组子菜单 -->
+                <item
+                    android:id="@+id/drawer_classify"
+                    android:icon="@mipmap/classify"
+                    android:title="日报分类"/>
 
-    <group
-        android:id="@+id/group2"
+            </group>
+        </menu>
+    </item>
+
+    <item
         android:checkableBehavior="single"
-        android:visible="false">
+        android:title="其他">
+        <menu>
+            <group
+                android:id="@+id/group2"
+                android:enabled="true"
+                android:checkableBehavior="single">
+                <item
+                    android:id="@+id/drawer_theme"
+                    android:icon="@mipmap/theme_change"
+                    android:title="日/夜间模式"/>
 
-        <item
-            android:id="@+id/drawer_star"
-            android:icon="@mipmap/scan_star"
-            android:title="收藏"/>
+                <item
+                    android:id="@+id/drawer_response"
+                    android:icon="@mipmap/response"
+                    android:title="反馈信息"/>
 
-        <item
-            android:id="@+id/drawer_good"
-            android:icon="@mipmap/scan_good"
-            android:title="点赞">
+                <item
+                    android:id="@+id/drawer_exit"
+                    android:icon="@mipmap/exit"
+                    android:title="退出应用"/>
+            </group>
+        </menu>
+    </item>
 
-        </item>
+    <!--<item-->
+    <!--android:title="其他">-->
+    <!--<menu>-->
+    <!--<group-->
+    <!--android:id="@+id/group2"-->
+    <!--android:checkableBehavior="single">-->
 
-        <item
-            android:id="@+id/drawer_history"
-            android:icon="@mipmap/scan_history"
-            android:title="历史"/>
+    <!--<item-->
+    <!--android:title="日常心理学"/>-->
 
-        <item
-            android:id="@+id/drawer_notification"
-            android:icon="@mipmap/notification_dark"
-            android:title="通知"/>
+    <!--<item-->
+    <!--android:title="用户推荐日报"/>-->
 
-    </group>
+    <!--<item-->
+    <!--android:title="电影日报"/>-->
 
-    <!-- 第3个分组子菜单 -->
+    <!--<item-->
+    <!--android:title="不许无聊"/>-->
 
-    <group
-        android:id="@+id/group3"
-        android:checkableBehavior="single">
+    <!--<item-->
+    <!--android:title="设计日报"/>-->
 
-        <item
-            android:id="@+id/drawer_theme"
-            android:icon="@mipmap/theme_change"
-            android:title="日/夜间模式"/>
+    <!--<item-->
+    <!--android:title="大公司日报"/>-->
 
-        <item
-            android:id="@+id/drawer_setting"
-            android:icon="@mipmap/settings"
-            android:title="设置与帮助"/>
+    <!--<item-->
+    <!--android:title="财经日报"/>-->
 
-    </group>
+    <!--<item-->
+    <!--android:title="互联网安全"/>-->
 
-    <!-- 第4个分组子菜单 -->
+    <!--<item-->
+    <!--android:title="开始游戏"/>-->
 
-    <group
-        android:id="@+id/group4"
-        android:checkableBehavior="single">
+    <!--<item-->
+    <!--android:title="音乐日报"/>-->
 
-        <item
-            android:id="@+id/drawer_response"
-            android:icon="@mipmap/response"
-            android:title="反馈信息"/>
+    <!--<item-->
+    <!--android:title="动漫日报"/>-->
 
-        <item
-            android:id="@+id/drawer_about"
-            android:icon="@mipmap/about"
-            android:title="关于应用"/>
+    <!--<item-->
+    <!--android:title="体育日报"/>-->
+    <!---->
+    <!--</group>-->
+    <!--</menu>-->
+    <!--</item>-->
 
-    </group>
-
-    <!-- 第5个分组子菜单 -->
-
-    <group
-        android:id="@+id/group5"
-        android:checkableBehavior="single">
-
-        <item
-            android:id="@+id/drawer_exit"
-            android:icon="@mipmap/exit"
-            android:title="退出应用"/>
-
-        <item
-            android:id="@+id/drawer_null"
-            android:title=""/>
-
-    </group>
+    <item
+        android:id="@+id/drawer_null"
+        android:title=""/>
 
 </menu>

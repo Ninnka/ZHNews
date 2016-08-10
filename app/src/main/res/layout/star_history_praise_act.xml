@@ -33,6 +33,15 @@
                 android:scaleType="fitCenter"
                 android:src="@mipmap/checklist"/>
 
+            <ImageView
+                android:layout_marginRight="20dp"
+                android:scaleType="fitCenter"
+                android:layout_gravity="end|center"
+                android:src="@mipmap/search_100px"
+                android:id="@+id/star_history_praiseActivity_Content_main_Search_ImageView"
+                android:layout_width="25dp"
+                android:layout_height="25dp"/>
+
             <TextView
                 android:id="@+id/star_history_praiseActivity_Content_main_clear_TextView"
                 android:layout_width="wrap_content"

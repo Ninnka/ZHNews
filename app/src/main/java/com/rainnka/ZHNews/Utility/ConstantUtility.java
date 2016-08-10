@@ -58,6 +58,8 @@ public class ConstantUtility {
 	public final static int NEWS_TO_UNPRAISE = 0x9419;
 	public final static int JUDGE_PRAISE_STATUS = 0x5556;
 
+	public final static int SEARCHITEM_FINISHED = 0x91734;
+
 	public static AnimatorSet getAnimatorDelegate(){
 		return new AnimatorSet();
 	}

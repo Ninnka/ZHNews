@@ -16,6 +16,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.design.internal.NavigationMenuView;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -312,6 +313,11 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 		addNetStatusTextClickListener();
 
 		/*
+		* 隐藏navigationView的scrollbar
+		* */
+		hideNavigationViewScrollBar();
+
+		/*
 		* 设置单个item可见
 		* */
 		//		navigationView.getMenu().findItem(R.id.drawer_star).setVisible(true);
@@ -354,7 +360,7 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 		mhandler.removeCallbacks(mRunnableBackPressStatus);
 		bannerHandler.removeMessages(ConstantUtility.BANNER_SCROLL_KEY);
 		recyclerRefreshHandler.removeCallbacksAndMessages(null);
-		if(getServiceStatus("com.rainnka.ZHNews.Service.InitNotiRecService")){
+		if (getServiceStatus("com.rainnka.ZHNews.Service.InitNotiRecService")) {
 			stopService(intent_notirec);
 		}
 	}
@@ -380,20 +386,23 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 		if (requestCode == ConstantUtility.ITENT_TO_LOGIN_REQUESTCODE && resultCode == LoginAty.RESULTCODE) {
 			ConstantUtility.userIsLogin = true;
 			profile_tv.setText(sharedPreferences.getString("nickname", ""));
-			navigationView.getMenu().setGroupVisible(R.id.group2, true);
+			profile_iv.setImageResource(R.mipmap.profile_login);
+			//			navigationView.getMenu().setGroupVisible(R.id.group2, true);
 			Snackbar.make(coordinatorLayout, "你已经成功登录", Snackbar.LENGTH_SHORT).show();
 		}
 		if (requestCode == ConstantUtility.ITENT_TO_PROFILE_REQUESTCODE && resultCode == ProfilePageAty.RESULTCODE_NORMALBACK) {
 			String nn = sharedPreferences.getString("nickname", "");
 			if (!profile_tv.getText().equals(nn)) {
 				profile_tv.setText(nn);
+				profile_iv.setImageResource(R.mipmap.profile_login);
 				Snackbar.make(coordinatorLayout, "修改昵称成功", Snackbar.LENGTH_SHORT).show();
 			}
 		}
 		if (requestCode == ConstantUtility.ITENT_TO_PROFILE_REQUESTCODE && resultCode == ProfilePageAty.RESULTCODE) {
 			ConstantUtility.userIsLogin = false;
 			profile_tv.setText("点击头像登录");
-			navigationView.getMenu().setGroupVisible(R.id.group2, false);
+			//			navigationView.getMenu().setGroupVisible(R.id.group2, false);
+			profile_iv.setImageResource(R.mipmap.profile_light);
 			Snackbar.make(coordinatorLayout, "你已经成功退出登录", Snackbar.LENGTH_SHORT).show();
 		}
 	}
@@ -412,6 +421,36 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 				intent.setAction(ConstantUtility.INTENT_TO_ABOUT_KEY);
 				startActivity(intent);
 				break;
+			case R.id.home_activity_menu_notification:
+				intent = new Intent();
+				intent.setAction(ConstantUtility.INTENT_TO_NOTIFICATION_KEY);
+				startActivity(intent);
+				break;
+			//			case R.id.home_activity_menu_theme:
+			//				if(getServiceStatus("com.rainnka.ZHNews.Service.InitNotiRecService")){
+			//					stopService(intent_notirec);
+			//				}
+			//				SharedPreferences preferences = getSharedPreferences("NightMode", MODE_PRIVATE);
+			//				SharedPreferences.Editor editor = preferences.edit();
+			//				if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_NO) {
+			//					editor.putInt("nightmode", AppCompatDelegate.MODE_NIGHT_YES);
+			//					editor.apply();
+			//					AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+			//				} else {
+			//					editor.putInt("nightmode", AppCompatDelegate.MODE_NIGHT_NO);
+			//					editor.apply();
+			//					AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+			//				}
+			//				HomeAty.this.recreate();
+			//				break;
+			//			case R.id.home_activity_menu_response:
+			//				intent = new Intent();
+			//				intent.setAction(ConstantUtility.INTENT_TO_FEEDBACK_KEY);
+			//				startActivity(intent);
+			//				break;
+			//			case R.id.home_activity_menu_exit:
+			//				finish();
+			//				break;
 		}
 		return true;
 	}
@@ -505,7 +544,8 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 				if (username.equals("admin") && password.equals("root")) {
 					nickname = sharedPreferences.getString("nickname", "");
 					profile_tv.setText(nickname);
-					navigationView.getMenu().setGroupVisible(R.id.group2, true);
+					profile_iv.setImageResource(R.mipmap.profile_login);
+					//					navigationView.getMenu().setGroupVisible(R.id.group2, true);
 					username = "";
 					password = "";
 					nickname = "";
@@ -629,6 +669,14 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 		swipeRefreshLayout.setOnRefreshListener(this);
 		swipeRefreshLayout.setDistanceToTriggerSync(800);
 		swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorAccent);
+	}
+
+	/*
+	* 隐藏navigationView的scrollBar
+	* */
+	private void hideNavigationViewScrollBar() {
+		NavigationMenuView navigationMenuView = (NavigationMenuView) navigationView.getChildAt(0);
+		navigationMenuView.setVerticalScrollBarEnabled(false);
 	}
 
 	/*
@@ -938,7 +986,7 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 					= (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
 			ArrayList<RunningServiceInfo> runningServiceInfoList
 					= (ArrayList<ActivityManager.RunningServiceInfo>) activityManager.getRunningServices(100);
-			for (Iterator<RunningServiceInfo> iterator = runningServiceInfoList.iterator(); iterator.hasNext();) {
+			for (Iterator<RunningServiceInfo> iterator = runningServiceInfoList.iterator(); iterator.hasNext(); ) {
 				RunningServiceInfo runningServiceInfo = iterator.next();
 				if (serviceName.equals(runningServiceInfo.service.getClassName())) {
 					return true;
@@ -1088,41 +1136,56 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 				} else {
 					onRefresh();
 				}
-
+				break;
+			case R.id.drawer_popular:
+				break;
+			case R.id.drawer_programa:
+				break;
+			case R.id.drawer_classify:
 				break;
 
-			case R.id.drawer_star:
-				intent = new Intent();
-				intent.setAction(ConstantUtility.INTENT_TO_STAR_HISTORY_PRAISE_KEY);
-				intent.putExtra(ConstantUtility.INTENT_STRING_DATA_KEY, ConstantUtility.STAR_KEY);
-				startActivity(intent);
-
-				break;
-
-			case R.id.drawer_good:
-				intent = new Intent();
-				intent.setAction(ConstantUtility.INTENT_TO_STAR_HISTORY_PRAISE_KEY);
-				intent.putExtra(ConstantUtility.INTENT_STRING_DATA_KEY, ConstantUtility.PRAISE_KEY);
-				startActivity(intent);
-
-				break;
-
-			case R.id.drawer_history:
-				intent = new Intent();
-				intent.setAction(ConstantUtility.INTENT_TO_STAR_HISTORY_PRAISE_KEY);
-				intent.putExtra(ConstantUtility.INTENT_STRING_DATA_KEY, ConstantUtility.HISTORY_KEY);
-				startActivity(intent);
-
-				break;
-
-			case R.id.drawer_notification:
-				intent = new Intent();
-				intent.setAction(ConstantUtility.INTENT_TO_NOTIFICATION_KEY);
-				startActivity(intent);
-
-				break;
+			//			case R.id.drawer_star:
+			//				intent = new Intent();
+			//				intent.setAction(ConstantUtility.INTENT_TO_STAR_HISTORY_PRAISE_KEY);
+			//				intent.putExtra(ConstantUtility.INTENT_STRING_DATA_KEY, ConstantUtility.STAR_KEY);
+			//				startActivity(intent);
+			//
+			//				break;
+			//
+			//			case R.id.drawer_good:
+			//				intent = new Intent();
+			//				intent.setAction(ConstantUtility.INTENT_TO_STAR_HISTORY_PRAISE_KEY);
+			//				intent.putExtra(ConstantUtility.INTENT_STRING_DATA_KEY, ConstantUtility.PRAISE_KEY);
+			//				startActivity(intent);
+			//
+			//				break;
+			//
+			//			case R.id.drawer_history:
+			//				intent = new Intent();
+			//				intent.setAction(ConstantUtility.INTENT_TO_STAR_HISTORY_PRAISE_KEY);
+			//				intent.putExtra(ConstantUtility.INTENT_STRING_DATA_KEY, ConstantUtility.HISTORY_KEY);
+			//				startActivity(intent);
+			//
+			//				break;
+			//
+			//			case R.id.drawer_notification:
+			//				intent = new Intent();
+			//				intent.setAction(ConstantUtility.INTENT_TO_NOTIFICATION_KEY);
+			//				startActivity(intent);
+			//
+			//				break;
+			//			case R.id.drawer_setting:
+			//				intent = new Intent();
+			//				intent.setAction(ConstantUtility.INTENT_TO_SETTINGDETAIL_KEY);
+			//				startActivity(intent);
+			//				break;
+			//			case R.id.drawer_about:
+			//				intent = new Intent();
+			//				intent.setAction(ConstantUtility.INTENT_TO_ABOUT_KEY);
+			//				startActivity(intent);
+			//				break;
 			case R.id.drawer_theme:
-				if(getServiceStatus("com.rainnka.ZHNews.Service.InitNotiRecService")){
+				if (getServiceStatus("com.rainnka.ZHNews.Service.InitNotiRecService")) {
 					stopService(intent_notirec);
 				}
 				SharedPreferences preferences = getSharedPreferences("NightMode", MODE_PRIVATE);
@@ -1138,21 +1201,13 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 				}
 				HomeAty.this.recreate();
 				break;
-			case R.id.drawer_setting:
-				intent = new Intent();
-				intent.setAction(ConstantUtility.INTENT_TO_SETTINGDETAIL_KEY);
-				startActivity(intent);
-				break;
+
 			case R.id.drawer_response:
 				intent = new Intent();
 				intent.setAction(ConstantUtility.INTENT_TO_FEEDBACK_KEY);
 				startActivity(intent);
 				break;
-			case R.id.drawer_about:
-				intent = new Intent();
-				intent.setAction(ConstantUtility.INTENT_TO_ABOUT_KEY);
-				startActivity(intent);
-				break;
+
 			case R.id.drawer_exit:
 				finish();
 				break;

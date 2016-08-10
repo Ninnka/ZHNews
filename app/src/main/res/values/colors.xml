@@ -25,7 +25,7 @@
     <color name="shp_text_main">#FFFFFF</color>
     <color name="shp_recv_text_main">#424242</color>
 
-    <color name="profile_text_main">#9e9e9e</color>
+    <color name="profile_text_main">#525252</color>
     <color name="profile_line">#757575</color>
     <color name="profile_text_blue">#1E88E5</color>
     <color name="profile_button_quit">#EF5350</color>
@@ -43,7 +43,7 @@
     <color name="home_content_recv_card_content_text">#424242</color>
     <color name="home_content_recv_card_date_text">#757575</color>
     <color name="home_content_vp">#F8F8F8</color>
-    <color name="home_drawer_header_text_main">#757575</color>
+    <color name="home_drawer_header_text_main">#FAFAFA</color>
     <color name="home_notification_content_text_main">#FFFFFF</color>
 
     <color name="setting_detail_textSelectHandleLeft">#757575</color>
