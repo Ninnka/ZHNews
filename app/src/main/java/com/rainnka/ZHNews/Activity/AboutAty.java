@@ -2,23 +2,21 @@ package com.rainnka.ZHNews.Activity;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 
+import com.rainnka.ZHNews.Activity.Base.SwipeBackAty;
 import com.rainnka.ZHNews.R;
 
 /**
  * Created by rainnka on 2016/7/23 13:46
  * Project name is ZHKUNews
  */
-public class AboutAty extends BaseAty {
+public class AboutAty extends SwipeBackAty {
 
 	Toolbar toolbar;
 	CardView cardView_sources;
@@ -26,14 +24,14 @@ public class AboutAty extends BaseAty {
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
-			Window window = getWindow();
-			// Translucent status bar
-			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager
-					.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager
-//					.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-		}
+//		if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
+//			Window window = getWindow();
+//			// Translucent status bar
+//			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager
+//					.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+////			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager
+////					.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+//		}
 		setContentView(R.layout.about_act);
 
 		initComponent();

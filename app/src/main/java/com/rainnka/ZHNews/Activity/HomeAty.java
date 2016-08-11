@@ -45,6 +45,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.gson.Gson;
+import com.rainnka.ZHNews.Activity.Base.BaseAty;
 import com.rainnka.ZHNews.Adapter.HomeActivityRecyclerViewAdapter;
 import com.rainnka.ZHNews.Adapter.HomeActivityViewPagerAdapter;
 import com.rainnka.ZHNews.Animation_Transformer.DepthPageTransformer;
@@ -383,14 +384,16 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == ConstantUtility.ITENT_TO_LOGIN_REQUESTCODE && resultCode == LoginAty.RESULTCODE) {
+		if (requestCode == ConstantUtility.ITENT_TO_LOGIN_REQUESTCODE && resultCode == ConstantUtility
+				.RESULTCODE_LOGIN_ATY) {
 			ConstantUtility.userIsLogin = true;
 			profile_tv.setText(sharedPreferences.getString("nickname", ""));
 			profile_iv.setImageResource(R.mipmap.profile_login);
 			//			navigationView.getMenu().setGroupVisible(R.id.group2, true);
 			Snackbar.make(coordinatorLayout, "你已经成功登录", Snackbar.LENGTH_SHORT).show();
 		}
-		if (requestCode == ConstantUtility.ITENT_TO_PROFILE_REQUESTCODE && resultCode == ProfilePageAty.RESULTCODE_NORMALBACK) {
+		if (requestCode == ConstantUtility.ITENT_TO_PROFILE_REQUESTCODE && resultCode == ConstantUtility
+				.RESULTCODE_NORMALBACK_PROFILE_ATY) {
 			String nn = sharedPreferences.getString("nickname", "");
 			if (!profile_tv.getText().equals(nn)) {
 				profile_tv.setText(nn);
@@ -398,7 +401,8 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 				Snackbar.make(coordinatorLayout, "修改昵称成功", Snackbar.LENGTH_SHORT).show();
 			}
 		}
-		if (requestCode == ConstantUtility.ITENT_TO_PROFILE_REQUESTCODE && resultCode == ProfilePageAty.RESULTCODE) {
+		if (requestCode == ConstantUtility.ITENT_TO_PROFILE_REQUESTCODE && resultCode == ConstantUtility
+				.RESULTCODE_PROFILE_ATY) {
 			ConstantUtility.userIsLogin = false;
 			profile_tv.setText("点击头像登录");
 			//			navigationView.getMenu().setGroupVisible(R.id.group2, false);

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -27,12 +26,11 @@ import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.rainnka.ZHNews.Activity.Base.SwipeBackAty;
 import com.rainnka.ZHNews.Adapter.Star_History_PraiseActivityRecyclerViewAdapter;
 import com.rainnka.ZHNews.Application.BaseApplication;
 import com.rainnka.ZHNews.Bean.ZhiHuNewsItemInfo;
@@ -52,7 +50,7 @@ import java.util.List;
  * Created by rainnka on 2016/5/21 14:10
  * Project name is ZHKUNews
  */
-public class Star_History_PraiseAty extends BaseAty {
+public class Star_History_PraiseAty extends SwipeBackAty {
 
 	public CoordinatorLayout coordinatorLayout;
 	protected AppBarLayout appBarLayout;
@@ -96,14 +94,14 @@ public class Star_History_PraiseAty extends BaseAty {
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
-			Window window = getWindow();
-			// Translucent status bar
-			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager
-					.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-			//			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager
-			//					.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-		}
+//		if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
+//			Window window = getWindow();
+//			// Translucent status bar
+//			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager
+//					.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//			//			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager
+//			//					.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+//		}
 
 		setContentView(R.layout.star_history_praise_act);
 

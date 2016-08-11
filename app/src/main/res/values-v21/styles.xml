@@ -20,13 +20,15 @@
         <item name="android:colorControlNormal">#FFFFFF</item>
 
         <!-- 开启transition -->
-        <!--<item name="android:windowActivityTransitions">true</item>-->
+        <item name="android:windowActivityTransitions">true</item>
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowAllowEnterTransitionOverlap">false</item>
         <item name="android:windowAllowReturnTransitionOverlap">false</item>
 
         <!-- 防止actionMode情况下 toolbar移位 -->
         <item name="windowActionModeOverlay">true</item>
+
+        <item name="android:windowIsTranslucent">true</item>
 
         <!--<item name="android:windowTranslucentStatus">true</item>-->
         <!--<item name="android:windowTranslucentNavigation">true</item>-->
@@ -44,7 +46,7 @@
 
     <style name="HomeTheme" parent="AppTheme">
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">#00FFFFFF</item>
 
         <!--状态栏透明-->
         <item name="android:statusBarColor">@android:color/transparent</item>
@@ -57,7 +59,7 @@
 
     <style name="NewsTheme" parent="AppTheme">
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">#00FFFFFF</item>
 
         <item name="android:statusBarColor">@android:color/transparent</item>
 

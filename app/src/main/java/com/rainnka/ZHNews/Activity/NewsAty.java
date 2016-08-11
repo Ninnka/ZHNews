@@ -27,6 +27,7 @@ import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.rainnka.ZHNews.Activity.Base.SwipeBackAty;
 import com.rainnka.ZHNews.Application.BaseApplication;
 import com.rainnka.ZHNews.Bean.ZhiHuNewsItemInfo;
 import com.rainnka.ZHNews.R;
@@ -46,7 +47,7 @@ import java.lang.ref.WeakReference;
  * Created by rainnka on 2016/5/15 16:19
  * Project name is ZHKUNews
  */
-public class NewsAty extends BaseAty {
+public class NewsAty extends SwipeBackAty {
 
 	protected CoordinatorLayout coordinatorLayout;
 	protected AppBarLayout appBarLayout;

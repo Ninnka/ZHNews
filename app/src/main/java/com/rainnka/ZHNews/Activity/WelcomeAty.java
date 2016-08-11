@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.ViewTarget;
+import com.rainnka.ZHNews.Activity.Base.BaseAty;
 import com.rainnka.ZHNews.R;
 import com.squareup.okhttp.OkHttpClient;
 
@@ -34,8 +35,6 @@ public class WelcomeAty extends BaseAty {
 	OkHttpClient okHttpClient;
 
 	ZhiHuStartItemInfo zhiHuStartItemInfo;
-	public final static String ZHIHU_START_IMAGE = "http://news-at.zhihu" +
-			".com/api/4/start-image/1080*1776";
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,7 +73,7 @@ public class WelcomeAty extends BaseAty {
 		callResponseHandler = new CallResponseHandler(this);
 		//		okHttpClient = new OkHttpClient();
 		//		final Request request = new Request.Builder()
-		//				.url(ZHIHU_START_IMAGE)
+		//				.url(ConstantUtility.ZHIHUAPI_WELCOME_IMAGE)
 		//				.build();
 		//		Call call = okHttpClient.newCall(request);
 		//		call.enqueue(new Callback() {

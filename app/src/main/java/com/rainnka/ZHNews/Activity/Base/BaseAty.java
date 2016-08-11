@@ -1,9 +1,8 @@
-package com.rainnka.ZHNews.Activity;
+package com.rainnka.ZHNews.Activity.Base;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 
 /**
  * Created by rainnka on 2016/5/17 14:11
@@ -11,7 +10,7 @@ import android.view.View;
  */
 public class BaseAty extends AppCompatActivity {
 
-	private View statusBarInstead;
+//	private View statusBarInstead;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,15 +56,15 @@ public class BaseAty extends AppCompatActivity {
 //		}
 	}
 
-	private int getStatusBarHeight() {
-		int resId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-		if (resId > 0) {
-			return getResources().getDimensionPixelSize(resId);
-		}
-		return 0;
-	}
+//	private int getStatusBarHeight() {
+//		int resId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+//		if (resId > 0) {
+//			return getResources().getDimensionPixelSize(resId);
+//		}
+//		return 0;
+//	}
 
-	protected void setStatusBarInsteadColor(int colorResourceID) {
-		statusBarInstead.setBackgroundResource(colorResourceID);
-	}
+//	protected void setStatusBarInsteadColor(int colorResourceID) {
+//		statusBarInstead.setBackgroundResource(colorResourceID);
+//	}
 }

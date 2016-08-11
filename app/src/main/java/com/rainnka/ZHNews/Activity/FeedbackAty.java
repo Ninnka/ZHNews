@@ -2,24 +2,22 @@ package com.rainnka.ZHNews.Activity;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.rainnka.ZHNews.Activity.Base.SwipeBackAty;
 import com.rainnka.ZHNews.R;
 
 /**
  * Created by rainnka on 2016/7/23 13:48
  * Project name is ZHKUNews
  */
-public class FeedbackAty extends BaseAty {
+public class FeedbackAty extends SwipeBackAty {
 
 	public Toolbar toolbar;
 	public ImageView imageView_sent;
@@ -29,14 +27,14 @@ public class FeedbackAty extends BaseAty {
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
-			Window window = getWindow();
-			// Translucent status bar
-			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager
-					.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager
-//					.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-		}
+//		if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
+//			Window window = getWindow();
+//			// Translucent status bar
+//			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager
+//					.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+////			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager
+////					.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+//		}
 		setContentView(R.layout.feedback_act);
 
 		initComponent();

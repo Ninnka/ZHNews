@@ -17,7 +17,9 @@
         <!-- 防止actionMode情况下 toolbar移位 -->
         <item name="windowActionModeOverlay">true</item>
 
-        <item name="android:fitsSystemWindows">true</item>
+        <!--<item name="android:fitsSystemWindows">true</item>-->
+
+
 
         <!--<item name="android:windowTranslucentStatus">true</item>-->
         <!--<item name="android:windowTranslucentNavigation">true</item>-->
@@ -40,6 +42,8 @@
     </style>
 
     <style name="NewsTheme" parent="AppTheme">
+        <item name="android:windowIsTranslucent">true</item>
+
 
         <!--<item name="colorPrimary">@android:color/white</item>-->
         <!--<item name="colorPrimaryDark">@android:color/white</item>-->

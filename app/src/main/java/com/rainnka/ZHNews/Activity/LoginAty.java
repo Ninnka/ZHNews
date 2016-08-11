@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
@@ -15,18 +14,18 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.rainnka.ZHNews.Activity.Base.SwipeBackAty;
 import com.rainnka.ZHNews.R;
+import com.rainnka.ZHNews.Utility.ConstantUtility;
 import com.rainnka.ZHNews.Utility.SnackbarUtility;
 
 /**
  * Created by rainnka on 2016/6/26 21:52
  * Project name is ZHKUNews
  */
-public class LoginAty extends BaseAty {
+public class LoginAty extends SwipeBackAty {
 
 	SharedPreferences sharedPreferences;
 	SharedPreferences.Editor editor;
@@ -37,21 +36,20 @@ public class LoginAty extends BaseAty {
 	TextInputEditText passwordTextInputEditText;
 	TextView signInTextView;
 
-	public final static String DATAKEY = "VALIDCODE";
 	private boolean VALIDCODE = false;
-	public final static int RESULTCODE = 0x4567;
+
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
-			Window window = getWindow();
-			// Translucent status bar
-			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager
-					.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager
-//					.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-		}
+//		if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
+//			Window window = getWindow();
+//			// Translucent status bar
+//			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager
+//					.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+////			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager
+////					.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+//		}
 		setContentView(R.layout.login_act);
 
 		//初始化组件
@@ -141,8 +139,8 @@ public class LoginAty extends BaseAty {
 					editor.putString("nickname", "nickname");
 					editor.apply();
 					Intent intent = getIntent();
-					intent.putExtra(DATAKEY, VALIDCODE);
-					LoginAty.this.setResult(RESULTCODE, intent);
+					intent.putExtra(ConstantUtility.DATAKEY_LOGIN_ATY, VALIDCODE);
+					LoginAty.this.setResult(ConstantUtility.RESULTCODE_LOGIN_ATY, intent);
 					LoginAty.this.finish();
 				} else {
 					SnackbarUtility.getSnackbarDefault(coordinatorLayout, "username or password " +

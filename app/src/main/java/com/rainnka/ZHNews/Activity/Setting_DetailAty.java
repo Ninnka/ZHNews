@@ -9,18 +9,18 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
+import com.rainnka.ZHNews.Activity.Base.SwipeBackAty;
 import com.rainnka.ZHNews.R;
 
 /**
  * Created by rainnka on 2016/8/2 15:32
  * Project name is ZHKUNews
  */
-public class Setting_DetailAty extends AppCompatActivity {
+public class Setting_DetailAty extends SwipeBackAty {
 
 	Toolbar toolbar;
 	FrameLayout frameLayout;

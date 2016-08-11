@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -12,14 +11,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.rainnka.ZHNews.Activity.Base.SwipeBackAty;
 import com.rainnka.ZHNews.R;
 import com.rainnka.ZHNews.Utility.ConstantUtility;
 import com.rainnka.ZHNews.Utility.SnackbarUtility;
@@ -28,7 +26,7 @@ import com.rainnka.ZHNews.Utility.SnackbarUtility;
  * Created by rainnka on 2016/7/10 15:26
  * Project name is ZHKUNews
  */
-public class ProfilePageAty extends BaseAty {
+public class ProfilePageAty extends SwipeBackAty {
 
 	LinearLayout linearLayout;
 	Toolbar toolbar;
@@ -47,20 +45,17 @@ public class ProfilePageAty extends BaseAty {
 
 	Intent intent;
 
-	public final static int RESULTCODE = 0x638912;
-	public final static int RESULTCODE_NORMALBACK = 0x41985;
-
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
-			Window window = getWindow();
-			// Translucent status bar
-			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager
-					.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager
-//					.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-		}
+//		if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
+//			Window window = getWindow();
+//			// Translucent status bar
+//			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager
+//					.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+////			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager
+////					.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+//		}
 		setContentView(R.layout.profilepage_act);
 
 		//
@@ -124,7 +119,7 @@ public class ProfilePageAty extends BaseAty {
 				editor.apply();
 				Intent intent = getIntent();
 				intent.putExtra("VALIDCODE", false);
-				ProfilePageAty.this.setResult(RESULTCODE, intent);
+				ProfilePageAty.this.setResult(ConstantUtility.RESULTCODE_PROFILE_ATY, intent);
 				ProfilePageAty.this.finish();
 			}
 		});
@@ -177,7 +172,8 @@ public class ProfilePageAty extends BaseAty {
 		switch (item.getItemId()) {
 			case android.R.id.home:
 				Intent intent = getIntent();
-				ProfilePageAty.this.setResult(RESULTCODE_NORMALBACK, intent);
+				ProfilePageAty.this.setResult(ConstantUtility.RESULTCODE_NORMALBACK_PROFILE_ATY,
+						intent);
 				ProfilePageAty.this.finish();
 				break;
 		}
