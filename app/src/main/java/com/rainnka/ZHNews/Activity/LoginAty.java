@@ -12,6 +12,8 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.transition.Slide;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -51,6 +53,13 @@ public class LoginAty extends SwipeBackAty {
 ////					.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 //		}
 		setContentView(R.layout.login_act);
+		setupWindowAnimations();
+
+		/*
+		* 另statusbar悬浮于activity上面
+		* */
+		getWindow().getDecorView().setSystemUiVisibility(View
+				.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
 
 		//初始化组件
 		initComponent();
@@ -66,6 +75,20 @@ public class LoginAty extends SwipeBackAty {
 
 		//设置editText的监听事件
 		setEditTextChangedListener();
+	}
+
+	private void setupWindowAnimations() {
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+			//			Fade fade = new Fade();
+			//			fade.setDuration(500);
+			//			Explode explode = new Explode();
+			//			explode.setDuration(300);
+			Slide slide = new Slide();
+			slide.setSlideEdge(Gravity.RIGHT);
+			slide.setDuration(300);
+			getWindow().setEnterTransition(slide);
+			//			getWindow().setReturnTransition(slide);
+		}
 	}
 
 	private void setEditTextChangedListener() {
@@ -141,7 +164,7 @@ public class LoginAty extends SwipeBackAty {
 					Intent intent = getIntent();
 					intent.putExtra(ConstantUtility.DATAKEY_LOGIN_ATY, VALIDCODE);
 					LoginAty.this.setResult(ConstantUtility.RESULTCODE_LOGIN_ATY, intent);
-					LoginAty.this.finish();
+					getSwipeBackLayout().scrollToFinishActivity();
 				} else {
 					SnackbarUtility.getSnackbarDefault(coordinatorLayout, "username or password " +
 							"error", Snackbar.LENGTH_SHORT).show();
@@ -212,9 +235,14 @@ public class LoginAty extends SwipeBackAty {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
-				finish();
+				onBackPressed();
 		}
 		return true;
+	}
+
+	@Override
+	public void onBackPressed() {
+		getSwipeBackLayout().scrollToFinishActivity();
 	}
 
 	@Override

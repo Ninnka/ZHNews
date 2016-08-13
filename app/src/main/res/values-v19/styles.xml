@@ -74,6 +74,33 @@
         <item name="android:actionModeBackground">@color/colorPrimary</item>
     </style>
 
+    <style name="AboutPageTheme" parent="AppTheme">
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="ProfilePageTheme" parent="AppTheme">
+
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="FeedbackPageTheme" parent="AppTheme">
+
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="NotificationPageTheme" parent="AppTheme">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="SettingDetailPageTheme" parent="AppTheme">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+
     <style name="fab_menu_labels_style">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">#006699</item>

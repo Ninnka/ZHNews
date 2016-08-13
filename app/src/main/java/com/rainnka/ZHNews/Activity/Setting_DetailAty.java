@@ -10,7 +10,10 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.transition.Slide;
+import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
 
 import com.rainnka.ZHNews.Activity.Base.SwipeBackAty;
@@ -33,10 +36,32 @@ public class Setting_DetailAty extends SwipeBackAty {
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.setting_detail);
+		setupWindowAnimations();
+
+		/*
+		* 另statusbar悬浮于activity上面
+		* */
+		getWindow().getDecorView().setSystemUiVisibility(View
+				.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+
 		initComponent();
 		initToolbarSetting();
 		initFrameLayoutContent();
 
+	}
+
+	private void setupWindowAnimations() {
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+			//			Fade fade = new Fade();
+			//			fade.setDuration(500);
+			//			Explode explode = new Explode();
+			//			explode.setDuration(300);
+			Slide slide = new Slide();
+			slide.setSlideEdge(Gravity.RIGHT);
+			slide.setDuration(300);
+			getWindow().setEnterTransition(slide);
+			//			getWindow().setReturnTransition(slide);
+		}
 	}
 
 	private void initFrameLayoutContent() {
@@ -51,10 +76,20 @@ public class Setting_DetailAty extends SwipeBackAty {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
-				finish();
+				onBackPressed();
 				break;
 		}
 		return true;
+	}
+
+	@Override
+	public void onBackPressed() {
+		//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+		//			finishAfterTransition();
+		//		}else {
+		//			finish();
+		//		}
+		getSwipeBackLayout().scrollToFinishActivity();
 	}
 
 	private void initToolbarSetting() {
@@ -85,7 +120,7 @@ public class Setting_DetailAty extends SwipeBackAty {
 						("recommandInterval");
 				if (checkBoxPreference.isChecked()) {
 					listPreference.setEnabled(true);
-				}else {
+				} else {
 					listPreference.setEnabled(false);
 				}
 			}

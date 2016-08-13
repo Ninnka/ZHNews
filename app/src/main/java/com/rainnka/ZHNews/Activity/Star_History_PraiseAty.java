@@ -21,8 +21,10 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.transition.Slide;
 import android.util.Log;
 import android.util.SparseBooleanArray;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -104,6 +106,13 @@ public class Star_History_PraiseAty extends SwipeBackAty {
 //		}
 
 		setContentView(R.layout.star_history_praise_act);
+		setupWindowAnimations();
+
+		/*
+		* 另statusbar悬浮于activity上面
+		* */
+		getWindow().getDecorView().setSystemUiVisibility(View
+				.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
 
 		/*
 		* 获取Intent中的信息
@@ -188,6 +197,19 @@ public class Star_History_PraiseAty extends SwipeBackAty {
 		//		});
 	}
 
+	private void setupWindowAnimations() {
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+			//			Fade fade = new Fade();
+			//			fade.setDuration(500);
+			//			Explode explode = new Explode();
+			//			explode.setDuration(300);
+			Slide slide = new Slide();
+			slide.setSlideEdge(Gravity.RIGHT);
+			slide.setDuration(300);
+			getWindow().setEnterTransition(slide);
+			//			getWindow().setReturnTransition(slide);
+		}
+	}
 
 	@Override
 	protected void onResume() {
@@ -273,14 +295,14 @@ public class Star_History_PraiseAty extends SwipeBackAty {
 
 	@Override
 	public void onBackPressed() {
-		super.onBackPressed();
+		getSwipeBackLayout().scrollToFinishActivity();
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
-				finish();
+				onBackPressed();
 		}
 		return true;
 	}

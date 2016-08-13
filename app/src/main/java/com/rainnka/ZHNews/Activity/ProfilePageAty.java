@@ -4,10 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.Toolbar;
+import android.transition.Slide;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,6 +26,7 @@ import com.rainnka.ZHNews.Activity.Base.SwipeBackAty;
 import com.rainnka.ZHNews.R;
 import com.rainnka.ZHNews.Utility.ConstantUtility;
 import com.rainnka.ZHNews.Utility.SnackbarUtility;
+import com.rainnka.ZHNews.Utility.TransitionHelper;
 
 /**
  * Created by rainnka on 2016/7/10 15:26
@@ -48,15 +54,22 @@ public class ProfilePageAty extends SwipeBackAty {
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
-//			Window window = getWindow();
-//			// Translucent status bar
-//			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager
-//					.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-////			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager
-////					.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-//		}
+		//		if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
+		//			Window window = getWindow();
+		//			// Translucent status bar
+		//			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager
+		//					.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+		////			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager
+		////					.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+		//		}
 		setContentView(R.layout.profilepage_act);
+		setupWindowAnimations();
+
+		/*
+		* 另statusbar悬浮于activity上面
+		* */
+		getWindow().getDecorView().setSystemUiVisibility(View
+				.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
 
 		//
 		initComponent();
@@ -77,6 +90,20 @@ public class ProfilePageAty extends SwipeBackAty {
 		addCollectionClickListener();
 	}
 
+	private void setupWindowAnimations() {
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+			//			Fade fade = new Fade();
+			//			fade.setDuration(500);
+			//			Explode explode = new Explode();
+			//			explode.setDuration(300);
+			Slide slide = new Slide();
+			slide.setSlideEdge(Gravity.RIGHT);
+			slide.setDuration(300);
+			getWindow().setEnterTransition(slide);
+			//			getWindow().setReturnTransition(slide);
+		}
+	}
+
 	private void addCollectionClickListener() {
 		linearLayout_starCollection.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -84,7 +111,8 @@ public class ProfilePageAty extends SwipeBackAty {
 				intent = new Intent();
 				intent.setAction(ConstantUtility.INTENT_TO_STAR_HISTORY_PRAISE_KEY);
 				intent.putExtra(ConstantUtility.INTENT_STRING_DATA_KEY, ConstantUtility.STAR_KEY);
-				startActivity(intent);
+				startActivityInTransition(intent, getTranstitionOptions(getTransitionPairs())
+						.toBundle(), true);
 			}
 		});
 		linearLayout_praiseCollection.setOnClickListener(new View.OnClickListener() {
@@ -93,7 +121,8 @@ public class ProfilePageAty extends SwipeBackAty {
 				intent = new Intent();
 				intent.setAction(ConstantUtility.INTENT_TO_STAR_HISTORY_PRAISE_KEY);
 				intent.putExtra(ConstantUtility.INTENT_STRING_DATA_KEY, ConstantUtility.PRAISE_KEY);
-				startActivity(intent);
+				startActivityInTransition(intent, getTranstitionOptions(getTransitionPairs())
+						.toBundle(), true);
 			}
 		});
 		linearLayout_historyCollection.setOnClickListener(new View.OnClickListener() {
@@ -102,9 +131,43 @@ public class ProfilePageAty extends SwipeBackAty {
 				intent = new Intent();
 				intent.setAction(ConstantUtility.INTENT_TO_STAR_HISTORY_PRAISE_KEY);
 				intent.putExtra(ConstantUtility.INTENT_STRING_DATA_KEY, ConstantUtility.HISTORY_KEY);
-				startActivity(intent);
+				startActivityInTransition(intent, getTranstitionOptions(getTransitionPairs())
+						.toBundle(), true);
 			}
 		});
+	}
+
+	public void startActivityInTransition(Intent intent, Bundle bundle, boolean transitionFlag) {
+		if (transitionFlag) {
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+				startActivity(intent, bundle);
+			} else {
+				startActivity(intent);
+			}
+		} else {
+			startActivity(intent);
+		}
+
+	}
+
+	public void startActivityInTransitionForResult(Intent intent, int code, Bundle bundle, boolean transitionFlag) {
+		if (transitionFlag) {
+			startActivityForResult(intent, code, bundle);
+		}else {
+			startActivityForResult(intent, code);
+		}
+	}
+
+	public Pair<View, String>[] getTransitionPairs() {
+		Pair<View, String>[] pairs = TransitionHelper.createSafeTransitionParticipants
+				(this, false);
+		return pairs;
+	}
+
+	public ActivityOptionsCompat getTranstitionOptions(Pair<View, String>[] pairs) {
+		ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat
+				.makeSceneTransitionAnimation(this, pairs);
+		return activityOptionsCompat;
 	}
 
 	private void addTextViewLogoutClickListener() {
@@ -120,7 +183,7 @@ public class ProfilePageAty extends SwipeBackAty {
 				Intent intent = getIntent();
 				intent.putExtra("VALIDCODE", false);
 				ProfilePageAty.this.setResult(ConstantUtility.RESULTCODE_PROFILE_ATY, intent);
-				ProfilePageAty.this.finish();
+				getSwipeBackLayout().scrollToFinishActivity();
 			}
 		});
 	}
@@ -171,13 +234,18 @@ public class ProfilePageAty extends SwipeBackAty {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
-				Intent intent = getIntent();
-				ProfilePageAty.this.setResult(ConstantUtility.RESULTCODE_NORMALBACK_PROFILE_ATY,
-						intent);
-				ProfilePageAty.this.finish();
+				onBackPressed();
 				break;
 		}
 		return true;
+	}
+
+	@Override
+	public void onBackPressed() {
+		Intent intent = getIntent();
+		ProfilePageAty.this.setResult(ConstantUtility.RESULTCODE_NORMALBACK_PROFILE_ATY,
+				intent);
+		getSwipeBackLayout().scrollToFinishActivity();
 	}
 
 	private void initComponent() {

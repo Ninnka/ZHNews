@@ -23,6 +23,8 @@ public class SwipeBackAty extends BaseAty implements SwipeBackActivityBase {
 		super.onCreate(savedInstanceState);
 		swipeBackActivityHelper = new SwipeBackActivityHelper(this);
 		swipeBackActivityHelper.onActivityCreate();
+		getSwipeBackLayout().setEdgeTrackingEnabled(SwipeBackLayout.EDGE_RIGHT | SwipeBackLayout
+				.EDGE_LEFT);
 	}
 
 	@Override
@@ -46,7 +48,7 @@ public class SwipeBackAty extends BaseAty implements SwipeBackActivityBase {
 
 	@Override
 	public void setSwipeBackEnable(boolean enable) {
-//		getSwipeBackLayout().setEnabled(enable);
+		getSwipeBackLayout().setEnabled(enable);
 		getSwipeBackLayout().setEnableGesture(enable);
 	}
 

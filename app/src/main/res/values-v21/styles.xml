@@ -22,13 +22,13 @@
         <!-- 开启transition -->
         <item name="android:windowActivityTransitions">true</item>
         <item name="android:windowContentTransitions">true</item>
-        <item name="android:windowAllowEnterTransitionOverlap">false</item>
-        <item name="android:windowAllowReturnTransitionOverlap">false</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
 
         <!-- 防止actionMode情况下 toolbar移位 -->
         <item name="windowActionModeOverlay">true</item>
 
-        <item name="android:windowIsTranslucent">true</item>
+        <!--<item name="android:windowBackground">@android:color/transparent</item>-->
 
         <!--<item name="android:windowTranslucentStatus">true</item>-->
         <!--<item name="android:windowTranslucentNavigation">true</item>-->
@@ -50,6 +50,7 @@
 
         <!--状态栏透明-->
         <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
 
         <!-- systembar设置 -->
         <!--<item name="android:windowTranslucentStatus">true</item>-->
@@ -62,6 +63,7 @@
         <item name="colorPrimaryDark">#00FFFFFF</item>
 
         <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
 
         <!--<item name="android:windowTranslucentStatus">false</item>-->
         <!--<item name="android:windowTranslucentNavigation">false</item>-->
@@ -79,15 +81,64 @@
     </style>
 
     <style name="LoginTheme" parent="AppTheme">
-        <!--<item name="android:editTextStyle">@style/Login_TextInputEditTextTheme</item>-->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimary</item>
-        <item name="colorAccent">@color/colorPrimaryDark</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+
     </style>
 
     <style name="SHPTheme" parent="AppTheme">
-        <item name="android:actionModeBackground">@color/colorPrimary</item>
+
+        <!-- 防止actionMode情况下 toolbar移位 -->
+        <item name="windowActionModeOverlay">true</item>
+
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+
     </style>
+    
+    <style name="AboutPageTheme" parent="AppTheme">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="ProfilePageTheme" parent="AppTheme">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+
+    </style>
+
+    <style name="FeedbackPageTheme" parent="AppTheme">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+
+    </style>
+
+    <style name="NotificationPageTheme" parent="AppTheme">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+
+    </style>
+
+    <style name="SettingDetailPageTheme" parent="AppTheme">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+
+    </style>
+
 
     <!--<style name="AppTheme.AppBarOverlay.other" parent="ThemeOverlay.AppCompat.Light">-->
 

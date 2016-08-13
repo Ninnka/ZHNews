@@ -16,7 +16,9 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
+import android.transition.Slide;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -90,6 +92,7 @@ public class NewsAty extends SwipeBackAty {
 		//					.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
 		//		}
 		setContentView(R.layout.news_act);
+		setupWindowAnimations();
 
 		//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 		//			Fade enterTransition = new Fade();
@@ -188,6 +191,20 @@ public class NewsAty extends SwipeBackAty {
 		*
 		* */
 		//		setActivityOnTouchEvent();
+	}
+
+	private void setupWindowAnimations() {
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+			//			Fade fade = new Fade();
+			//			fade.setDuration(500);
+			//			Explode explode = new Explode();
+			//			explode.setDuration(300);
+			Slide slide = new Slide();
+			slide.setSlideEdge(Gravity.RIGHT);
+			slide.setDuration(300);
+			getWindow().setEnterTransition(slide);
+			//			getWindow().setReturnTransition(slide);
+		}
 	}
 
 	private void addStarImageViewOnClickListener() {
@@ -581,7 +598,7 @@ public class NewsAty extends SwipeBackAty {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
-				finish();
+				onBackPressed();
 
 				//				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 				//					Log.i("ZRH", "finishAfterTransition");
@@ -598,7 +615,7 @@ public class NewsAty extends SwipeBackAty {
 
 	@Override
 	public void onBackPressed() {
-		finish();
+		getSwipeBackLayout().scrollToFinishActivity();
 
 		//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 		//			Log.i("ZRH", "finishAfterTransition");

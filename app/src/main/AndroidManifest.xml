@@ -62,7 +62,7 @@
         <activity
             android:name=".Activity.ProfilePageAty"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
+            android:theme="@style/ProfilePageTheme"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.ProfilePage"/>
@@ -73,7 +73,7 @@
         <activity
             android:name=".Activity.NotificationAty"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
+            android:theme="@style/NotificationPageTheme">
             <intent-filter>
                 <action android:name="android.intent.action.NotificationPage"/>
                 <category android:name="android.intent.category.DEFAULT"/>
@@ -83,7 +83,7 @@
         <activity
             android:name=".Activity.FeedbackAty"
             android:screenOrientation="portrait"
-            android:theme="@style/LoginTheme"
+            android:theme="@style/FeedbackPageTheme"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.FeedbackPage"/>
@@ -93,7 +93,8 @@
 
         <activity
             android:name=".Activity.AboutAty"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AboutPageTheme">
             <intent-filter>
                 <action android:name="android.intent.action.AboutPage"/>
                 <category android:name="android.intent.category.DEFAULT"/>
@@ -102,7 +103,8 @@
 
         <activity
             android:name=".Activity.Setting_DetailAty"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/SettingDetailPageTheme">
             <intent-filter>
                 <action android:name="android.intent.action.Setting_Detail"/>
                 <category android:name="android.intent.category.DEFAULT"/>

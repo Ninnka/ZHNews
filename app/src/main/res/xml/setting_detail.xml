@@ -36,26 +36,37 @@
         android:title="帮助">
 
         <Preference
+            android:selectable="false"
+            android:summary="除了主页以外的页面左右滑动均可以退出页面，手指判定距离在两个边缘"
+            android:title="左右滑动页面"/>
+
+        <Preference
+            android:selectable="false"
             android:summary="快速底部可以迅速滑动到底部并且加载旧的日报资源\n快速顶部可以迅速滑动到顶部相当于返回顶部"
             android:title="首页浮动按钮"/>
 
         <Preference
+            android:selectable="false"
             android:summary="可以点击左上角的三行线按钮滑出菜单，也可以将手指从左边缘往右边滑动一段足够长的距离呼出菜单"
             android:title="侧滑栏"/>
 
         <Preference
+            android:selectable="false"
             android:summary="长按单个item可以向左向右滑动删除\n点击右上角的多选编辑按钮，进入编辑状态后点击item可以进行标记，toolbar会多出全员以及删除的按钮\n长按item时可以智能多选"
             android:title="收藏、点赞"/>
 
         <Preference
+            android:selectable="false"
             android:summary="通知页面暂时都会有什么东西"
             android:title="通知"/>
 
         <Preference
+            android:selectable="false"
             android:summary="点击直接切换，没什么好说的"
             android:title="光暗模式切换"/>
 
         <Preference
+            android:selectable="false"
             android:summary="反馈信息需要填写完后调用你系统的发送邮件应用发送"
             android:title="反馈"/>
 

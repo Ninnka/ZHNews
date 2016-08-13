@@ -6,15 +6,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     tools:context=".Activity.LoginAty">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/login_activity_AppBarLayout"
         android:layout_width="match_parent"
+        android:background="@color/colorPrimary"
         android:layout_height="wrap_content">
 
         <android.support.v7.widget.Toolbar
+            android:layout_marginTop="24dp"
             android:id="@+id/login_activity_Toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"

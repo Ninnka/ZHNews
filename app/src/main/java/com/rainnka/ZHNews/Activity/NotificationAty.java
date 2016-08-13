@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.ViewStubCompat;
+import android.transition.Slide;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -35,6 +37,12 @@ public class NotificationAty extends SwipeBackAty {
 ////					.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 //		}
 		setContentView(R.layout.notificationpage_act);
+		setupWindowAnimations();
+		/*
+		* 另statusbar悬浮于activity上面
+		* */
+		getWindow().getDecorView().setSystemUiVisibility(View
+				.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
 
 		initComponent();
 
@@ -62,6 +70,20 @@ public class NotificationAty extends SwipeBackAty {
 		});
 	}
 
+	private void setupWindowAnimations() {
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+			//			Fade fade = new Fade();
+			//			fade.setDuration(500);
+			//			Explode explode = new Explode();
+			//			explode.setDuration(300);
+			Slide slide = new Slide();
+			slide.setSlideEdge(Gravity.RIGHT);
+			slide.setDuration(300);
+			getWindow().setEnterTransition(slide);
+			//			getWindow().setReturnTransition(slide);
+		}
+	}
+
 	public void initComponent() {
 		toolbar = (Toolbar) findViewById(R.id.notificationpage_act_Toolbar);
 		viewStubCompat = (ViewStubCompat) findViewById(R.id.notificationpage_act_ViewStub);
@@ -80,9 +102,14 @@ public class NotificationAty extends SwipeBackAty {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
-				finish();
+				onBackPressed();
 				break;
 		}
 		return true;
+	}
+
+	@Override
+	public void onBackPressed() {
+		getSwipeBackLayout().scrollToFinishActivity();
 	}
 }

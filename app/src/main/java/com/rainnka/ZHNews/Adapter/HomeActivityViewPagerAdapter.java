@@ -4,6 +4,8 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -135,7 +137,11 @@ public class HomeActivityViewPagerAdapter extends PagerAdapter {
 					bundle.putSerializable(ConstantUtility.SER_KEY, zhiHuNewsTopItemInfoList.get
 							(position - 1));
 					intent.putExtras(bundle);
-					appCompatActivity.startActivity(intent);
+					Pair<View, String>[] pairs = ((HomeAty)appCompatActivity).getTransitionPairs();
+					ActivityOptionsCompat activityOptionsCompat = ((HomeAty)appCompatActivity)
+							.getTranstitionOptions(pairs);
+					((HomeAty)appCompatActivity).startActivityInTransition(intent,
+							activityOptionsCompat.toBundle(), true);
 				} catch (Exception e) {
 					Log.i("ZRH", e.toString());
 				}

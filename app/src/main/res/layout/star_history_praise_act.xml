@@ -6,21 +6,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     tools:context=".Activity.Star_History_PraiseAty">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/star_history_praiseActivity_Content_main_AppBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
         app:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/star_history_praiseActivity_Content_main_ToolBar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
+            android:layout_marginTop="24dp"
             app:layout_scrollFlags="scroll|enterAlways"
+            android:background="@color/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
             <ImageView

@@ -5,16 +5,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     tools:context=".Activity.NotificationAty">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/notificationpage_act_AppBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
         app:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
+            android:layout_marginTop="24dp"
             android:id="@+id/notificationpage_act_Toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"

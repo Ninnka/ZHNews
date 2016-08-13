@@ -23,6 +23,8 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -59,6 +61,7 @@ import com.rainnka.ZHNews.Service.InitNotiRecService;
 import com.rainnka.ZHNews.Utility.ConstantUtility;
 import com.rainnka.ZHNews.Utility.SQLiteCreateTableHelper;
 import com.rainnka.ZHNews.Utility.SnackbarUtility;
+import com.rainnka.ZHNews.Utility.TransitionHelper;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
@@ -160,6 +163,7 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 
 	public SQLiteDatabase sqLiteDatabase;
 
+
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -168,14 +172,7 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 					.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
 		}
 		setContentView(R.layout.home_act);
-
-
-		//		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-		//			Fade slideTransition = new Fade();
-		//			slideTransition.setDuration(400);
-		//			getWindow().setReenterTransition(slideTransition);
-		//			getWindow().setExitTransition(slideTransition);
-		//		}
+		setupWindowAnimations();
 
 		/*
 		* 初始化网络连接管理器
@@ -306,7 +303,7 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 		/*
 		* 侧栏头像点击事件
 		* */
-		initDrawerNavigationProfileOnClickListener();
+		addNavigationProfileImageOnClickListener();
 
 		/*
 		* 重新刷新按钮点击事件
@@ -327,6 +324,17 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 		* */
 		//		navigationView.getMenu().setGroupVisible(R.id.group2, true);
 
+	}
+
+	private void setupWindowAnimations() {
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+			//			Fade fade = new Fade();
+			//			fade.setDuration(500);
+			//			getWindow().setExitTransition(null);
+			//			Fade fade1 = new Fade();
+			//			fade1.setDuration(0);
+			//			getWindow().setReenterTransition(null);
+		}
 	}
 
 	@Override
@@ -418,17 +426,20 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 			case R.id.home_activity_menu_setting:
 				intent = new Intent();
 				intent.setAction(ConstantUtility.INTENT_TO_SETTINGDETAIL_KEY);
-				startActivity(intent);
+				startActivityInTransition(intent, getTranstitionOptions(getTransitionPairs())
+						.toBundle(), true);
 				break;
 			case R.id.home_activity_menu_about:
 				intent = new Intent();
 				intent.setAction(ConstantUtility.INTENT_TO_ABOUT_KEY);
-				startActivity(intent);
+				startActivityInTransition(intent, getTranstitionOptions(getTransitionPairs())
+						.toBundle(), true);
 				break;
 			case R.id.home_activity_menu_notification:
 				intent = new Intent();
 				intent.setAction(ConstantUtility.INTENT_TO_NOTIFICATION_KEY);
-				startActivity(intent);
+				startActivityInTransition(intent, getTranstitionOptions(getTransitionPairs())
+						.toBundle(), true);
 				break;
 			//			case R.id.home_activity_menu_theme:
 			//				if(getServiceStatus("com.rainnka.ZHNews.Service.InitNotiRecService")){
@@ -510,21 +521,9 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 					Bundle bundle = new Bundle();
 					bundle.putSerializable(ConstantUtility.SER_KEY, temp_zhiHuNewsItemInfo);
 					intent.putExtras(bundle);
+					startActivityInTransition(intent, getTranstitionOptions(getTransitionPairs())
+							.toBundle(), true);
 
-					startActivity(intent);
-
-					//				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-					//					Pair<View, String> pair = new Pair<View, String>
-					//							(floatingActionsMenu,
-					//									"transition");
-					//					ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat
-					//							.makeSceneTransitionAnimation(HomeActivity.this, pair);
-					//					Log.i("ZRH", "startActivity(intent, activityOptionsCompat.toBundle())");
-					//					startActivity(intent, activityOptionsCompat.toBundle());
-					//				} else {
-					//					Log.i("ZRH", "startActivity(intent)");
-					//					startActivity(intent);
-					//				}
 				}
 			}
 
@@ -600,6 +599,39 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 		});
 	}
 
+	public Pair<View, String>[] getTransitionPairs() {
+		Pair<View, String>[] pairs = TransitionHelper.createSafeTransitionParticipants
+				(this, false);
+		return pairs;
+	}
+
+	public ActivityOptionsCompat getTranstitionOptions(Pair<View, String>[] pairs) {
+		ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat
+				.makeSceneTransitionAnimation(this, pairs);
+		return activityOptionsCompat;
+	}
+
+	public void startActivityInTransition(Intent intent, Bundle bundle, boolean transitionFlag) {
+		if (transitionFlag) {
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+				startActivity(intent, bundle);
+			} else {
+				startActivity(intent);
+			}
+		} else {
+			startActivity(intent);
+		}
+
+	}
+
+	public void startActivityInTransitionForResult(Intent intent, int code, Bundle bundle, boolean transitionFlag) {
+		if (transitionFlag) {
+			startActivityForResult(intent, code, bundle);
+		} else {
+			startActivityForResult(intent, code);
+		}
+	}
+
 	/*
 	* 设置appbar下的fab按钮的点击事件
 	* */
@@ -646,7 +678,7 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 	/*
 	* 侧栏头像点击事件
 	* */
-	private void initDrawerNavigationProfileOnClickListener() {
+	private void addNavigationProfileImageOnClickListener() {
 		profile_iv.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -655,12 +687,16 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 					drawerLayout.closeDrawer(navigationView);
 					Intent intent_to_login = new Intent();
 					intent_to_login.setAction(ConstantUtility.INTENT_TO_LOGIN_KEY);
-					startActivityForResult(intent_to_login, ConstantUtility.ITENT_TO_LOGIN_REQUESTCODE);
+					startActivityInTransitionForResult(intent_to_login, ConstantUtility
+							.ITENT_TO_LOGIN_REQUESTCODE, getTranstitionOptions(getTransitionPairs
+							()).toBundle(), true);
 				} else {
 					drawerLayout.closeDrawer(navigationView);
 					Intent intent_to_profile = new Intent();
 					intent_to_profile.setAction(ConstantUtility.INTENT_TO_PROFILE_KEY);
-					startActivityForResult(intent_to_profile, ConstantUtility.ITENT_TO_PROFILE_REQUESTCODE);
+					startActivityInTransitionForResult(intent_to_profile, ConstantUtility
+							.ITENT_TO_PROFILE_REQUESTCODE, getTranstitionOptions
+							(getTransitionPairs()).toBundle(), true);
 				}
 			}
 		});
@@ -1209,7 +1245,8 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 			case R.id.drawer_response:
 				intent = new Intent();
 				intent.setAction(ConstantUtility.INTENT_TO_FEEDBACK_KEY);
-				startActivity(intent);
+				startActivityInTransition(intent, getTranstitionOptions(getTransitionPairs())
+						.toBundle(), true);
 				break;
 
 			case R.id.drawer_exit:
