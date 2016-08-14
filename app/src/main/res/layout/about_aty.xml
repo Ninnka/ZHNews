@@ -12,11 +12,10 @@
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorPrimaryDark"
         app:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
-            android:layout_marginTop="24dp"
             android:id="@+id/about_act_Toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
@@ -120,7 +119,7 @@
                 android:layout_marginLeft="3dp"
                 android:layout_marginTop="32dp"
                 android:gravity="left"
-                android:text="0.80.0"
+                android:text="@string/app_version"
                 android:textColor="@color/about_text_other"
                 android:textSize="13sp"/>
 

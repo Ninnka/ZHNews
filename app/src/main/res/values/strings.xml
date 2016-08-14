@@ -7,10 +7,6 @@
     <string name="imageViewContentDescribtion">pic</string>
     <string name="about_act_sources">https://github.com/Rennzh/ZHNews</string>
     <string name="about_act_author_email"><![CDATA[Rainnka <hennzr@gmail.com>]]></string>
-    <string-array name="bg_title">
-        <item>this is title about bg1</item>
-        <item>this is title about bg2</item>
-        <item>this is title about bg3</item>
-    </string-array>
+    <string name="app_version">0.80.0</string>
 
 </resources>

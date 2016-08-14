@@ -34,6 +34,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.transition.Fade;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -59,6 +60,7 @@ import com.rainnka.ZHNews.CustomView.HomeActivityViewPagerIndicator;
 import com.rainnka.ZHNews.R;
 import com.rainnka.ZHNews.Service.InitNotiRecService;
 import com.rainnka.ZHNews.Utility.ConstantUtility;
+import com.rainnka.ZHNews.Utility.NetworkConnectivityUtility;
 import com.rainnka.ZHNews.Utility.SQLiteCreateTableHelper;
 import com.rainnka.ZHNews.Utility.SnackbarUtility;
 import com.rainnka.ZHNews.Utility.TransitionHelper;
@@ -167,11 +169,13 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			getWindow().getDecorView().setSystemUiVisibility(View
-					.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-		}
-		setContentView(R.layout.home_act);
+
+		//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+		//			getWindow().getDecorView().setSystemUiVisibility(View
+		//					.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+		//		}
+
+		setContentView(R.layout.home_aty);
 		setupWindowAnimations();
 
 		/*
@@ -328,8 +332,9 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 
 	private void setupWindowAnimations() {
 		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-			//			Fade fade = new Fade();
-			//			fade.setDuration(500);
+			Fade fade = new Fade();
+			fade.setDuration(100);
+			getWindow().setEnterTransition(fade);
 			//			getWindow().setExitTransition(null);
 			//			Fade fade1 = new Fade();
 			//			fade1.setDuration(0);
@@ -691,7 +696,6 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 							.ITENT_TO_LOGIN_REQUESTCODE, getTranstitionOptions(getTransitionPairs
 							()).toBundle(), true);
 				} else {
-					drawerLayout.closeDrawer(navigationView);
 					Intent intent_to_profile = new Intent();
 					intent_to_profile.setAction(ConstantUtility.INTENT_TO_PROFILE_KEY);
 					startActivityInTransitionForResult(intent_to_profile, ConstantUtility
@@ -778,8 +782,7 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 	* 获取网络连接管理器
 	* */
 	private void initConnectivityManager() {
-		connectivityManager = (ConnectivityManager) this.getApplicationContext().getSystemService
-				(CONNECTIVITY_SERVICE);
+		connectivityManager = NetworkConnectivityUtility.getConnectivityManager();
 	}
 
 	/*
@@ -1388,7 +1391,7 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 					* */
 					for (int i = 0; i < homeAct.zhiHuNewsTopItemInfoList.size() + 2; i++) {
 						View convertView = LayoutInflater.from(homeAct).inflate(R.layout
-								.home_act_content_viewpager_item, null);
+								.home_aty_content_viewpager_item, null);
 						ImageView imageView = (ImageView) convertView.findViewById(R.id
 								.homeActivity_Content_ViewPager_CustomItem_ImageView);
 						if (i == 0) {

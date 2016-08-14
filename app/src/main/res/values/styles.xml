@@ -45,7 +45,7 @@
     <style name="LoginTheme" parent="AppTheme">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
     <!--<style name="Login_TextInputEditTextTheme" parent="Widget.AppCompat.EditText">-->
@@ -54,6 +54,7 @@
 
     <style name="SHPTheme" parent="AppTheme">
         <item name="android:actionModeBackground">@color/colorPrimary</item>
+        <item name="android:windowIsTranslucent">true</item>
     </style>
 
     <style name="AboutPageTheme" parent="AppTheme">
@@ -78,6 +79,11 @@
     </style>
 
     <style name="SettingDetailPageTheme" parent="AppTheme">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="CommentsPageTheme" parent="AppTheme">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsTranslucent">true</item>
     </style>

@@ -112,6 +112,15 @@
         </activity>
 
         <activity
+            android:name=".Activity.CommentsAty"
+            android:theme="@style/CommentsPageTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.Comments"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".Activity.WelcomeAty"
             android:theme="@style/WelcomeTheme">
             <intent-filter>
@@ -119,6 +128,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
 
         <service android:name=".Service.InitNotiRecService">
 

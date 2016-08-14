@@ -10,12 +10,11 @@
               tools:context=".Activity.ProfilePageAty">
 
     <LinearLayout
-        android:background="@color/colorPrimary"
+        android:background="@color/colorPrimaryDark"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <android.support.v7.widget.Toolbar
-            android:layout_marginTop="24dp"
             android:id="@+id/profilepage_act_Toolbar"
             style="@style/AppTheme.PopupOverlay"
             android:layout_width="match_parent"

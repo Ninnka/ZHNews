@@ -54,7 +54,7 @@ public class Star_History_PraiseActivityRecyclerViewAdapter extends RecyclerView
 	@Override
 	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		return new RecyclerViewContentViewHolder(layoutInflater.inflate(R.layout
-				.star_history_praise_act_content_recyclerview_item, parent, false));
+				.star_history_praise_aty_content_recyclerview_item, parent, false));
 	}
 
 	@Override

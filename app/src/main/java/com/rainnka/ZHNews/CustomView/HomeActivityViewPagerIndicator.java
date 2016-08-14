@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.rainnka.ZHNews.R;
-import com.rainnka.ZHNews.Utility.LengthTransitionUtility;
+import com.rainnka.ZHNews.Utility.LengthConverterUtility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,11 +41,11 @@ public class HomeActivityViewPagerIndicator extends LinearLayout {
 		VirtualSize = bannerSize + 2;
 		viewList = new ArrayList<>();
 		LinearLayout.LayoutParams layoutParamsNormal = new LinearLayout.LayoutParams
-				(LengthTransitionUtility.dip2px(homeActivity, 16), ViewGroup
+				(LengthConverterUtility.dip2px(homeActivity, 16), ViewGroup
 						.LayoutParams.MATCH_PARENT);
-		layoutParamsNormal.setMargins(0, 0, LengthTransitionUtility.dip2px(homeActivity, 8), 0);
+		layoutParamsNormal.setMargins(0, 0, LengthConverterUtility.dip2px(homeActivity, 8), 0);
 		LinearLayout.LayoutParams layoutParamsEnd = new LinearLayout.LayoutParams
-				(LengthTransitionUtility.dip2px(homeActivity, 16), ViewGroup
+				(LengthConverterUtility.dip2px(homeActivity, 16), ViewGroup
 						.LayoutParams.MATCH_PARENT);
 		layoutParamsEnd.setMargins(0, 0, 0, 0);
 		for (int i = 0; i < bannerSize; i++) {

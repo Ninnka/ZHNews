@@ -73,10 +73,10 @@ public class HomeActivityRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		if (viewType == 0) {
 			return new RecyclerViewDateViewHolder(layoutInflater.inflate(R.layout
-					.home_act_content_recyclerview_item_date, parent, false));
+					.home_aty_content_recyclerview_item_date, parent, false));
 		} else if (viewType == 1) {
 			return new RecyclerViewContentViewHolder(layoutInflater.inflate(R.layout
-					.home_act_content_recyclerview_item_content, parent, false));
+					.home_aty_content_recyclerview_item_content, parent, false));
 		}
 		return null;
 	}

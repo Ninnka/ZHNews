@@ -21,14 +21,13 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.transition.Slide;
 import android.util.Log;
 import android.util.SparseBooleanArray;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -40,6 +39,7 @@ import com.rainnka.ZHNews.Callback_Listener.SimpleItemTouchHelperCallback;
 import com.rainnka.ZHNews.Callback_Listener.onSHPActRecyclerItemClickListener;
 import com.rainnka.ZHNews.R;
 import com.rainnka.ZHNews.Utility.ConstantUtility;
+import com.rainnka.ZHNews.Utility.LengthConverterUtility;
 import com.rainnka.ZHNews.Utility.SQLiteCreateTableHelper;
 import com.rainnka.ZHNews.Utility.SnackbarUtility;
 import com.squareup.okhttp.OkHttpClient;
@@ -105,14 +105,13 @@ public class Star_History_PraiseAty extends SwipeBackAty {
 //			//					.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 //		}
 
-		setContentView(R.layout.star_history_praise_act);
+		setContentView(R.layout.star_history_praise_aty);
 		setupWindowAnimations();
 
 		/*
 		* 另statusbar悬浮于activity上面
 		* */
-		getWindow().getDecorView().setSystemUiVisibility(View
-				.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+		setFullScreenLayout();
 
 		/*
 		* 获取Intent中的信息
@@ -137,7 +136,7 @@ public class Star_History_PraiseAty extends SwipeBackAty {
 		/*
 		* 初始化toolbar
 		* */
-		initToolbar();
+		initToolbarSetting();
 
 		/*
 		* 准备recyclerview用的linearLayoutManager
@@ -167,7 +166,7 @@ public class Star_History_PraiseAty extends SwipeBackAty {
 		/*
 		* 搜索按钮点击事件
 		* */
-		initSearchImageView();
+		creayeSearchImageViewActionMode();
 
 		/*
 		* 网络访问资源
@@ -195,20 +194,6 @@ public class Star_History_PraiseAty extends SwipeBackAty {
 		//				}
 		//			}
 		//		});
-	}
-
-	private void setupWindowAnimations() {
-		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-			//			Fade fade = new Fade();
-			//			fade.setDuration(500);
-			//			Explode explode = new Explode();
-			//			explode.setDuration(300);
-			Slide slide = new Slide();
-			slide.setSlideEdge(Gravity.RIGHT);
-			slide.setDuration(300);
-			getWindow().setEnterTransition(slide);
-			//			getWindow().setReturnTransition(slide);
-		}
 	}
 
 	@Override
@@ -294,11 +279,6 @@ public class Star_History_PraiseAty extends SwipeBackAty {
 	}
 
 	@Override
-	public void onBackPressed() {
-		getSwipeBackLayout().scrollToFinishActivity();
-	}
-
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
@@ -373,7 +353,7 @@ public class Star_History_PraiseAty extends SwipeBackAty {
 		//				.star_history_praiseActivity_Content_main_SearchView);
 	}
 
-	private void initToolbar() {
+	private void initToolbarSetting() {
 		switch (title) {
 			case ConstantUtility.STAR_KEY:
 				toolbar.setTitle("收藏");
@@ -388,6 +368,10 @@ public class Star_History_PraiseAty extends SwipeBackAty {
 		toolbar.setTitleTextColor(Color.WHITE);
 		setSupportActionBar(toolbar);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) toolbar.getLayoutParams();
+		layoutParams.setMargins(0, LengthConverterUtility.dip2px(BaseApplication
+				.getBaseApplicationContext(), 24), 0, 0);
+		toolbar.setLayoutParams(layoutParams);
 	}
 
 	private void initMultChoiceClickListener() {
@@ -631,7 +615,7 @@ public class Star_History_PraiseAty extends SwipeBackAty {
 		});
 	}
 
-	private void initSearchImageView() {
+	private void creayeSearchImageViewActionMode() {
 		imageView_Search.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {

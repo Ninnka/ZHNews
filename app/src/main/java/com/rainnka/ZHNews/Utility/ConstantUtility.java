@@ -1,6 +1,7 @@
 package com.rainnka.ZHNews.Utility;
 
 import android.animation.AnimatorSet;
+import android.support.v7.widget.LinearLayoutManager;
 
 /**
  * Created by rainnka on 2016/8/4 15:48
@@ -42,6 +43,11 @@ public class ConstantUtility {
 	public final static String PRAISE_KEY = "praise";
 
 	public final static String SER_KEY = "SER";
+
+	public final static String INTENT_TO_COMMENTS_KET = "android.intent.action.Comments";
+
+	public final static int ADD_COMMENTSLIST = 0x1293;
+	public final static int NO_COMMENTSLIST = 0x346754;
 
 	public final static String ZHIHUAPI_LATEST = "http://news-at.zhihu.com/api/4/news/latest";
 	public final static String ZHIHUAPI_BEFORE = "http://news.at.zhihu.com/api/4/news/before/";
@@ -89,6 +95,13 @@ public class ConstantUtility {
 
 	public final static int RESULTCODE_PROFILE_ATY = 0x638912;
 	public final static int RESULTCODE_NORMALBACK_PROFILE_ATY = 0x41985;
+
+	public final static int[] ATTRS = new int[]{
+			android.R.attr.listDivider
+	};
+	public final static int HORIZONTAL_LIST = LinearLayoutManager.HORIZONTAL;
+	public final static int VERTICAL_LIST = LinearLayoutManager.VERTICAL;
+
 
 	public static AnimatorSet getAnimatorDelegate(){
 		return new AnimatorSet();

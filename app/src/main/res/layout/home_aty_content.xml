@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context=".Activity.HomeAty"
-    tools:showIn="@layout/home_act">
+    tools:showIn="@layout/home_aty">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/homeActivity_Content_main_AppBarLayout"
@@ -29,7 +29,7 @@
             app:expandedTitleMarginBottom="0dp"
             app:expandedTitleTextAppearance="@style/expandedTitleTextAppearance"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:statusBarScrim="@color/colorPrimary">
+            app:statusBarScrim="@color/colorPrimaryDark">
 
             <!--<FrameLayout-->
             <!--android:id="@+id/homeActivity_Content_main_FrameLayout"-->

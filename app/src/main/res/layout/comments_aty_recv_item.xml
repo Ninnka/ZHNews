@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="12dp">
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/comments_aty_recv_item_avatar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:scaleType="fitCenter"
+        app:riv_corner_radius="24dp"/>
+
+    <TextView
+        android:id="@+id/comments_aty_recv_item_author"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@+id/comments_aty_recv_item_avatar"
+        android:textColor="@color/comments_recvitem_author"
+        android:textSize="14sp"/>
+
+    <TextView
+        android:id="@+id/comments_aty_recv_item_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/comments_aty_recv_item_author"/>
+
+    <TextView
+        android:id="@+id/comments_aty_recv_item_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/comments_aty_recv_item_author"
+        android:layout_alignStart="@+id/comments_aty_recv_item_author"
+        android:layout_below="@+id/comments_aty_recv_item_author"
+        android:layout_marginTop="6dp"
+        android:ellipsize="end"
+        android:textSize="16sp"/>
+
+    <ImageView
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_alignTop="@+id/comments_aty_recv_item_like"
+        android:layout_marginRight="4dp"
+        android:layout_toLeftOf="@+id/comments_aty_recv_item_like"
+        android:scaleType="fitCenter"
+        android:src="@mipmap/like"/>
+
+    <TextView
+        android:id="@+id/comments_aty_recv_item_like"
+        android:text="666666"
+        android:layout_width="wrap_content"
+        android:layout_marginRight="6dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="6dp"
+        android:layout_alignRight="@+id/comments_aty_recv_item_time"
+        android:layout_below="@+id/comments_aty_recv_item_content"/>
+
+</RelativeLayout>

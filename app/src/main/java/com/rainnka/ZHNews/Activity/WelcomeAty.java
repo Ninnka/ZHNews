@@ -99,7 +99,7 @@ public class WelcomeAty extends BaseAty {
 			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager
 					.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 		}
-		setContentView(R.layout.welcome_act);
+		setContentView(R.layout.welcome_aty);
 		linearLayout = (LinearLayout) findViewById(R.id.welCome_Activity_welcomeBackgroud);
 		welcomeHandler.sendEmptyMessageDelayed(0x123, 3000);
 	}

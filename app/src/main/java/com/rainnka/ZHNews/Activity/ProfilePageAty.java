@@ -11,8 +11,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.Toolbar;
-import android.transition.Slide;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,8 +21,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.rainnka.ZHNews.Activity.Base.SwipeBackAty;
+import com.rainnka.ZHNews.Application.BaseApplication;
 import com.rainnka.ZHNews.R;
 import com.rainnka.ZHNews.Utility.ConstantUtility;
+import com.rainnka.ZHNews.Utility.LengthConverterUtility;
 import com.rainnka.ZHNews.Utility.SnackbarUtility;
 import com.rainnka.ZHNews.Utility.TransitionHelper;
 
@@ -62,20 +62,19 @@ public class ProfilePageAty extends SwipeBackAty {
 		////			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager
 		////					.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 		//		}
-		setContentView(R.layout.profilepage_act);
+		setContentView(R.layout.profilepage_aty);
 		setupWindowAnimations();
 
 		/*
 		* 另statusbar悬浮于activity上面
 		* */
-		getWindow().getDecorView().setSystemUiVisibility(View
-				.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+		setFullScreenLayout();
 
 		//
 		initComponent();
 
 		//
-		initSettingToolbar();
+		initToolbarSetting();
 
 		//
 		initUsernameEditText();
@@ -88,20 +87,6 @@ public class ProfilePageAty extends SwipeBackAty {
 
 		//
 		addCollectionClickListener();
-	}
-
-	private void setupWindowAnimations() {
-		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-			//			Fade fade = new Fade();
-			//			fade.setDuration(500);
-			//			Explode explode = new Explode();
-			//			explode.setDuration(300);
-			Slide slide = new Slide();
-			slide.setSlideEdge(Gravity.RIGHT);
-			slide.setDuration(300);
-			getWindow().setEnterTransition(slide);
-			//			getWindow().setReturnTransition(slide);
-		}
 	}
 
 	private void addCollectionClickListener() {
@@ -240,14 +225,6 @@ public class ProfilePageAty extends SwipeBackAty {
 		return true;
 	}
 
-	@Override
-	public void onBackPressed() {
-		Intent intent = getIntent();
-		ProfilePageAty.this.setResult(ConstantUtility.RESULTCODE_NORMALBACK_PROFILE_ATY,
-				intent);
-		getSwipeBackLayout().scrollToFinishActivity();
-	}
-
 	private void initComponent() {
 		sharedPreferences = getSharedPreferences("up", MODE_PRIVATE);
 
@@ -268,11 +245,14 @@ public class ProfilePageAty extends SwipeBackAty {
 				(Context.INPUT_METHOD_SERVICE);
 	}
 
-	private void initSettingToolbar() {
+	private void initToolbarSetting() {
 		toolbar.setTitleTextColor(Color.WHITE);
 		toolbar.setTitle("个人主页");
 		setSupportActionBar(toolbar);
-		;
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) toolbar.getLayoutParams();
+		layoutParams.setMargins(0, LengthConverterUtility.dip2px(BaseApplication
+				.getBaseApplicationContext(), 24), 0, 0);
+		toolbar.setLayoutParams(layoutParams);
 	}
 }

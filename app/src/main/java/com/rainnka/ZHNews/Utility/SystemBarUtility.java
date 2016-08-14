@@ -3,14 +3,17 @@ package com.rainnka.ZHNews.Utility;
 import android.content.Context;
 import android.graphics.Point;
 import android.os.Build;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.WindowManager;
 
+import com.rainnka.ZHNews.Application.BaseApplication;
+
 /**
- * Created by rainnka on 2016/7/31 14:48
+ * Created by rainnka on 2016/8/14 9:22
  * Project name is ZHKUNews
  */
-public class ScreenToolUtility {
+public class SystemBarUtility {
 
 	/*
 	* 获取 statusBar 的高度
@@ -37,6 +40,22 @@ public class ScreenToolUtility {
 	}
 
 	/*
+	* 获取ActionBar的高度
+	* */
+	public int getActionBarHeight() {
+		TypedValue tv = new TypedValue();
+		int actionBarHeight = 0;
+		if (BaseApplication.getBaseApplicationContext().getTheme().resolveAttribute(android.R
+				.attr.actionBarSize, tv, true))
+		// 如果资源是存在的、有效的
+		{
+			actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, BaseApplication
+					.getBaseApplicationContext().getResources().getDisplayMetrics());
+		}
+		return actionBarHeight;
+	}
+
+	/*
 	* 获取当前那navigationBar的可见大小
 	* */
 	public static Point getCurrentNavigationBarSize(Context context) {
@@ -44,9 +63,9 @@ public class ScreenToolUtility {
 		Point realScreenSize = getRealScreenSize(context);
 
 		// navigation bar on the right
-//		if (appUsableSize.x < realScreenSize.x) {
-//			return new Point(realScreenSize.x - appUsableSize.x, appUsableSize.y);
-//		}
+		//		if (appUsableSize.x < realScreenSize.x) {
+		//			return new Point(realScreenSize.x - appUsableSize.x, appUsableSize.y);
+		//		}
 
 		// navigation bar at the bottom
 		if (appUsableSize.y < realScreenSize.y) {

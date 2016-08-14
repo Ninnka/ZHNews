@@ -59,6 +59,10 @@
     </item>
 
     <!--<item-->
+        <!--android:id="@+id/drawer_null"-->
+        <!--android:title=""/>-->
+
+    <!--<item-->
     <!--android:title="其他">-->
     <!--<menu>-->
     <!--<group-->
@@ -104,9 +108,5 @@
     <!--</group>-->
     <!--</menu>-->
     <!--</item>-->
-
-    <item
-        android:id="@+id/drawer_null"
-        android:title=""/>
 
 </menu>

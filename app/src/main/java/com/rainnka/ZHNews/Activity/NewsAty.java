@@ -15,10 +15,10 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.Toolbar;
-import android.transition.Slide;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,6 +36,7 @@ import com.rainnka.ZHNews.R;
 import com.rainnka.ZHNews.Utility.ConstantUtility;
 import com.rainnka.ZHNews.Utility.SQLiteCreateTableHelper;
 import com.rainnka.ZHNews.Utility.SnackbarUtility;
+import com.rainnka.ZHNews.Utility.TransitionHelper;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
@@ -49,7 +50,7 @@ import java.lang.ref.WeakReference;
  * Created by rainnka on 2016/5/15 16:19
  * Project name is ZHKUNews
  */
-public class NewsAty extends SwipeBackAty {
+public class NewsAty extends SwipeBackAty implements AppBarLayout.OnOffsetChangedListener {
 
 	protected CoordinatorLayout coordinatorLayout;
 	protected AppBarLayout appBarLayout;
@@ -59,6 +60,7 @@ public class NewsAty extends SwipeBackAty {
 	protected WebView webView;
 	protected ImageView imageView_praise;
 	protected ImageView imageView_star;
+	protected ImageView imageView_comments;
 	protected LinearLayout linearLayout_webViewContainer;
 
 	public OkHttpClient okHttpClient;
@@ -93,18 +95,6 @@ public class NewsAty extends SwipeBackAty {
 		//		}
 		setContentView(R.layout.news_act);
 		setupWindowAnimations();
-
-		//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-		//			Fade enterTransition = new Fade();
-		//			enterTransition.setDuration(600);
-		//			//			enterTransition.excludeTarget(R.id.newsActivity_WebView, true);
-		//
-		//			Fade returnTransition = new Fade();
-		//			returnTransition.setDuration(500);
-		//
-		//			getWindow().setEnterTransition(enterTransition);
-		//			getWindow().setReturnTransition(returnTransition);
-		//		}
 
 		/*
 		* 获取intent中的数据
@@ -156,6 +146,11 @@ public class NewsAty extends SwipeBackAty {
 		addStarImageViewOnClickListener();
 
 		/*
+		* 添加评论点击事件
+		* */
+		addCommentsImageViewOnClickListener();
+
+		/*
 		* 初始化gson
 		* */
 		gson = new Gson();
@@ -186,6 +181,10 @@ public class NewsAty extends SwipeBackAty {
 		* */
 		loadWebViewContent();
 
+		/*
+		* appbar滚动监听
+		* */
+		addAppBarOffsetChangedListener();
 
 		/*
 		*
@@ -193,18 +192,17 @@ public class NewsAty extends SwipeBackAty {
 		//		setActivityOnTouchEvent();
 	}
 
-	private void setupWindowAnimations() {
-		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-			//			Fade fade = new Fade();
-			//			fade.setDuration(500);
-			//			Explode explode = new Explode();
-			//			explode.setDuration(300);
-			Slide slide = new Slide();
-			slide.setSlideEdge(Gravity.RIGHT);
-			slide.setDuration(300);
-			getWindow().setEnterTransition(slide);
-			//			getWindow().setReturnTransition(slide);
-		}
+	private void addCommentsImageViewOnClickListener() {
+		imageView_comments.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Intent intent = new Intent();
+				intent.setAction(ConstantUtility.INTENT_TO_COMMENTS_KET);
+				intent.putExtra("id", zhiHuNewsItemInfoFromHome.id);
+				startActivityInTransition(intent, getTranstitionOptions(getTransitionPairs()).toBundle(),
+						true);
+			}
+		});
 	}
 
 	private void addStarImageViewOnClickListener() {
@@ -341,6 +339,7 @@ public class NewsAty extends SwipeBackAty {
 		webView = (WebView) findViewById(R.id.newsActivity_WebView);
 		imageView_praise = (ImageView) findViewById(R.id.newsActivity_praise_ImageView);
 		imageView_star = (ImageView) findViewById(R.id.newsActivity_star_ImageView);
+		imageView_comments = (ImageView) findViewById(R.id.newsActivity_comments_ImageView);
 		linearLayout_webViewContainer = (LinearLayout) findViewById(R.id
 				.newsActivity_WebView_container);
 	}
@@ -614,23 +613,27 @@ public class NewsAty extends SwipeBackAty {
 	}
 
 	@Override
-	public void onBackPressed() {
-		getSwipeBackLayout().scrollToFinishActivity();
-
-		//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-		//			Log.i("ZRH", "finishAfterTransition");
-		//			finishAfterTransition();
-		//		} else {
-		//			Log.i("ZRH", "finish");
-		//			finish();
-		//		}
-	}
-
-	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		//		getMenuInflater().inflate(R.menu.news_act_menu, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
+
+	@Override
+	public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+		if (verticalOffset <= -315) {
+			collapsingToolbarLayout.setTitle("");
+		} else {
+			collapsingToolbarLayout.setTitle(zhiHuNewsItemInfoFromHome.title);
+		}
+	}
+
+	/*
+	* appbar监听事件
+	* */
+	private void addAppBarOffsetChangedListener() {
+		appBarLayout.addOnOffsetChangedListener(this);
+	}
+
 
 	/*
 	* 静态内部类--处理数据库返回的信息
@@ -680,6 +683,39 @@ public class NewsAty extends SwipeBackAty {
 					break;
 			}
 		}
+	}
+
+	public void startActivityInTransition(Intent intent, Bundle bundle, boolean transitionFlag) {
+		if (transitionFlag) {
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+				startActivity(intent, bundle);
+			} else {
+				startActivity(intent);
+			}
+		} else {
+			startActivity(intent);
+		}
+
+	}
+
+	public void startActivityInTransitionForResult(Intent intent, int code, Bundle bundle, boolean transitionFlag) {
+		if (transitionFlag) {
+			startActivityForResult(intent, code, bundle);
+		} else {
+			startActivityForResult(intent, code);
+		}
+	}
+
+	public Pair<View, String>[] getTransitionPairs() {
+		Pair<View, String>[] pairs = TransitionHelper.createSafeTransitionParticipants
+				(this, false);
+		return pairs;
+	}
+
+	public ActivityOptionsCompat getTranstitionOptions(Pair<View, String>[] pairs) {
+		ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat
+				.makeSceneTransitionAnimation(this, pairs);
+		return activityOptionsCompat;
 	}
 
 	/*

@@ -5,7 +5,7 @@
     <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
 
         <!--<item name="android:textColorPrimary">@color/colorPrimary</item>-->
@@ -62,8 +62,9 @@
 
     <style name="LoginTheme" parent="AppTheme">
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimary</item>
-        <item name="colorAccent">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowIsTranslucent">true</item>
     </style>
 
     <!--<style name="Login_TextInputEditTextTheme" parent="Widget.AppCompat.EditText">-->
@@ -72,6 +73,7 @@
 
     <style name="SHPTheme" parent="AppTheme">
         <item name="android:actionModeBackground">@color/colorPrimary</item>
+        <item name="android:windowIsTranslucent">true</item>
     </style>
 
     <style name="AboutPageTheme" parent="AppTheme">
@@ -100,6 +102,10 @@
         <item name="android:windowIsTranslucent">true</item>
     </style>
 
+    <style name="CommentsPageTheme" parent="AppTheme">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
 
     <style name="fab_menu_labels_style">
         <item name="android:textSize">14sp</item>

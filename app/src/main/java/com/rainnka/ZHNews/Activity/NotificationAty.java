@@ -4,15 +4,16 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.ViewStubCompat;
-import android.transition.Slide;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.rainnka.ZHNews.Activity.Base.SwipeBackAty;
+import com.rainnka.ZHNews.Application.BaseApplication;
 import com.rainnka.ZHNews.R;
+import com.rainnka.ZHNews.Utility.LengthConverterUtility;
 
 /**
  * Created by rainnka on 2016/7/22 10:40
@@ -36,17 +37,17 @@ public class NotificationAty extends SwipeBackAty {
 ////			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager
 ////					.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 //		}
-		setContentView(R.layout.notificationpage_act);
+		setContentView(R.layout.notificationpage_aty);
 		setupWindowAnimations();
+
 		/*
 		* 另statusbar悬浮于activity上面
 		* */
-		getWindow().getDecorView().setSystemUiVisibility(View
-				.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+		setFullScreenLayout();
 
 		initComponent();
 
-		initToolbar();
+		initToolbarSetting();
 
 		textView.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -70,32 +71,22 @@ public class NotificationAty extends SwipeBackAty {
 		});
 	}
 
-	private void setupWindowAnimations() {
-		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-			//			Fade fade = new Fade();
-			//			fade.setDuration(500);
-			//			Explode explode = new Explode();
-			//			explode.setDuration(300);
-			Slide slide = new Slide();
-			slide.setSlideEdge(Gravity.RIGHT);
-			slide.setDuration(300);
-			getWindow().setEnterTransition(slide);
-			//			getWindow().setReturnTransition(slide);
-		}
-	}
-
 	public void initComponent() {
 		toolbar = (Toolbar) findViewById(R.id.notificationpage_act_Toolbar);
 		viewStubCompat = (ViewStubCompat) findViewById(R.id.notificationpage_act_ViewStub);
 		textView = (TextView) findViewById(R.id.notificationpage_act_TextView);
 	}
 
-	public void initToolbar() {
+	public void initToolbarSetting() {
 		toolbar.setTitle("通知");
 		toolbar.setTitleTextColor(getApplicationContext().getResources().getColor(R.color
 				.md_white_1000));
 		setSupportActionBar(toolbar);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) toolbar.getLayoutParams();
+		layoutParams.setMargins(0, LengthConverterUtility.dip2px(BaseApplication
+				.getBaseApplicationContext(), 24), 0, 0);
+		toolbar.setLayoutParams(layoutParams);
 	}
 
 	@Override
@@ -108,8 +99,4 @@ public class NotificationAty extends SwipeBackAty {
 		return true;
 	}
 
-	@Override
-	public void onBackPressed() {
-		getSwipeBackLayout().scrollToFinishActivity();
-	}
 }

@@ -5,8 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:fitsSystemWindows="true"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".Activity.NewsAty">
 
     <android.support.design.widget.AppBarLayout
@@ -26,14 +26,14 @@
             app:expandedTitleMarginBottom="0dp"
             app:expandedTitleTextAppearance="@style/expandedTitleTextAppearance"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:statusBarScrim="@color/colorPrimary">
+            app:statusBarScrim="@color/colorPrimaryDark">
 
             <ImageView
-                android:fitsSystemWindows="true"
                 android:id="@+id/newsActivity_ImageView_InCollapsingToolbarLayout"
                 android:layout_width="match_parent"
                 android:layout_height="230dp"
                 android:contentDescription="@string/imageViewContentDescribtion"
+                android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
                 app:layout_collapseMode="parallax"
                 app:layout_collapseParallaxMultiplier="0.7"/>
@@ -60,6 +60,14 @@
                     android:layout_gravity="end"
                     android:layout_marginRight="24dp"
                     android:src="@drawable/unstared"/>
+
+                <ImageView
+                    android:id="@+id/newsActivity_comments_ImageView"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:layout_gravity="end"
+                    android:layout_marginRight="24dp"
+                    android:src="@mipmap/comments"/>
 
             </android.support.v7.widget.Toolbar>
 
