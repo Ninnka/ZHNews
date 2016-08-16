@@ -55,6 +55,7 @@ public class Setting_DetailAty extends SwipeBackAty {
 		fragmentManager.beginTransaction()
 				.add(R.id.setting_detail_act_FrameLayout, setting_detailFragment)
 				.commit();
+
 	}
 
 	@Override
@@ -84,10 +85,21 @@ public class Setting_DetailAty extends SwipeBackAty {
 	}
 
 	public static class Setting_DetailFragment extends PreferenceFragment {
+
+		CheckBoxPreference checkBoxPreference;
+		ListPreference listPreference;
+
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			addPreferencesFromResource(R.xml.setting_detail);
+			checkBoxPreference = (CheckBoxPreference) findPreference("loadRecommendation");
+			listPreference = (ListPreference) findPreference("recommandInterval");
+			if (checkBoxPreference.isChecked()) {
+				listPreference.setEnabled(true);
+			} else {
+				listPreference.setEnabled(false);
+			}
 		}
 
 		@Override

@@ -14,19 +14,19 @@
                     android:title="主页"/>
 
                 <item
-                    android:id="@+id/drawer_popular"
+                    android:id="@+id/drawer_hot"
                     android:icon="@mipmap/popular"
                     android:title="热门精选"/>
-
-                <item
-                    android:id="@+id/drawer_programa"
-                    android:icon="@mipmap/programa"
-                    android:title="栏目总览"/>
 
                 <item
                     android:id="@+id/drawer_classify"
                     android:icon="@mipmap/classify"
                     android:title="日报分类"/>
+
+                <item
+                    android:id="@+id/drawer_programa"
+                    android:icon="@mipmap/programa"
+                    android:title="栏目总览"/>
 
             </group>
         </menu>

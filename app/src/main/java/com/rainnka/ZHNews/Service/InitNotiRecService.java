@@ -22,17 +22,19 @@ import com.google.gson.Gson;
 import com.rainnka.ZHNews.Bean.ZhiHuNewsLatestItemInfo;
 import com.rainnka.ZHNews.R;
 import com.rainnka.ZHNews.Utility.ConstantUtility;
-import com.squareup.okhttp.Call;
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by rainnka on 2016/8/4 15:42
@@ -62,7 +64,11 @@ public class InitNotiRecService extends Service {
 		super.onCreate();
 		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		notificationHandler = new NotificationHandler(this);
-		okHttpClient = new OkHttpClient();
+		okHttpClient = new OkHttpClient().newBuilder()
+				.connectTimeout(10, TimeUnit.SECONDS)
+				.writeTimeout(10, TimeUnit.SECONDS)
+				.readTimeout(10, TimeUnit.SECONDS)
+				.build();
 		request = new Request.Builder()
 				.url(ConstantUtility.ZHIHUAPI_LATEST)
 				.build();
@@ -73,13 +79,14 @@ public class InitNotiRecService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		call.enqueue(new Callback() {
+
 			@Override
-			public void onFailure(Request request, IOException e) {
-				Log.i("ZRH", "onFailure");
+			public void onFailure(Call call, IOException e) {
+
 			}
 
 			@Override
-			public void onResponse(Response response) throws IOException {
+			public void onResponse(Call call, Response response) throws IOException {
 				if (response.code() == 200) {
 					//						Log.i("ZRH", "success in access url: " + response.request().urlString());
 					zhiHuNewsLatestItemInfo = gson.fromJson(response.body().string(),

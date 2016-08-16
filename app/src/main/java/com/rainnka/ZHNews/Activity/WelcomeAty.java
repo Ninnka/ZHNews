@@ -19,9 +19,10 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.ViewTarget;
 import com.rainnka.ZHNews.Activity.Base.BaseAty;
 import com.rainnka.ZHNews.R;
-import com.squareup.okhttp.OkHttpClient;
 
 import java.lang.ref.WeakReference;
+
+import okhttp3.OkHttpClient;
 
 /**
  * Created by rainnka on 2016/5/18 20:58

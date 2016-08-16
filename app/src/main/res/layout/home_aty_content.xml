@@ -14,8 +14,7 @@
         android:id="@+id/homeActivity_Content_main_AppBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
-        app:theme="@style/AppTheme.AppBarOverlay">
+        android:fitsSystemWindows="true">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/homeActivity_Content_main_CollapsingToolbarLayout"
@@ -65,8 +64,7 @@
                 android:id="@+id/homeActivity_Content_main_ToolBar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/AppTheme.PopupOverlay">
+                app:layout_collapseMode="pin">
 
             </android.support.v7.widget.Toolbar>
 

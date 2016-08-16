@@ -121,6 +121,15 @@
         </activity>
 
         <activity
+            android:name=".Activity.HotNewsAty"
+            android:theme="@style/HotNewsTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.HotNews"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".Activity.WelcomeAty"
             android:theme="@style/WelcomeTheme">
             <intent-filter>

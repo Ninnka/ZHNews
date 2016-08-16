@@ -57,7 +57,7 @@
         android:layout_marginRight="6dp"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="10dp"
         android:layout_alignRight="@+id/comments_aty_recv_item_time"
         android:layout_below="@+id/comments_aty_recv_item_content"/>
 

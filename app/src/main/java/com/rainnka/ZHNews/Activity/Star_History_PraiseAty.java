@@ -42,11 +42,12 @@ import com.rainnka.ZHNews.Utility.ConstantUtility;
 import com.rainnka.ZHNews.Utility.LengthConverterUtility;
 import com.rainnka.ZHNews.Utility.SQLiteCreateTableHelper;
 import com.rainnka.ZHNews.Utility.SnackbarUtility;
-import com.squareup.okhttp.OkHttpClient;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.OkHttpClient;
 
 /**
  * Created by rainnka on 2016/5/21 14:10

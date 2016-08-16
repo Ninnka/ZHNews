@@ -23,7 +23,6 @@
 
         <ListPreference
             android:dialogTitle="推荐日报的时间间隔"
-            android:enabled="true"
             android:entries="@array/listpreference_recInterval"
             android:entryValues="@array/listpreference_recInterval_values"
             android:key="recommandInterval"

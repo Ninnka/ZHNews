@@ -37,14 +37,16 @@ import com.rainnka.ZHNews.Utility.ConstantUtility;
 import com.rainnka.ZHNews.Utility.SQLiteCreateTableHelper;
 import com.rainnka.ZHNews.Utility.SnackbarUtility;
 import com.rainnka.ZHNews.Utility.TransitionHelper;
-import com.squareup.okhttp.Call;
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by rainnka on 2016/5/15 16:19
@@ -121,7 +123,7 @@ public class NewsAty extends SwipeBackAty implements AppBarLayout.OnOffsetChange
 		/*
 		* 设置toolbar
 		* */
-		initToolbar();
+		initToolbarSetting();
 
 		/*
 		* 初始化webview
@@ -168,7 +170,11 @@ public class NewsAty extends SwipeBackAty implements AppBarLayout.OnOffsetChange
 		/*
 		* 初始化okhttpclient相关
 		* */
-		okHttpClient = new OkHttpClient();
+		okHttpClient = new OkHttpClient().newBuilder()
+				.connectTimeout(10, TimeUnit.SECONDS)
+				.writeTimeout(10, TimeUnit.SECONDS)
+				.readTimeout(10, TimeUnit.SECONDS)
+				.build();
 		String getInfoUrl = ConstantUtility.getInfoByAPI + zhiHuNewsItemInfoFromHome.id;
 		//		Log.i("ZRH","getInfoUrl: "+getInfoUrl);
 		request = new Request.Builder()
@@ -323,10 +329,11 @@ public class NewsAty extends SwipeBackAty implements AppBarLayout.OnOffsetChange
 
 	}
 
-	private void initToolbar() {
+	private void initToolbarSetting() {
 		toolbar.setTitle("");
 		setSupportActionBar(toolbar);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		loadCollapsingToolbarContentTitle();
 	}
 
 	private void initComponent() {
@@ -369,13 +376,20 @@ public class NewsAty extends SwipeBackAty implements AppBarLayout.OnOffsetChange
 	}
 
 	/*
-	* 根据获取的信息类加载头布局实际信息
+	* 根据获取的信息类加载头布局标题
 	* */
-	private void loadCollapsingToolbarContent() {
+	private void loadCollapsingToolbarContentTitle() {
+		collapsingToolbarLayout.setTitle(zhiHuNewsItemInfoFromHome.title);
+	}
+
+	/*
+	*
+	* */
+	private void loadCollapsingToolbarContentPic() {
 		Glide.with(NewsAty.this)
 				.load(zhiHuNewsItemInfo.image)
 				.into(imageView);
-		collapsingToolbarLayout.setTitle(zhiHuNewsItemInfo.title);
+
 	}
 
 	/*
@@ -383,13 +397,14 @@ public class NewsAty extends SwipeBackAty implements AppBarLayout.OnOffsetChange
 	* */
 	private void loadWebViewContent() {
 		call.enqueue(new Callback() {
+
 			@Override
-			public void onFailure(Request request, IOException e) {
-				Log.i("ZRH", "failure");
+			public void onFailure(Call call, IOException e) {
+
 			}
 
 			@Override
-			public void onResponse(Response response) throws IOException {
+			public void onResponse(Call call, Response response) throws IOException {
 				if (response.code() == 200) {
 					//					Log.i("ZRH", "code = " + response.code() + "\n" + response.body().string());
 					try {
@@ -735,7 +750,7 @@ public class NewsAty extends SwipeBackAty implements AppBarLayout.OnOffsetChange
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
-			newsAct.loadCollapsingToolbarContent();
+			newsAct.loadCollapsingToolbarContentPic();
 			StringBuilder stringBuilder = new StringBuilder();
 			stringBuilder.append(String.format(newsAct.header, newsAct
 					.zhiHuNewsItemInfo.css.get(0)));

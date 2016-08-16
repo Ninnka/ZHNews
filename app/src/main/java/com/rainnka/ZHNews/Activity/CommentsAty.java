@@ -29,16 +29,18 @@ import com.rainnka.ZHNews.Utility.ConstantUtility;
 import com.rainnka.ZHNews.Utility.LengthConverterUtility;
 import com.rainnka.ZHNews.Utility.NetworkConnectivityUtility;
 import com.rainnka.ZHNews.Utility.SnackbarUtility;
-import com.squareup.okhttp.Call;
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by rainnka on 2016/8/14 11:18
@@ -65,8 +67,12 @@ public class CommentsAty extends SwipeBackAty {
 	public List<ZhihuNewsItemComments> zhihuNewsItemLongCommentsList;
 	public List<ZhihuNewsItemComments> zhihuNewsItemShortCommentsList;
 
-	public boolean longCommentsFlag = false;
-	public boolean shortCommentsFlag = false;
+	public int longCommentsFlag = INFETCHING;
+	public int shortCommentsFlag = INFETCHING;
+
+	public final static int HASCOMMENTS = 1;
+	public final static int NOCOMMENTS = 0;
+	public final static int INFETCHING = 2;
 
 	protected CommentsHandler commentsHandler;
 	protected OkHttpClient okHttpClient;
@@ -98,7 +104,6 @@ public class CommentsAty extends SwipeBackAty {
 
 	}
 
-
 	@Override
 	protected void onDestroy() {
 		commentsHandler.removeCallbacksAndMessages(null);
@@ -115,7 +120,7 @@ public class CommentsAty extends SwipeBackAty {
 	}
 
 	/***********************************************************************************************
-	 * main self method
+	 * main self methods
 	 ********************************************************************************************/
 
 	private void initComponent() {
@@ -151,7 +156,11 @@ public class CommentsAty extends SwipeBackAty {
 
 	private void initZhihuNewsComments() {
 		if (NetworkConnectivityUtility.getConnectivityStatus(NetworkConnectivityUtility.getConnectivityManager())) {
-			okHttpClient = new OkHttpClient();
+			okHttpClient = new OkHttpClient().newBuilder()
+					.connectTimeout(10, TimeUnit.SECONDS)
+					.writeTimeout(10, TimeUnit.SECONDS)
+					.readTimeout(10, TimeUnit.SECONDS)
+					.build();
 			String urlLong = String.format(ConstantUtility.ZHIHUAPI_LONG_COMMENTS, String.valueOf
 					(targetId));
 			Request request_longcomments = new Request.Builder()
@@ -167,13 +176,14 @@ public class CommentsAty extends SwipeBackAty {
 			Call call_short_comments = okHttpClient.newCall(request_shortcomments);
 
 			call_long_comments.enqueue(new Callback() {
+
 				@Override
-				public void onFailure(Request request, IOException e) {
-					commentsHandler.sendEmptyMessage(0x0812354);
+				public void onFailure(Call call, IOException e) {
+					commentsHandler.sendEmptyMessage(0x9981263);
 				}
 
 				@Override
-				public void onResponse(Response response) throws IOException {
+				public void onResponse(Call call, Response response) throws IOException {
 					if (response.code() == 200) {
 						String commentStr = response.body().string();
 						if (commentStr.contains("author")) {
@@ -181,26 +191,30 @@ public class CommentsAty extends SwipeBackAty {
 								Comments commentsLong = gson.fromJson(commentStr, Comments.class);
 								zhihuNewsItemLongCommentsList = commentsLong.comments;
 								addDataToCommentsList(zhihuNewsItemLongCommentsList);
+								longCommentsFlag = HASCOMMENTS;
 								commentsHandler.sendEmptyMessage(ConstantUtility.ADD_COMMENTSLIST);
-								longCommentsFlag = true;
 							} catch (Exception e) {
 								Log.i("ZRH", e.toString());
 							}
 						} else {
-							commentsHandler.sendEmptyMessage(0x346754);
+							longCommentsFlag = NOCOMMENTS;
+							commentsHandler.sendEmptyMessage(ConstantUtility.NO_COMMENTSLIST);
 						}
 					}
 				}
+
 			});
 
 			call_short_comments.enqueue(new Callback() {
-				@Override
-				public void onFailure(Request request, IOException e) {
 
+
+				@Override
+				public void onFailure(Call call, IOException e) {
+					commentsHandler.sendEmptyMessage(0x9981263);
 				}
 
 				@Override
-				public void onResponse(Response response) throws IOException {
+				public void onResponse(Call call, Response response) throws IOException {
 					if (response.code() == 200) {
 						String commentStr = response.body().string();
 						if (commentStr.contains("author")) {
@@ -208,16 +222,18 @@ public class CommentsAty extends SwipeBackAty {
 								Comments commentsShort = gson.fromJson(commentStr, Comments.class);
 								zhihuNewsItemShortCommentsList = commentsShort.comments;
 								addDataToCommentsList(zhihuNewsItemShortCommentsList);
+								shortCommentsFlag = HASCOMMENTS;
 								commentsHandler.sendEmptyMessage(ConstantUtility.ADD_COMMENTSLIST);
-								shortCommentsFlag = true;
 							} catch (Exception e) {
 								Log.i("ZRH", e.toString());
 							}
 						} else {
+							shortCommentsFlag = NOCOMMENTS;
 							commentsHandler.sendEmptyMessage(ConstantUtility.NO_COMMENTSLIST);
 						}
 					}
 				}
+
 			});
 		} else {
 			networkAccessOutTime();
@@ -243,10 +259,14 @@ public class CommentsAty extends SwipeBackAty {
 	}
 
 	private void notifyDataHasChanged() {
-		if (longCommentsFlag && shortCommentsFlag) {
-			if (textView_shadow.getVisibility() == View.VISIBLE) {
-				textView_shadow.setVisibility(View.GONE);
-			}
+		if (textView_shadow.getVisibility() == View.VISIBLE) {
+			textView_shadow.setVisibility(View.GONE);
+		}
+		if(longCommentsFlag == HASCOMMENTS && shortCommentsFlag == HASCOMMENTS){
+			commentsAtyRecvAdp.notifyDataSetChanged();
+		}else if(longCommentsFlag == HASCOMMENTS){
+			commentsAtyRecvAdp.notifyDataSetChanged();
+		}else if (shortCommentsFlag == HASCOMMENTS){
 			commentsAtyRecvAdp.notifyDataSetChanged();
 		}
 	}
@@ -256,16 +276,22 @@ public class CommentsAty extends SwipeBackAty {
 	}
 
 	public void noCommentsList() {
-		if (textView_shadow.getVisibility() == View.GONE) {
-			textView_shadow.setVisibility(View.VISIBLE);
-			textView_shadow.setText("无评论哦");
+		if(longCommentsFlag == NOCOMMENTS && shortCommentsFlag == NOCOMMENTS){
+			SnackbarUtility.getSnackbarDefault(coordinatorLayout, "无评论", Snackbar.LENGTH_LONG)
+					.show();
+			if (textView_shadow.getVisibility() == View.GONE) {
+				textView_shadow.setVisibility(View.VISIBLE);
+				textView_shadow.setText("此日报没有评论哦");
+			} else {
+				textView_shadow.setText("此日报没有评论哦");
+			}
 		}
 	}
 
 	public void networkAccessOutTime() {
 		if (textView_shadow.getVisibility() == View.GONE) {
 			textView_shadow.setVisibility(View.VISIBLE);
-			textView_shadow.setText("网络不在状态,点击刷新");
+			textView_shadow.setText("网络不在状态\n点击刷新");
 			textView_shadow.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
@@ -296,8 +322,6 @@ public class CommentsAty extends SwipeBackAty {
 					commentsAty.notifyDataHasChanged();
 					break;
 				case ConstantUtility.NO_COMMENTSLIST:
-					SnackbarUtility.getSnackbarDefault(commentsAty.coordinatorLayout, "无评论",
-							Snackbar.LENGTH_LONG).show();
 					commentsAty.noCommentsList();
 					break;
 				default:

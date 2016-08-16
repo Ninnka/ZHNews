@@ -98,6 +98,9 @@ public class HomeActivityRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 					.crossFade(0)
 					.fitCenter()
 					.into(recyclerViewContentViewHolder.picture_iv);
+//			FutureTarget<File> fileFutureTarget = Glide.with(homeAct)
+//					.load(zhiHuNewsItemInfo.images.get(0))
+//					.downloadOnly(150,150);
 		} else if (holder instanceof RecyclerViewDateViewHolder) {
 			RecyclerViewDateViewHolder recyclerViewDateViewHolder = (RecyclerViewDateViewHolder)
 					holder;

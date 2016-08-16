@@ -64,11 +64,6 @@ import com.rainnka.ZHNews.Utility.NetworkConnectivityUtility;
 import com.rainnka.ZHNews.Utility.SQLiteCreateTableHelper;
 import com.rainnka.ZHNews.Utility.SnackbarUtility;
 import com.rainnka.ZHNews.Utility.TransitionHelper;
-import com.squareup.okhttp.Call;
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -80,6 +75,12 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by rainnka on 2016/5/12 20:45
@@ -318,6 +319,8 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 		* 隐藏navigationView的scrollbar
 		* */
 		hideNavigationViewScrollBar();
+
+
 
 		/*
 		* 设置单个item可见
@@ -774,8 +777,11 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 	* 初始化网络连接客户端
 	* */
 	private void initOkhttpClient() {
-		okHttpClient = new OkHttpClient();
-		okHttpClient.setReadTimeout(10, TimeUnit.SECONDS);
+		okHttpClient = new OkHttpClient().newBuilder()
+				.connectTimeout(10, TimeUnit.SECONDS)
+				.writeTimeout(10, TimeUnit.SECONDS)
+				.readTimeout(10, TimeUnit.SECONDS)
+				.build();
 	}
 
 	/*
@@ -849,17 +855,18 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 						.build();
 				Call call = okHttpClient.newCall(request);
 				call.enqueue(new Callback() {
+
+
 					@Override
-					public void onFailure(Request request, IOException e) {
+					public void onFailure(Call call, IOException e) {
 						Snackbar snackbar = SnackbarUtility.getSnackbarDefault(coordinatorLayout,
 								"咦，网络不太顺畅吔", 3000);
 						snackbar.show();
 						recyclerRefreshHandler.sendEmptyMessage(0x7629);
-
 					}
 
 					@Override
-					public void onResponse(Response response) throws IOException {
+					public void onResponse(Call call, Response response) throws IOException {
 						if (response.code() == 200) {
 							//						Log.i("ZRH", "success in access url: " + response.request().urlString());
 							zhiHuNewsLatestItemInfo = gson.fromJson(response.body().string(),
@@ -876,6 +883,7 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 							isFirstLoadingContent = false;
 						}
 					}
+
 				});
 			}
 		}
@@ -1107,8 +1115,10 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 			Call call = okHttpClient.newCall(request);
 
 			call.enqueue(new Callback() {
+
+
 				@Override
-				public void onFailure(Request request, IOException e) {
+				public void onFailure(Call call, IOException e) {
 					Snackbar snackbar = SnackbarUtility.getSnackbarDefault(coordinatorLayout,
 							"咦，网络不太顺畅吔", 3000);
 					snackbar.show();
@@ -1116,7 +1126,7 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 				}
 
 				@Override
-				public void onResponse(Response response) throws IOException {
+				public void onResponse(Call call, Response response) throws IOException {
 					if (response.code() == 200) {
 						zhiHuNewsLatestItemInfo_new = gson.fromJson(response.body().string(),
 								ZhiHuNewsLatestItemInfo.class);
@@ -1126,6 +1136,7 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 
 					}
 				}
+
 			});
 		}
 	}
@@ -1142,9 +1153,10 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 					.build();
 			Call call = okHttpClient.newCall(request);
 			call.enqueue(new Callback() {
+
+
 				@Override
-				public void onFailure(Request request, IOException e) {
-					//				Log.i("ZRH", "failure in oldurl");
+				public void onFailure(Call call, IOException e) {
 					Snackbar snackbar = SnackbarUtility.getSnackbarDefault(coordinatorLayout,
 							"咦，网络不太顺畅吔", 3000);
 					snackbar.show();
@@ -1152,7 +1164,7 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 				}
 
 				@Override
-				public void onResponse(Response response) throws IOException {
+				public void onResponse(Call call, Response response) throws IOException {
 					if (response.code() == 200) {
 						//					Log.i("ZRH", "success in access url: " + response.request().urlString());
 						zhiHuNewsLatestItemInfo_old = gson.fromJson(response.body
@@ -1162,6 +1174,7 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 						recyclerRefreshHandler.sendMessage(message);
 					}
 				}
+
 			});
 		}
 	}
@@ -1180,7 +1193,11 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 					onRefresh();
 				}
 				break;
-			case R.id.drawer_popular:
+			case R.id.drawer_hot:
+				intent = new Intent();
+				intent.setAction(ConstantUtility.INTENT_TO_HOTNEWS_KEY);
+				startActivityInTransition(intent, getTranstitionOptions(getTransitionPairs())
+						.toBundle(), true);
 				break;
 			case R.id.drawer_programa:
 				break;

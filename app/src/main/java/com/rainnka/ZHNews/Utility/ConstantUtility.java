@@ -46,6 +46,8 @@ public class ConstantUtility {
 
 	public final static String INTENT_TO_COMMENTS_KET = "android.intent.action.Comments";
 
+	public final static String INTENT_TO_HOTNEWS_KEY = "android.intent.action.HotNews";
+
 	public final static int ADD_COMMENTSLIST = 0x1293;
 	public final static int NO_COMMENTSLIST = 0x346754;
 
