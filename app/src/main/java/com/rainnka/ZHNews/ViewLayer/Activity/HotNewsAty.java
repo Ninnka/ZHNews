@@ -1,5 +1,6 @@
-package com.rainnka.ZHNews.Activity;
+package com.rainnka.ZHNews.ViewLayer.Activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -17,7 +18,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.rainnka.ZHNews.Activity.Base.SwipeBackAty;
 import com.rainnka.ZHNews.Adapter.HotNewsAtyRecvAdp;
 import com.rainnka.ZHNews.Application.BaseApplication;
 import com.rainnka.ZHNews.Bean.HotNews;
@@ -26,6 +26,7 @@ import com.rainnka.ZHNews.R;
 import com.rainnka.ZHNews.Utility.ConstantUtility;
 import com.rainnka.ZHNews.Utility.LengthConverterUtility;
 import com.rainnka.ZHNews.Utility.TransitionHelper;
+import com.rainnka.ZHNews.ViewLayer.Activity.Base.SwipeBackAty;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -37,7 +38,6 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
-import retrofit2.http.Path;
 
 /**
  * Created by rainnka on 2016/8/16 15:02
@@ -50,6 +50,8 @@ public class HotNewsAty extends SwipeBackAty implements HotNewsAtyRecvAdp.HotNew
 	 *********/
 	protected Toolbar toolbar;
 	protected RecyclerView recyclerView;
+
+	protected ProgressDialog progressDialog;
 
 	public HotNewsAtyRecvAdp hotNewsAtyRecvAdp;
 
@@ -69,6 +71,7 @@ public class HotNewsAty extends SwipeBackAty implements HotNewsAtyRecvAdp.HotNew
 		setContentView(R.layout.hotnews_aty);
 		setupWindowAnimations();
 		setFullScreenLayout();
+		initProgressDialog();
 
 		iniHandler();
 
@@ -135,6 +138,15 @@ public class HotNewsAty extends SwipeBackAty implements HotNewsAtyRecvAdp.HotNew
 		toolbar.setLayoutParams(layoutParams);
 	}
 
+	private void initProgressDialog() {
+		progressDialog = new ProgressDialog(this);
+		progressDialog.setMessage("loading");
+		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		progressDialog.setIndeterminate(true);
+		progressDialog.setCanceledOnTouchOutside(false);
+		progressDialog.show();
+	}
+
 	public void initRecyclerViewSetting() {
 		GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
 		//		gridLayoutManager.setOrientation(GridLayoutManager.VERTICAL);
@@ -159,7 +171,7 @@ public class HotNewsAty extends SwipeBackAty implements HotNewsAtyRecvAdp.HotNew
 				.addConverterFactory(GsonConverterFactory.create())
 				.build();
 		HotNewsService hotNewsService = retrofit.create(HotNewsService.class);
-		Call<HotNews> hotNewsCall = hotNewsService.hot("3");
+		Call<HotNews> hotNewsCall = hotNewsService.hot();
 
 		hotNewsCall.enqueue(new Callback<HotNews>() {
 			@Override
@@ -173,7 +185,6 @@ public class HotNewsAty extends SwipeBackAty implements HotNewsAtyRecvAdp.HotNew
 					} catch (Exception e) {
 						Log.i("ZRH", e.toString());
 					}
-
 				}
 			}
 
@@ -186,7 +197,8 @@ public class HotNewsAty extends SwipeBackAty implements HotNewsAtyRecvAdp.HotNew
 
 	protected void hotNewsDataHasChanged() {
 		hotNewsAtyRecvAdp.addZhiHuNewsItemHotList(zhiHuNewsItemHotList);
-		hotNewsAtyRecvAdp.notifyDataSetChanged();
+		hotNewsAtyRecvAdp.notifyItemRangeInserted(0, hotNewsAtyRecvAdp.getItemCount() - 1);
+		progressDialog.dismiss();
 	}
 
 	public Pair<View, String>[] getTransitionPairs() {
@@ -228,8 +240,8 @@ public class HotNewsAty extends SwipeBackAty implements HotNewsAtyRecvAdp.HotNew
 	 *****************************/
 
 	public interface HotNewsService {
-		@GET("/api/{v}/news/hot")
-		Call<HotNews> hot(@Path("v") String v);
+		@GET("/api/3/news/hot")
+		Call<HotNews> hot();
 	}
 
 	public static class HotNewsHandler extends Handler {

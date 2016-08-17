@@ -1,4 +1,4 @@
-package com.rainnka.ZHNews.Activity;
+package com.rainnka.ZHNews.ViewLayer.Activity;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
@@ -29,7 +29,7 @@ import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
-import com.rainnka.ZHNews.Activity.Base.SwipeBackAty;
+import com.rainnka.ZHNews.ViewLayer.Activity.Base.SwipeBackAty;
 import com.rainnka.ZHNews.Application.BaseApplication;
 import com.rainnka.ZHNews.Bean.ZhiHuNewsItemHot;
 import com.rainnka.ZHNews.Bean.ZhiHuNewsItemInfo;

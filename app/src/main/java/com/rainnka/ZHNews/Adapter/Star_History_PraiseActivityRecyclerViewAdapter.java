@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.rainnka.ZHNews.Activity.Star_History_PraiseAty;
+import com.rainnka.ZHNews.ViewLayer.Activity.Star_History_PraiseAty;
 import com.rainnka.ZHNews.Application.BaseApplication;
 import com.rainnka.ZHNews.Bean.ZhiHuNewsItemInfo;
 import com.rainnka.ZHNews.R;

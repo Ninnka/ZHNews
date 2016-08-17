@@ -1,4 +1,4 @@
-package com.rainnka.ZHNews.Activity;
+package com.rainnka.ZHNews.ViewLayer.Activity;
 
 import android.app.FragmentManager;
 import android.graphics.Color;
@@ -14,7 +14,7 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
-import com.rainnka.ZHNews.Activity.Base.SwipeBackAty;
+import com.rainnka.ZHNews.ViewLayer.Activity.Base.SwipeBackAty;
 import com.rainnka.ZHNews.Application.BaseApplication;
 import com.rainnka.ZHNews.R;
 import com.rainnka.ZHNews.Utility.LengthConverterUtility;

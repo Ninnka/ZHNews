@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.rainnka.ZHNews.Activity.HomeAty;
+import com.rainnka.ZHNews.ViewLayer.Activity.HomeAty;
 import com.rainnka.ZHNews.Bean.ZhiHuNewsItemInfo;
 import com.rainnka.ZHNews.R;
 import com.rainnka.ZHNews.Utility.ConstantUtility;

@@ -15,7 +15,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".Activity.HomeAty"
+            android:name=".ViewLayer.Activity.HomeAty"
             android:screenOrientation="portrait"
             android:theme="@style/HomeTheme">
 
@@ -26,7 +26,7 @@
         </activity>
 
         <activity
-            android:name=".Activity.NewsAty"
+            android:name=".ViewLayer.Activity.NewsAty"
             android:screenOrientation="portrait"
             android:theme="@style/NewsTheme">
 
@@ -37,7 +37,7 @@
         </activity>
 
         <activity
-            android:name=".Activity.Star_History_PraiseAty"
+            android:name=".ViewLayer.Activity.Star_History_PraiseAty"
             android:screenOrientation="portrait"
             android:theme="@style/SHPTheme">
 
@@ -48,7 +48,7 @@
         </activity>
 
         <activity
-            android:name=".Activity.LoginAty"
+            android:name=".ViewLayer.Activity.LoginAty"
             android:screenOrientation="portrait"
             android:theme="@style/LoginTheme"
             android:windowSoftInputMode="adjustResize">
@@ -60,7 +60,7 @@
         </activity>
 
         <activity
-            android:name=".Activity.ProfilePageAty"
+            android:name=".ViewLayer.Activity.ProfilePageAty"
             android:screenOrientation="portrait"
             android:theme="@style/ProfilePageTheme"
             android:windowSoftInputMode="adjustResize">
@@ -71,7 +71,7 @@
         </activity>
 
         <activity
-            android:name=".Activity.NotificationAty"
+            android:name=".ViewLayer.Activity.NotificationAty"
             android:screenOrientation="portrait"
             android:theme="@style/NotificationPageTheme">
             <intent-filter>
@@ -81,7 +81,7 @@
         </activity>
 
         <activity
-            android:name=".Activity.FeedbackAty"
+            android:name=".ViewLayer.Activity.FeedbackAty"
             android:screenOrientation="portrait"
             android:theme="@style/FeedbackPageTheme"
             android:windowSoftInputMode="adjustResize">
@@ -92,7 +92,7 @@
         </activity>
 
         <activity
-            android:name=".Activity.AboutAty"
+            android:name=".ViewLayer.Activity.AboutAty"
             android:screenOrientation="portrait"
             android:theme="@style/AboutPageTheme">
             <intent-filter>
@@ -102,7 +102,7 @@
         </activity>
 
         <activity
-            android:name=".Activity.Setting_DetailAty"
+            android:name=".ViewLayer.Activity.Setting_DetailAty"
             android:screenOrientation="portrait"
             android:theme="@style/SettingDetailPageTheme">
             <intent-filter>
@@ -112,7 +112,7 @@
         </activity>
 
         <activity
-            android:name=".Activity.CommentsAty"
+            android:name=".ViewLayer.Activity.CommentsAty"
             android:theme="@style/CommentsPageTheme">
             <intent-filter>
                 <action android:name="android.intent.action.Comments"/>
@@ -121,7 +121,7 @@
         </activity>
 
         <activity
-            android:name=".Activity.HotNewsAty"
+            android:name=".ViewLayer.Activity.HotNewsAty"
             android:theme="@style/HotNewsTheme">
             <intent-filter>
                 <action android:name="android.intent.action.HotNews"/>
@@ -130,7 +130,7 @@
         </activity>
 
         <activity
-            android:name=".Activity.WelcomeAty"
+            android:name=".ViewLayer.Activity.WelcomeAty"
             android:theme="@style/WelcomeTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

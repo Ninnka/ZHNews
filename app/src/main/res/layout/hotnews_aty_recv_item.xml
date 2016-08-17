@@ -8,6 +8,7 @@
     app:cardCornerRadius="2dp"
     android:layout_gravity="center"
     app:cardElevation="2dp"
+    app:cardBackgroundColor="@color/hotnews_recv_item_background"
     android:layout_margin="12dp"
     app:contentPadding="12dp"
     android:orientation="vertical">

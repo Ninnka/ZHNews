@@ -1,4 +1,4 @@
-package com.rainnka.ZHNews.Activity;
+package com.rainnka.ZHNews.ViewLayer.Activity;
 
 import android.app.ProgressDialog;
 import android.content.ContentValues;
@@ -31,7 +31,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.rainnka.ZHNews.Activity.Base.SwipeBackAty;
+import com.rainnka.ZHNews.ViewLayer.Activity.Base.SwipeBackAty;
 import com.rainnka.ZHNews.Adapter.Star_History_PraiseActivityRecyclerViewAdapter;
 import com.rainnka.ZHNews.Application.BaseApplication;
 import com.rainnka.ZHNews.Bean.ZhiHuNewsItemInfo;

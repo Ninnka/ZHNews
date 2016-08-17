@@ -1,4 +1,4 @@
-package com.rainnka.ZHNews.Activity;
+package com.rainnka.ZHNews.ViewLayer.Activity;
 
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
@@ -48,7 +48,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.gson.Gson;
-import com.rainnka.ZHNews.Activity.Base.BaseAty;
+import com.rainnka.ZHNews.ViewLayer.Activity.Base.BaseAty;
 import com.rainnka.ZHNews.Adapter.HomeActivityRecyclerViewAdapter;
 import com.rainnka.ZHNews.Adapter.HomeActivityViewPagerAdapter;
 import com.rainnka.ZHNews.Animation_Transformer.DepthPageTransformer;

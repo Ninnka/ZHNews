@@ -7,7 +7,7 @@
               android:layout_height="match_parent"
               android:focusableInTouchMode="true"
               android:orientation="vertical"
-              tools:context=".Activity.ProfilePageAty">
+              tools:context=".ViewLayer.Activity.ProfilePageAty">
 
     <LinearLayout
         android:background="@color/colorPrimaryDark"

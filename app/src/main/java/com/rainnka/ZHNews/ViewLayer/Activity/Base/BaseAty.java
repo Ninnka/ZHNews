@@ -1,4 +1,4 @@
-package com.rainnka.ZHNews.Activity.Base;
+package com.rainnka.ZHNews.ViewLayer.Activity.Base;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

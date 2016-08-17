@@ -1,4 +1,4 @@
-package com.rainnka.ZHNews.Activity;
+package com.rainnka.ZHNews.ViewLayer.Activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.rainnka.ZHNews.Activity.Base.SwipeBackAty;
+import com.rainnka.ZHNews.ViewLayer.Activity.Base.SwipeBackAty;
 import com.rainnka.ZHNews.Application.BaseApplication;
 import com.rainnka.ZHNews.R;
 import com.rainnka.ZHNews.Utility.LengthConverterUtility;

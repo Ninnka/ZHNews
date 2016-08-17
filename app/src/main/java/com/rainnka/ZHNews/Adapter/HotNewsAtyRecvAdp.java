@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.rainnka.ZHNews.Activity.HotNewsAty;
+import com.rainnka.ZHNews.ViewLayer.Activity.HotNewsAty;
 import com.rainnka.ZHNews.Bean.ZhiHuNewsItemHot;
 import com.rainnka.ZHNews.R;
 

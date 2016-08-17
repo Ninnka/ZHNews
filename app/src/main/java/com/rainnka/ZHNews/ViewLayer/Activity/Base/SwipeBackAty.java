@@ -1,4 +1,4 @@
-package com.rainnka.ZHNews.Activity.Base;
+package com.rainnka.ZHNews.ViewLayer.Activity.Base;
 
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -28,7 +28,7 @@ public class SwipeBackAty extends BaseAty implements SwipeBackActivityBase {
 			//			explode.setDuration(300);
 			Slide slide = new Slide();
 			slide.setSlideEdge(Gravity.RIGHT);
-			slide.setDuration(300);
+			slide.setDuration(150);
 			getWindow().setEnterTransition(slide);
 			//			getWindow().setReturnTransition(slide);
 		}

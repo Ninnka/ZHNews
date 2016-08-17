@@ -12,7 +12,7 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.makeramen.roundedimageview.RoundedImageView;
-import com.rainnka.ZHNews.Activity.CommentsAty;
+import com.rainnka.ZHNews.ViewLayer.Activity.CommentsAty;
 import com.rainnka.ZHNews.Bean.ZhihuNewsItemComments;
 import com.rainnka.ZHNews.R;
 

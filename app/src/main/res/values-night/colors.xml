@@ -53,4 +53,6 @@
     <color name="comments_shadow_background">#2b2b2b</color>
     <color name="comments_shadow_text">#EAEAEA</color>
 
+    <color name="hotnews_recv_item_background">#282828</color>
+
 </resources>

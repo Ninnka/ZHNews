@@ -1,5 +1,6 @@
-package com.rainnka.ZHNews.Activity;
+package com.rainnka.ZHNews.ViewLayer.Activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -18,7 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.rainnka.ZHNews.Activity.Base.SwipeBackAty;
+import com.rainnka.ZHNews.ViewLayer.Activity.Base.SwipeBackAty;
 import com.rainnka.ZHNews.Adapter.CommentsAtyRecvAdp;
 import com.rainnka.ZHNews.Application.BaseApplication;
 import com.rainnka.ZHNews.Bean.Comments;
@@ -78,6 +79,10 @@ public class CommentsAty extends SwipeBackAty {
 	protected OkHttpClient okHttpClient;
 	protected Gson gson;
 
+	protected ProgressDialog progressDialog;
+
+	private int counter = 0;
+
 	/**********************************************************************************************
 	 * main inherited methods
 	 ********************************************************************************************/
@@ -88,6 +93,8 @@ public class CommentsAty extends SwipeBackAty {
 		setContentView(R.layout.comments_aty);
 		setupWindowAnimations();
 		setFullScreenLayout();
+
+		initProgressDialog();
 
 		bindIntentInfo();
 
@@ -141,6 +148,15 @@ public class CommentsAty extends SwipeBackAty {
 		toolbar.setLayoutParams(layoutParams);
 	}
 
+	private void initProgressDialog() {
+		progressDialog = new ProgressDialog(this);
+		progressDialog.setMessage("loading");
+		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		progressDialog.setIndeterminate(true);
+		progressDialog.setCanceledOnTouchOutside(false);
+		progressDialog.show();
+	}
+
 	public void bindIntentInfo() {
 		intent = getIntent();
 		targetId = intent.getIntExtra("id", 0);
@@ -192,21 +208,23 @@ public class CommentsAty extends SwipeBackAty {
 								zhihuNewsItemLongCommentsList = commentsLong.comments;
 								addDataToCommentsList(zhihuNewsItemLongCommentsList);
 								longCommentsFlag = HASCOMMENTS;
-								commentsHandler.sendEmptyMessage(ConstantUtility.ADD_COMMENTSLIST);
+								commentsHandler.sendEmptyMessage(ConstantUtility.COMMENTSLIST_CHANGED);
 							} catch (Exception e) {
 								Log.i("ZRH", e.toString());
 							}
 						} else {
 							longCommentsFlag = NOCOMMENTS;
-							commentsHandler.sendEmptyMessage(ConstantUtility.NO_COMMENTSLIST);
+							commentsHandler.sendEmptyMessage(ConstantUtility.COMMENTSLIST_CHANGED);
 						}
+					}
+					if (response.isSuccessful()) {
+						Log.i("ZRH", response.code() + "");
 					}
 				}
 
 			});
 
 			call_short_comments.enqueue(new Callback() {
-
 
 				@Override
 				public void onFailure(Call call, IOException e) {
@@ -223,13 +241,13 @@ public class CommentsAty extends SwipeBackAty {
 								zhihuNewsItemShortCommentsList = commentsShort.comments;
 								addDataToCommentsList(zhihuNewsItemShortCommentsList);
 								shortCommentsFlag = HASCOMMENTS;
-								commentsHandler.sendEmptyMessage(ConstantUtility.ADD_COMMENTSLIST);
+								commentsHandler.sendEmptyMessage(ConstantUtility.COMMENTSLIST_CHANGED);
 							} catch (Exception e) {
 								Log.i("ZRH", e.toString());
 							}
 						} else {
 							shortCommentsFlag = NOCOMMENTS;
-							commentsHandler.sendEmptyMessage(ConstantUtility.NO_COMMENTSLIST);
+							commentsHandler.sendEmptyMessage(ConstantUtility.COMMENTSLIST_CHANGED);
 						}
 					}
 				}
@@ -259,15 +277,24 @@ public class CommentsAty extends SwipeBackAty {
 	}
 
 	private void notifyDataHasChanged() {
-		if (textView_shadow.getVisibility() == View.VISIBLE) {
-			textView_shadow.setVisibility(View.GONE);
-		}
-		if(longCommentsFlag == HASCOMMENTS && shortCommentsFlag == HASCOMMENTS){
-			commentsAtyRecvAdp.notifyDataSetChanged();
-		}else if(longCommentsFlag == HASCOMMENTS){
-			commentsAtyRecvAdp.notifyDataSetChanged();
-		}else if (shortCommentsFlag == HASCOMMENTS){
-			commentsAtyRecvAdp.notifyDataSetChanged();
+		counter++;
+		if (counter >= 2) {
+			if (longCommentsFlag == HASCOMMENTS && shortCommentsFlag == HASCOMMENTS) {
+				commentsAtyRecvAdp.notifyItemRangeInserted(0, commentsAtyRecvAdp.getItemCount() - 1);
+			} else if (longCommentsFlag == HASCOMMENTS && shortCommentsFlag == NOCOMMENTS) {
+				commentsAtyRecvAdp.notifyItemRangeInserted(0, commentsAtyRecvAdp.getItemCount() - 1);
+			} else if (shortCommentsFlag == HASCOMMENTS && longCommentsFlag == NOCOMMENTS) {
+				commentsAtyRecvAdp.notifyItemRangeInserted(0, commentsAtyRecvAdp.getItemCount() - 1);
+			}
+			if (longCommentsFlag == HASCOMMENTS || shortCommentsFlag == HASCOMMENTS) {
+				if (progressDialog != null && progressDialog.isShowing()) {
+					progressDialog.dismiss();
+				}
+				if (textView_shadow.getVisibility() == View.VISIBLE) {
+					textView_shadow.setVisibility(View.GONE);
+				}
+			}
+			counter = 0;
 		}
 	}
 
@@ -276,7 +303,8 @@ public class CommentsAty extends SwipeBackAty {
 	}
 
 	public void noCommentsList() {
-		if(longCommentsFlag == NOCOMMENTS && shortCommentsFlag == NOCOMMENTS){
+		if (longCommentsFlag == NOCOMMENTS && shortCommentsFlag == NOCOMMENTS) {
+			progressDialog.dismiss();
 			SnackbarUtility.getSnackbarDefault(coordinatorLayout, "无评论", Snackbar.LENGTH_LONG)
 					.show();
 			if (textView_shadow.getVisibility() == View.GONE) {
@@ -289,6 +317,7 @@ public class CommentsAty extends SwipeBackAty {
 	}
 
 	public void networkAccessOutTime() {
+		progressDialog.dismiss();
 		if (textView_shadow.getVisibility() == View.GONE) {
 			textView_shadow.setVisibility(View.VISIBLE);
 			textView_shadow.setText("网络不在状态\n点击刷新");
@@ -318,12 +347,12 @@ public class CommentsAty extends SwipeBackAty {
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
-				case ConstantUtility.ADD_COMMENTSLIST:
+				case ConstantUtility.COMMENTSLIST_CHANGED:
 					commentsAty.notifyDataHasChanged();
 					break;
-				case ConstantUtility.NO_COMMENTSLIST:
-					commentsAty.noCommentsList();
-					break;
+				//				case ConstantUtility.NO_COMMENTSLIST:
+				//					commentsAty.noCommentsList();
+				//					break;
 				default:
 					commentsAty.networkAccessOutTime();
 					break;
