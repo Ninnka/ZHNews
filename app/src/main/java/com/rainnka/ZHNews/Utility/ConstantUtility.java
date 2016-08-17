@@ -43,6 +43,7 @@ public class ConstantUtility {
 	public final static String PRAISE_KEY = "praise";
 
 	public final static String SER_KEY = "SER";
+	public final static String SER_KEY_HOTNEWS = "SER_HOTNEWS";
 
 	public final static String INTENT_TO_COMMENTS_KET = "android.intent.action.Comments";
 

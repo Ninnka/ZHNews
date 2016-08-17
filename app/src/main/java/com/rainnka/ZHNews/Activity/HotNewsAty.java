@@ -1,13 +1,20 @@
 package com.rainnka.ZHNews.Activity;
 
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.LinearLayout;
 
 import com.rainnka.ZHNews.Activity.Base.SwipeBackAty;
@@ -16,8 +23,11 @@ import com.rainnka.ZHNews.Application.BaseApplication;
 import com.rainnka.ZHNews.Bean.HotNews;
 import com.rainnka.ZHNews.Bean.ZhiHuNewsItemHot;
 import com.rainnka.ZHNews.R;
+import com.rainnka.ZHNews.Utility.ConstantUtility;
 import com.rainnka.ZHNews.Utility.LengthConverterUtility;
+import com.rainnka.ZHNews.Utility.TransitionHelper;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +43,7 @@ import retrofit2.http.Path;
  * Created by rainnka on 2016/8/16 15:02
  * Project name is ZHKUNews
  */
-public class HotNewsAty extends SwipeBackAty {
+public class HotNewsAty extends SwipeBackAty implements HotNewsAtyRecvAdp.HotNewsRecvItemOnClickListener {
 
 	/********
 	 * main self members
@@ -44,6 +54,8 @@ public class HotNewsAty extends SwipeBackAty {
 	public HotNewsAtyRecvAdp hotNewsAtyRecvAdp;
 
 	public List<ZhiHuNewsItemHot> zhiHuNewsItemHotList;
+
+	public HotNewsHandler hotNewsHandler;
 
 	public Retrofit retrofit;
 
@@ -58,37 +70,23 @@ public class HotNewsAty extends SwipeBackAty {
 		setupWindowAnimations();
 		setFullScreenLayout();
 
+		iniHandler();
+
 		initComponent();
 		initToolbarSetting();
 
 		initRecyclerViewSetting();
 
-		retrofit = new Retrofit.Builder()
-				.baseUrl("http://news-at.zhihu.com")
-				.addConverterFactory(GsonConverterFactory.create())
-				.build();
-		HotNewsService hotNewsService = retrofit.create(HotNewsService.class);
-		Call<HotNews> hotNews = hotNewsService.hot("3");
-		Log.i("ZRH", "builder call");
+		initZhihuHotNewsContent();
 
-		hotNews.enqueue(new Callback<HotNews>() {
-			@Override
-			public void onResponse(Call<HotNews> call, Response<HotNews> response) {
-				if (response.code() == 200) {
-					Log.i("ZRH", "success");
-				}
-			}
+		addHotNewsItemOnClickListener();
 
-			@Override
-			public void onFailure(Call<HotNews> call, Throwable t) {
-
-			}
-		});
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		hotNewsHandler.removeCallbacksAndMessages(null);
 	}
 
 	@Override
@@ -99,6 +97,22 @@ public class HotNewsAty extends SwipeBackAty {
 				break;
 		}
 		return true;
+	}
+
+	@Override
+	public void onItemClick(int position) {
+		Intent intent = new Intent();
+		intent.setAction(ConstantUtility.INTENT_TO_NEWS_KEY);
+		Bundle bundle = new Bundle();
+		bundle.putSerializable(ConstantUtility.SER_KEY_HOTNEWS, hotNewsAtyRecvAdp.getZhiHuNewsItemHot(position));
+		intent.putExtras(bundle);
+		startActivityInTransition(intent, getTranstitionOptions(getTransitionPairs()).toBundle(),
+				true);
+	}
+
+	@Override
+	public void onItemLongClick() {
+
 	}
 
 	/**************************
@@ -123,7 +137,7 @@ public class HotNewsAty extends SwipeBackAty {
 
 	public void initRecyclerViewSetting() {
 		GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
-		gridLayoutManager.setOrientation(GridLayoutManager.VERTICAL);
+		//		gridLayoutManager.setOrientation(GridLayoutManager.VERTICAL);
 		recyclerView.setLayoutManager(gridLayoutManager);
 		zhiHuNewsItemHotList = new ArrayList<>();
 		hotNewsAtyRecvAdp = new HotNewsAtyRecvAdp(this);
@@ -131,9 +145,83 @@ public class HotNewsAty extends SwipeBackAty {
 		recyclerView.setAdapter(hotNewsAtyRecvAdp);
 	}
 
+	private void iniHandler() {
+		hotNewsHandler = new HotNewsHandler(this);
+	}
+
+	private void addHotNewsItemOnClickListener() {
+		hotNewsAtyRecvAdp.setHotNewsRecvItemOnClickListener(this);
+	}
+
 	public void initZhihuHotNewsContent() {
+		retrofit = new Retrofit.Builder()
+				.baseUrl("http://news-at.zhihu.com")
+				.addConverterFactory(GsonConverterFactory.create())
+				.build();
+		HotNewsService hotNewsService = retrofit.create(HotNewsService.class);
+		Call<HotNews> hotNewsCall = hotNewsService.hot("3");
+
+		hotNewsCall.enqueue(new Callback<HotNews>() {
+			@Override
+			public void onResponse(Call<HotNews> call, Response<HotNews> response) {
+				if (response.code() == 200) {
+					try {
+						HotNews hotNews = response.body();
+						//						Log.i("ZRH", "hotNews.recent.size: " + hotNews.recent.size());
+						zhiHuNewsItemHotList = hotNews.recent;
+						hotNewsHandler.sendEmptyMessage(0x12398664);
+					} catch (Exception e) {
+						Log.i("ZRH", e.toString());
+					}
+
+				}
+			}
+
+			@Override
+			public void onFailure(Call<HotNews> call, Throwable t) {
+
+			}
+		});
+	}
+
+	protected void hotNewsDataHasChanged() {
+		hotNewsAtyRecvAdp.addZhiHuNewsItemHotList(zhiHuNewsItemHotList);
+		hotNewsAtyRecvAdp.notifyDataSetChanged();
+	}
+
+	public Pair<View, String>[] getTransitionPairs() {
+		Pair<View, String>[] pairs = TransitionHelper.createSafeTransitionParticipants
+				(this, false);
+		return pairs;
+	}
+
+	public ActivityOptionsCompat getTranstitionOptions(Pair<View, String>[] pairs) {
+		ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat
+				.makeSceneTransitionAnimation(this, pairs);
+		return activityOptionsCompat;
+	}
+
+	public void startActivityInTransition(Intent intent, Bundle bundle, boolean transitionFlag) {
+		if (transitionFlag) {
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+				startActivity(intent, bundle);
+			} else {
+				startActivity(intent);
+			}
+		} else {
+			startActivity(intent);
+		}
 
 	}
+
+	public void startActivityInTransitionForResult(Intent intent, int code, Bundle bundle, boolean transitionFlag) {
+		if (transitionFlag) {
+			startActivityForResult(intent, code, bundle);
+		} else {
+			startActivityForResult(intent, code);
+		}
+	}
+
 
 	/****************************
 	 * main inner class
@@ -142,6 +230,26 @@ public class HotNewsAty extends SwipeBackAty {
 	public interface HotNewsService {
 		@GET("/api/{v}/news/hot")
 		Call<HotNews> hot(@Path("v") String v);
+	}
+
+	public static class HotNewsHandler extends Handler {
+
+		protected HotNewsAty hotNewsAty;
+		protected WeakReference<HotNewsAty> hotNewsAtyWeakReference;
+
+		public HotNewsHandler(HotNewsAty hotNewsAty) {
+			this.hotNewsAtyWeakReference = new WeakReference<>(hotNewsAty);
+			this.hotNewsAty = this.hotNewsAtyWeakReference.get();
+		}
+
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			switch (msg.what) {
+				default:
+					hotNewsAty.hotNewsDataHasChanged();
+			}
+		}
 	}
 
 }

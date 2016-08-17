@@ -36,4 +36,8 @@ public class ZhiHuNewsItemInfo implements Serializable {
 
 	public List<String> css;
 
+	public String thumbnail;
+
+	public String url_hot;
+
 }

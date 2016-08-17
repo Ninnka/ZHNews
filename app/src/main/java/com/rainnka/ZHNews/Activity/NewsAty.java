@@ -31,6 +31,7 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.rainnka.ZHNews.Activity.Base.SwipeBackAty;
 import com.rainnka.ZHNews.Application.BaseApplication;
+import com.rainnka.ZHNews.Bean.ZhiHuNewsItemHot;
 import com.rainnka.ZHNews.Bean.ZhiHuNewsItemInfo;
 import com.rainnka.ZHNews.R;
 import com.rainnka.ZHNews.Utility.ConstantUtility;
@@ -101,7 +102,7 @@ public class NewsAty extends SwipeBackAty implements AppBarLayout.OnOffsetChange
 		/*
 		* 获取intent中的数据
 		* */
-		getInfomationFromIntent();
+		bindIntentInfo();
 
 		/*
 		* 初始化组件
@@ -166,21 +167,6 @@ public class NewsAty extends SwipeBackAty implements AppBarLayout.OnOffsetChange
 		* 判断是否点赞
 		* */
 		judgePraiseState();
-
-		/*
-		* 初始化okhttpclient相关
-		* */
-		okHttpClient = new OkHttpClient().newBuilder()
-				.connectTimeout(10, TimeUnit.SECONDS)
-				.writeTimeout(10, TimeUnit.SECONDS)
-				.readTimeout(10, TimeUnit.SECONDS)
-				.build();
-		String getInfoUrl = ConstantUtility.getInfoByAPI + zhiHuNewsItemInfoFromHome.id;
-		//		Log.i("ZRH","getInfoUrl: "+getInfoUrl);
-		request = new Request.Builder()
-				.url(getInfoUrl)
-				.build();
-		call = okHttpClient.newCall(request);
 
 		/*
 		* 格局获得信息类加载webview中的主要内容
@@ -370,9 +356,17 @@ public class NewsAty extends SwipeBackAty implements AppBarLayout.OnOffsetChange
 		}
 	}
 
-	private void getInfomationFromIntent() {
+	private void bindIntentInfo() {
 		Intent intent = getIntent();
 		zhiHuNewsItemInfoFromHome = (ZhiHuNewsItemInfo) intent.getSerializableExtra(ConstantUtility.SER_KEY);
+		if(zhiHuNewsItemInfoFromHome == null){
+			ZhiHuNewsItemHot zhiHuNewsItemHot = (ZhiHuNewsItemHot) intent.getSerializableExtra(ConstantUtility
+					.SER_KEY_HOTNEWS);
+			zhiHuNewsItemInfoFromHome = new ZhiHuNewsItemInfo();
+			zhiHuNewsItemInfoFromHome.id = zhiHuNewsItemHot.news_id;
+			zhiHuNewsItemInfoFromHome.title = zhiHuNewsItemHot.title;
+			zhiHuNewsItemInfoFromHome.url_hot = zhiHuNewsItemHot.url;
+		}
 	}
 
 	/*
@@ -389,13 +383,28 @@ public class NewsAty extends SwipeBackAty implements AppBarLayout.OnOffsetChange
 		Glide.with(NewsAty.this)
 				.load(zhiHuNewsItemInfo.image)
 				.into(imageView);
-
 	}
 
 	/*
 	* 格局获得信息类加载webview中的主要内容
 	* */
 	private void loadWebViewContent() {
+		okHttpClient = new OkHttpClient().newBuilder()
+				.connectTimeout(10, TimeUnit.SECONDS)
+				.writeTimeout(10, TimeUnit.SECONDS)
+				.readTimeout(10, TimeUnit.SECONDS)
+				.build();
+		String getInfoUrl = "";
+		if(zhiHuNewsItemInfoFromHome.url_hot == null){
+			getInfoUrl = ConstantUtility.getInfoByAPI + zhiHuNewsItemInfoFromHome.id;
+		}else {
+			getInfoUrl = zhiHuNewsItemInfoFromHome.url_hot;
+		}
+		Log.i("ZRH","getInfoUrl: "+getInfoUrl);
+		request = new Request.Builder()
+				.url(getInfoUrl)
+				.build();
+		call = okHttpClient.newCall(request);
 		call.enqueue(new Callback() {
 
 			@Override

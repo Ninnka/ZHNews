@@ -39,8 +39,16 @@ public class HotNewsAtyRecvAdp extends RecyclerView.Adapter<RecyclerView.ViewHol
 		this.zhiHuNewsItemHotList = zhiHuNewsItemHotList;
 	}
 
+	public void addZhiHuNewsItemHotList(List<ZhiHuNewsItemHot> zhiHuNewsItemHotList) {
+		this.zhiHuNewsItemHotList.addAll(getItemCount(), zhiHuNewsItemHotList);
+	}
+
 	public void setHotNewsRecvItemOnClickListener(HotNewsRecvItemOnClickListener hotNewsRecvItemOnClickListener) {
 		this.hotNewsRecvItemOnClickListener = hotNewsRecvItemOnClickListener;
+	}
+
+	public ZhiHuNewsItemHot getZhiHuNewsItemHot(int position){
+		return zhiHuNewsItemHotList.get(position);
 	}
 
 	@Override
@@ -50,7 +58,7 @@ public class HotNewsAtyRecvAdp extends RecyclerView.Adapter<RecyclerView.ViewHol
 	}
 
 	@Override
-	public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+	public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
 		if (holder instanceof HotNewsViewHolder) {
 			Glide.with(hotNewsAty)
 					.load(zhiHuNewsItemHotList.get(position).thumbnail)
@@ -63,15 +71,15 @@ public class HotNewsAtyRecvAdp extends RecyclerView.Adapter<RecyclerView.ViewHol
 			((HotNewsViewHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					if(hotNewsRecvItemOnClickListener != null){
-						hotNewsRecvItemOnClickListener.onItemClick();
+					if (hotNewsRecvItemOnClickListener != null) {
+						hotNewsRecvItemOnClickListener.onItemClick(position);
 					}
 				}
 			});
 			((HotNewsViewHolder) holder).itemView.setOnLongClickListener(new View.OnLongClickListener() {
 				@Override
 				public boolean onLongClick(View view) {
-					if(hotNewsRecvItemOnClickListener != null){
+					if (hotNewsRecvItemOnClickListener != null) {
 						hotNewsRecvItemOnClickListener.onItemLongClick();
 						return true;
 					}
@@ -104,8 +112,8 @@ public class HotNewsAtyRecvAdp extends RecyclerView.Adapter<RecyclerView.ViewHol
 	 * main inner interface
 	 **************/
 
-	public interface HotNewsRecvItemOnClickListener{
-		void onItemClick();
+	public interface HotNewsRecvItemOnClickListener {
+		void onItemClick(int position);
 
 		void onItemLongClick();
 	}
