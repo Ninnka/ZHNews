@@ -155,6 +155,12 @@
         <item name="android:windowIsTranslucent">true</item>
     </style>
 
+    <style name="NewsCategoryTheme" parent="AppTheme">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
     <!--<style name="AppTheme.AppBarOverlay.other" parent="ThemeOverlay.AppCompat.Light">-->
 
     <!--</style>-->

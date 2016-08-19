@@ -1,4 +1,4 @@
-package com.rainnka.ZHNews.Adapter;
+package com.rainnka.ZHNews.ViewLayer.Adapter;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.rainnka.ZHNews.Utility.IntentActionUtility;
 import com.rainnka.ZHNews.ViewLayer.Activity.HomeAty;
 import com.rainnka.ZHNews.Bean.ZhiHuNewsItemInfo;
 import com.rainnka.ZHNews.R;
@@ -131,7 +132,7 @@ public class HomeActivityViewPagerAdapter extends PagerAdapter {
 
 				}
 				Intent intent = new Intent();
-				intent.setAction(ConstantUtility.INTENT_TO_NEWS_KEY);
+				intent.setAction(IntentActionUtility.INTENT_TO_NEWS_KEY);
 				Bundle bundle = new Bundle();
 				try {
 					bundle.putSerializable(ConstantUtility.SER_KEY, zhiHuNewsTopItemInfoList.get

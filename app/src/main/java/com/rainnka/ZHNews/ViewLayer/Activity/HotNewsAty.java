@@ -18,7 +18,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.rainnka.ZHNews.Adapter.HotNewsAtyRecvAdp;
+import com.rainnka.ZHNews.Utility.IntentActionUtility;
+import com.rainnka.ZHNews.ViewLayer.Adapter.HotNewsAtyRecvAdp;
 import com.rainnka.ZHNews.Application.BaseApplication;
 import com.rainnka.ZHNews.Bean.HotNews;
 import com.rainnka.ZHNews.Bean.ZhiHuNewsItemHot;
@@ -105,7 +106,7 @@ public class HotNewsAty extends SwipeBackAty implements HotNewsAtyRecvAdp.HotNew
 	@Override
 	public void onItemClick(int position) {
 		Intent intent = new Intent();
-		intent.setAction(ConstantUtility.INTENT_TO_NEWS_KEY);
+		intent.setAction(IntentActionUtility.INTENT_TO_NEWS_KEY);
 		Bundle bundle = new Bundle();
 		bundle.putSerializable(ConstantUtility.SER_KEY_HOTNEWS, hotNewsAtyRecvAdp.getZhiHuNewsItemHot(position));
 		intent.putExtras(bundle);

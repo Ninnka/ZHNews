@@ -55,4 +55,10 @@
 
     <color name="hotnews_recv_item_background">#282828</color>
 
+    <color name="newscategory_tabTextColor">#66FFFFFF</color>
+    <color name="newscategory_tabSelectedTextColor">#F5F5F5</color>
+    <color name="newscategory_tabIndicatorColor">#F5F5F5</color>
+    <color name="newscategory_frgm_text_loading">#FAFAFA</color>
+    <color name="newscategory_frgm_textbackground">#2E2E2E</color>
+
 </resources>

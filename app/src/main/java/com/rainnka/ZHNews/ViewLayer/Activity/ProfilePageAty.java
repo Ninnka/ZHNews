@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.rainnka.ZHNews.Utility.IntentActionUtility;
 import com.rainnka.ZHNews.ViewLayer.Activity.Base.SwipeBackAty;
 import com.rainnka.ZHNews.Application.BaseApplication;
 import com.rainnka.ZHNews.R;
@@ -94,8 +95,8 @@ public class ProfilePageAty extends SwipeBackAty {
 			@Override
 			public void onClick(View view) {
 				intent = new Intent();
-				intent.setAction(ConstantUtility.INTENT_TO_STAR_HISTORY_PRAISE_KEY);
-				intent.putExtra(ConstantUtility.INTENT_STRING_DATA_KEY, ConstantUtility.STAR_KEY);
+				intent.setAction(IntentActionUtility.INTENT_TO_STAR_HISTORY_PRAISE_KEY);
+				intent.putExtra(IntentActionUtility.INTENT_STRING_DATA_KEY, ConstantUtility.STAR_KEY);
 				startActivityInTransition(intent, getTranstitionOptions(getTransitionPairs())
 						.toBundle(), true);
 			}
@@ -104,8 +105,8 @@ public class ProfilePageAty extends SwipeBackAty {
 			@Override
 			public void onClick(View view) {
 				intent = new Intent();
-				intent.setAction(ConstantUtility.INTENT_TO_STAR_HISTORY_PRAISE_KEY);
-				intent.putExtra(ConstantUtility.INTENT_STRING_DATA_KEY, ConstantUtility.PRAISE_KEY);
+				intent.setAction(IntentActionUtility.INTENT_TO_STAR_HISTORY_PRAISE_KEY);
+				intent.putExtra(IntentActionUtility.INTENT_STRING_DATA_KEY, ConstantUtility.PRAISE_KEY);
 				startActivityInTransition(intent, getTranstitionOptions(getTransitionPairs())
 						.toBundle(), true);
 			}
@@ -114,8 +115,8 @@ public class ProfilePageAty extends SwipeBackAty {
 			@Override
 			public void onClick(View view) {
 				intent = new Intent();
-				intent.setAction(ConstantUtility.INTENT_TO_STAR_HISTORY_PRAISE_KEY);
-				intent.putExtra(ConstantUtility.INTENT_STRING_DATA_KEY, ConstantUtility.HISTORY_KEY);
+				intent.setAction(IntentActionUtility.INTENT_TO_STAR_HISTORY_PRAISE_KEY);
+				intent.putExtra(IntentActionUtility.INTENT_STRING_DATA_KEY, ConstantUtility.HISTORY_KEY);
 				startActivityInTransition(intent, getTranstitionOptions(getTransitionPairs())
 						.toBundle(), true);
 			}

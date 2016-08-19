@@ -14,13 +14,13 @@ import com.rainnka.ZHNews.Utility.ConstantUtility;
  * Created by rainnka on 2016/8/14 16:26
  * Project name is ZHKUNews
  */
-public class CommentsRecvDividerItemDecoration extends RecyclerView.ItemDecoration {
+public class RecvDividerItemDecoration extends RecyclerView.ItemDecoration {
 
 	private Drawable divider;
 
 	private int orientation;
 
-	public CommentsRecvDividerItemDecoration(Context context, int orientation) {
+	public RecvDividerItemDecoration(Context context, int orientation) {
 		final TypedArray typedArray = context.obtainStyledAttributes(ConstantUtility.ATTRS);
 		divider = typedArray.getDrawable(0);
 		typedArray.recycle();

@@ -3,7 +3,7 @@ package com.rainnka.ZHNews.Callback_Listener;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
-import com.rainnka.ZHNews.Adapter.ItemTouchHelperAdapter;
+import com.rainnka.ZHNews.ViewLayer.Adapter.ItemTouchHelperAdapter;
 
 /**
  * Created by rainnka on 2016/5/21 17:08

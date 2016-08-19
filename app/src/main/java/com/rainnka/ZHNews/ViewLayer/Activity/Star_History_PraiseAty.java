@@ -31,8 +31,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.rainnka.ZHNews.Utility.IntentActionUtility;
 import com.rainnka.ZHNews.ViewLayer.Activity.Base.SwipeBackAty;
-import com.rainnka.ZHNews.Adapter.Star_History_PraiseActivityRecyclerViewAdapter;
+import com.rainnka.ZHNews.ViewLayer.Adapter.Star_History_PraiseActivityRecyclerViewAdapter;
 import com.rainnka.ZHNews.Application.BaseApplication;
 import com.rainnka.ZHNews.Bean.ZhiHuNewsItemInfo;
 import com.rainnka.ZHNews.Callback_Listener.SimpleItemTouchHelperCallback;
@@ -446,7 +447,7 @@ public class Star_History_PraiseAty extends SwipeBackAty {
 	}
 
 	public String getInentInfo() {
-		return getIntent().getStringExtra(ConstantUtility.INTENT_STRING_DATA_KEY);
+		return getIntent().getStringExtra(IntentActionUtility.INTENT_STRING_DATA_KEY);
 	}
 
 	private void initHandler() {
@@ -534,7 +535,7 @@ public class Star_History_PraiseAty extends SwipeBackAty {
 
 				} else {
 					Intent intent = new Intent();
-					intent.setAction(ConstantUtility.INTENT_TO_NEWS_KEY);
+					intent.setAction(IntentActionUtility.INTENT_TO_NEWS_KEY);
 					Bundle bundle = new Bundle();
 					bundle.putSerializable(ConstantUtility.SER_KEY,
 							star_history_praiseActivityRecyclerViewAdapter.zhiHuNewsItemInfoList.get

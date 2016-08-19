@@ -29,6 +29,8 @@ import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.rainnka.ZHNews.Utility.APIUtility;
+import com.rainnka.ZHNews.Utility.IntentActionUtility;
 import com.rainnka.ZHNews.ViewLayer.Activity.Base.SwipeBackAty;
 import com.rainnka.ZHNews.Application.BaseApplication;
 import com.rainnka.ZHNews.Bean.ZhiHuNewsItemHot;
@@ -189,7 +191,7 @@ public class NewsAty extends SwipeBackAty implements AppBarLayout.OnOffsetChange
 			@Override
 			public void onClick(View view) {
 				Intent intent = new Intent();
-				intent.setAction(ConstantUtility.INTENT_TO_COMMENTS_KET);
+				intent.setAction(IntentActionUtility.INTENT_TO_COMMENTS_KET);
 				intent.putExtra("id", zhiHuNewsItemInfoFromHome.id);
 				startActivityInTransition(intent, getTranstitionOptions(getTransitionPairs()).toBundle(),
 						true);
@@ -396,11 +398,10 @@ public class NewsAty extends SwipeBackAty implements AppBarLayout.OnOffsetChange
 				.build();
 		String getInfoUrl = "";
 		if(zhiHuNewsItemInfoFromHome.url_hot == null){
-			getInfoUrl = ConstantUtility.getInfoByAPI + zhiHuNewsItemInfoFromHome.id;
+			getInfoUrl = APIUtility.getInfoByAPI + zhiHuNewsItemInfoFromHome.id;
 		}else {
 			getInfoUrl = zhiHuNewsItemInfoFromHome.url_hot;
 		}
-		Log.i("ZRH","getInfoUrl: "+getInfoUrl);
 		request = new Request.Builder()
 				.url(getInfoUrl)
 				.build();

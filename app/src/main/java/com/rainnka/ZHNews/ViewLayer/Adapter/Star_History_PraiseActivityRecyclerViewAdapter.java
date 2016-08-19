@@ -1,4 +1,4 @@
-package com.rainnka.ZHNews.Adapter;
+package com.rainnka.ZHNews.ViewLayer.Adapter;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.Snackbar;

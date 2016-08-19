@@ -21,7 +21,9 @@ import com.bumptech.glide.request.target.NotificationTarget;
 import com.google.gson.Gson;
 import com.rainnka.ZHNews.Bean.ZhiHuNewsLatestItemInfo;
 import com.rainnka.ZHNews.R;
+import com.rainnka.ZHNews.Utility.APIUtility;
 import com.rainnka.ZHNews.Utility.ConstantUtility;
+import com.rainnka.ZHNews.Utility.IntentActionUtility;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -70,7 +72,7 @@ public class InitNotiRecService extends Service {
 				.readTimeout(10, TimeUnit.SECONDS)
 				.build();
 		request = new Request.Builder()
-				.url(ConstantUtility.ZHIHUAPI_LATEST)
+				.url(APIUtility.ZHIHUAPI_LATEST)
 				.build();
 		call = okHttpClient.newCall(request);
 		gson = new Gson();
@@ -154,7 +156,7 @@ public class InitNotiRecService extends Service {
 		bundle.putSerializable(ConstantUtility.SER_KEY, zhiHuNewsLatestItemInfo.stories.get
 				(targetNum));
 		Intent intent = new Intent();
-		intent.setAction(ConstantUtility.INTENT_TO_NEWS_KEY);
+		intent.setAction(IntentActionUtility.INTENT_TO_NEWS_KEY);
 		intent.putExtras(bundle);
 		PendingIntent pendingIntent_News = PendingIntent.getActivity(this,
 				ConstantUtility.PENDINGINTENT_NEWS_REQUESTCODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);

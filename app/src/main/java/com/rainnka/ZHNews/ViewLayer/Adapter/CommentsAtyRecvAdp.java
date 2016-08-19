@@ -1,4 +1,4 @@
-package com.rainnka.ZHNews.Adapter;
+package com.rainnka.ZHNews.ViewLayer.Adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;

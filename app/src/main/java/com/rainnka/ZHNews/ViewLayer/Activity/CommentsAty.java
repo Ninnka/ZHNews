@@ -19,12 +19,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.rainnka.ZHNews.Utility.APIUtility;
 import com.rainnka.ZHNews.ViewLayer.Activity.Base.SwipeBackAty;
-import com.rainnka.ZHNews.Adapter.CommentsAtyRecvAdp;
+import com.rainnka.ZHNews.ViewLayer.Adapter.CommentsAtyRecvAdp;
 import com.rainnka.ZHNews.Application.BaseApplication;
 import com.rainnka.ZHNews.Bean.Comments;
 import com.rainnka.ZHNews.Bean.ZhihuNewsItemComments;
-import com.rainnka.ZHNews.CustomView.CommentsRecvDividerItemDecoration;
+import com.rainnka.ZHNews.CustomView.RecvDividerItemDecoration;
 import com.rainnka.ZHNews.R;
 import com.rainnka.ZHNews.Utility.ConstantUtility;
 import com.rainnka.ZHNews.Utility.LengthConverterUtility;
@@ -63,7 +64,7 @@ public class CommentsAty extends SwipeBackAty {
 
 	public CommentsAtyRecvAdp commentsAtyRecvAdp;
 	public LinearLayoutManager linearLayoutManager;
-	public CommentsRecvDividerItemDecoration dividerItemDecoration;
+	public RecvDividerItemDecoration dividerItemDecoration;
 
 	public List<ZhihuNewsItemComments> zhihuNewsItemLongCommentsList;
 	public List<ZhihuNewsItemComments> zhihuNewsItemShortCommentsList;
@@ -177,14 +178,14 @@ public class CommentsAty extends SwipeBackAty {
 					.writeTimeout(10, TimeUnit.SECONDS)
 					.readTimeout(10, TimeUnit.SECONDS)
 					.build();
-			String urlLong = String.format(ConstantUtility.ZHIHUAPI_LONG_COMMENTS, String.valueOf
+			String urlLong = String.format(APIUtility.ZHIHUAPI_LONG_COMMENTS, String.valueOf
 					(targetId));
 			Request request_longcomments = new Request.Builder()
 					.url(urlLong)
 					.build();
 			Call call_long_comments = okHttpClient.newCall(request_longcomments);
 
-			String urlShort = String.format(ConstantUtility.ZHIHUAPI_SHORT_COMMENTS, String.valueOf
+			String urlShort = String.format(APIUtility.ZHIHUAPI_SHORT_COMMENTS, String.valueOf
 					(targetId));
 			Request request_shortcomments = new Request.Builder()
 					.url(urlShort)
@@ -216,9 +217,6 @@ public class CommentsAty extends SwipeBackAty {
 							longCommentsFlag = NOCOMMENTS;
 							commentsHandler.sendEmptyMessage(ConstantUtility.COMMENTSLIST_CHANGED);
 						}
-					}
-					if (response.isSuccessful()) {
-						Log.i("ZRH", response.code() + "");
 					}
 				}
 
@@ -263,7 +261,7 @@ public class CommentsAty extends SwipeBackAty {
 		linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 		recyclerView.setLayoutManager(linearLayoutManager);
 		recyclerView.setAdapter(commentsAtyRecvAdp);
-		dividerItemDecoration = new CommentsRecvDividerItemDecoration(this, ConstantUtility
+		dividerItemDecoration = new RecvDividerItemDecoration(this, ConstantUtility
 				.VERTICAL_LIST);
 		recyclerView.addItemDecoration(dividerItemDecoration);
 	}

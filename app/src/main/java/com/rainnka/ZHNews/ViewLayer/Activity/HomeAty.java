@@ -48,14 +48,16 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.gson.Gson;
+import com.rainnka.ZHNews.Utility.APIUtility;
+import com.rainnka.ZHNews.Utility.IntentActionUtility;
 import com.rainnka.ZHNews.ViewLayer.Activity.Base.BaseAty;
-import com.rainnka.ZHNews.Adapter.HomeActivityRecyclerViewAdapter;
-import com.rainnka.ZHNews.Adapter.HomeActivityViewPagerAdapter;
+import com.rainnka.ZHNews.ViewLayer.Adapter.HomeActivityRecyclerViewAdapter;
+import com.rainnka.ZHNews.ViewLayer.Adapter.HomeActivityViewPagerAdapter;
 import com.rainnka.ZHNews.Animation_Transformer.DepthPageTransformer;
 import com.rainnka.ZHNews.Application.BaseApplication;
 import com.rainnka.ZHNews.Bean.ZhiHuNewsItemInfo;
 import com.rainnka.ZHNews.Bean.ZhiHuNewsLatestItemInfo;
-import com.rainnka.ZHNews.Callback_Listener.onHActRecyclerItemClickListener;
+import com.rainnka.ZHNews.Callback_Listener.onHomeActRecyclerItemClickListener;
 import com.rainnka.ZHNews.CustomView.HomeActivityViewPagerIndicator;
 import com.rainnka.ZHNews.R;
 import com.rainnka.ZHNews.Service.InitNotiRecService;
@@ -400,7 +402,7 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == ConstantUtility.ITENT_TO_LOGIN_REQUESTCODE && resultCode == ConstantUtility
+		if (requestCode == IntentActionUtility.ITENT_TO_LOGIN_REQUESTCODE && resultCode == ConstantUtility
 				.RESULTCODE_LOGIN_ATY) {
 			ConstantUtility.userIsLogin = true;
 			profile_tv.setText(sharedPreferences.getString("nickname", ""));
@@ -408,7 +410,7 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 			//			navigationView.getMenu().setGroupVisible(R.id.group2, true);
 			Snackbar.make(coordinatorLayout, "你已经成功登录", Snackbar.LENGTH_SHORT).show();
 		}
-		if (requestCode == ConstantUtility.ITENT_TO_PROFILE_REQUESTCODE && resultCode == ConstantUtility
+		if (requestCode == IntentActionUtility.ITENT_TO_PROFILE_REQUESTCODE && resultCode == ConstantUtility
 				.RESULTCODE_NORMALBACK_PROFILE_ATY) {
 			String nn = sharedPreferences.getString("nickname", "");
 			if (!profile_tv.getText().equals(nn)) {
@@ -417,7 +419,7 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 				Snackbar.make(coordinatorLayout, "修改昵称成功", Snackbar.LENGTH_SHORT).show();
 			}
 		}
-		if (requestCode == ConstantUtility.ITENT_TO_PROFILE_REQUESTCODE && resultCode == ConstantUtility
+		if (requestCode == IntentActionUtility.ITENT_TO_PROFILE_REQUESTCODE && resultCode == ConstantUtility
 				.RESULTCODE_PROFILE_ATY) {
 			ConstantUtility.userIsLogin = false;
 			profile_tv.setText("点击头像登录");
@@ -433,19 +435,19 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 		switch (item.getItemId()) {
 			case R.id.home_activity_menu_setting:
 				intent = new Intent();
-				intent.setAction(ConstantUtility.INTENT_TO_SETTINGDETAIL_KEY);
+				intent.setAction(IntentActionUtility.INTENT_TO_SETTINGDETAIL_KEY);
 				startActivityInTransition(intent, getTranstitionOptions(getTransitionPairs())
 						.toBundle(), true);
 				break;
 			case R.id.home_activity_menu_about:
 				intent = new Intent();
-				intent.setAction(ConstantUtility.INTENT_TO_ABOUT_KEY);
+				intent.setAction(IntentActionUtility.INTENT_TO_ABOUT_KEY);
 				startActivityInTransition(intent, getTranstitionOptions(getTransitionPairs())
 						.toBundle(), true);
 				break;
 			case R.id.home_activity_menu_notification:
 				intent = new Intent();
-				intent.setAction(ConstantUtility.INTENT_TO_NOTIFICATION_KEY);
+				intent.setAction(IntentActionUtility.INTENT_TO_NOTIFICATION_KEY);
 				startActivityInTransition(intent, getTranstitionOptions(getTransitionPairs())
 						.toBundle(), true);
 				break;
@@ -479,7 +481,7 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 	}
 
 	private void addRecyclerViewOnItemClickListener() {
-		recyclerView.addOnItemTouchListener(new onHActRecyclerItemClickListener(recyclerView) {
+		recyclerView.addOnItemTouchListener(new onHomeActRecyclerItemClickListener(recyclerView) {
 			@Override
 			public void onItemClickListener(RecyclerView.ViewHolder viewHolder) {
 				if (homeActivityRecyclerViewAdapter.zhiHuNewsItemInfoList.get(viewHolder
@@ -525,7 +527,7 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 					}
 
 					Intent intent = new Intent();
-					intent.setAction(ConstantUtility.INTENT_TO_NEWS_KEY);
+					intent.setAction(IntentActionUtility.INTENT_TO_NEWS_KEY);
 					Bundle bundle = new Bundle();
 					bundle.putSerializable(ConstantUtility.SER_KEY, temp_zhiHuNewsItemInfo);
 					intent.putExtras(bundle);
@@ -694,14 +696,14 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 					//					Log.i("ZRH","isLogin"+sharedPreferences.getString("isLogin",""));
 					drawerLayout.closeDrawer(navigationView);
 					Intent intent_to_login = new Intent();
-					intent_to_login.setAction(ConstantUtility.INTENT_TO_LOGIN_KEY);
-					startActivityInTransitionForResult(intent_to_login, ConstantUtility
+					intent_to_login.setAction(IntentActionUtility.INTENT_TO_LOGIN_KEY);
+					startActivityInTransitionForResult(intent_to_login, IntentActionUtility
 							.ITENT_TO_LOGIN_REQUESTCODE, getTranstitionOptions(getTransitionPairs
 							()).toBundle(), true);
 				} else {
 					Intent intent_to_profile = new Intent();
-					intent_to_profile.setAction(ConstantUtility.INTENT_TO_PROFILE_KEY);
-					startActivityInTransitionForResult(intent_to_profile, ConstantUtility
+					intent_to_profile.setAction(IntentActionUtility.INTENT_TO_PROFILE_KEY);
+					startActivityInTransitionForResult(intent_to_profile, IntentActionUtility
 							.ITENT_TO_PROFILE_REQUESTCODE, getTranstitionOptions
 							(getTransitionPairs()).toBundle(), true);
 				}
@@ -851,7 +853,7 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 			if (isFirstLoadingContent) {
 				swipeRefreshLayout.setEnabled(false);
 				Request request = new Request.Builder()
-						.url(ConstantUtility.ZHIHUAPI_LATEST)
+						.url(APIUtility.ZHIHUAPI_LATEST)
 						.build();
 				Call call = okHttpClient.newCall(request);
 				call.enqueue(new Callback() {
@@ -1109,7 +1111,7 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 		}
 		if (getConnectivityStatus()) {
 			Request request = new Request.Builder()
-					.url(ConstantUtility.ZHIHUAPI_LATEST)
+					.url(APIUtility.ZHIHUAPI_LATEST)
 					.build();
 
 			Call call = okHttpClient.newCall(request);
@@ -1147,7 +1149,7 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 
 		if (getConnectivityStatus()) {
 			refressh_old_date = current_simple_date_format;
-			String oldUrl = ConstantUtility.ZHIHUAPI_BEFORE + refressh_old_date;
+			String oldUrl = APIUtility.ZHIHUAPI_BEFORE + refressh_old_date;
 			Request request = new Request.Builder()
 					.url(oldUrl)
 					.build();
@@ -1195,13 +1197,17 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 				break;
 			case R.id.drawer_hot:
 				intent = new Intent();
-				intent.setAction(ConstantUtility.INTENT_TO_HOTNEWS_KEY);
+				intent.setAction(IntentActionUtility.INTENT_TO_HOTNEWS_KEY);
 				startActivityInTransition(intent, getTranstitionOptions(getTransitionPairs())
 						.toBundle(), true);
 				break;
-			case R.id.drawer_programa:
+			case R.id.drawer_category:
+				intent = new Intent();
+				intent.setAction(IntentActionUtility.INTENT_TO_NEWSCATEGORY_KEY);
+				startActivityInTransition(intent, getTranstitionOptions(getTransitionPairs())
+						.toBundle(), true);
 				break;
-			case R.id.drawer_classify:
+			case R.id.drawer_section:
 				break;
 
 			//			case R.id.drawer_star:
@@ -1264,7 +1270,7 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 
 			case R.id.drawer_response:
 				intent = new Intent();
-				intent.setAction(ConstantUtility.INTENT_TO_FEEDBACK_KEY);
+				intent.setAction(IntentActionUtility.INTENT_TO_FEEDBACK_KEY);
 				startActivityInTransition(intent, getTranstitionOptions(getTransitionPairs())
 						.toBundle(), true);
 				break;

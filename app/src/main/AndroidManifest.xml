@@ -130,6 +130,16 @@
         </activity>
 
         <activity
+            android:name=".ViewLayer.Activity.NewsCategoryAty"
+            android:theme="@style/NewsCategoryTheme">
+
+            <intent-filter>
+                <action android:name="android.intent.action.NewsCategory"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".ViewLayer.Activity.WelcomeAty"
             android:theme="@style/WelcomeTheme">
             <intent-filter>

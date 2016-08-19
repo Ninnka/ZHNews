@@ -19,12 +19,12 @@
                     android:title="热门精选"/>
 
                 <item
-                    android:id="@+id/drawer_classify"
+                    android:id="@+id/drawer_category"
                     android:icon="@mipmap/classify"
                     android:title="日报分类"/>
 
                 <item
-                    android:id="@+id/drawer_programa"
+                    android:id="@+id/drawer_section"
                     android:icon="@mipmap/programa"
                     android:title="栏目总览"/>
 

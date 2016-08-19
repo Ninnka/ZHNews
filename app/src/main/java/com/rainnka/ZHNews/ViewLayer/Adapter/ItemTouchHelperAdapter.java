@@ -1,4 +1,4 @@
-package com.rainnka.ZHNews.Adapter;
+package com.rainnka.ZHNews.ViewLayer.Adapter;
 
 /**
  * Created by rainnka on 2016/5/21 17:09

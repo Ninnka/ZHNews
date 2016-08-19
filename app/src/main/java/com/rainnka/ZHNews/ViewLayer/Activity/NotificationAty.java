@@ -59,7 +59,7 @@ public class NotificationAty extends SwipeBackAty {
 					imageView.setVisibility(View.VISIBLE);
 				}
 				imageView = (ImageView) findViewById(R.id.notificationpage_act_maincontent_ImageView);
-				imageView.setImageResource(R.drawable.bg2);
+				imageView.setImageResource(R.drawable.drawer_header_bg);
 				imageView.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
