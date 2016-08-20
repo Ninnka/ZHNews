@@ -1,7 +1,9 @@
 package com.rainnka.ZHNews.ViewLayer.Activity;
 
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,6 +21,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.rainnka.ZHNews.Utility.IntentActionUtility;
+import com.rainnka.ZHNews.Utility.SQLiteCreateTableHelper;
 import com.rainnka.ZHNews.ViewLayer.Adapter.HotNewsAtyRecvAdp;
 import com.rainnka.ZHNews.Application.BaseApplication;
 import com.rainnka.ZHNews.Bean.HotNews;
@@ -60,6 +63,8 @@ public class HotNewsAty extends SwipeBackAty implements HotNewsAtyRecvAdp.HotNew
 
 	public HotNewsHandler hotNewsHandler;
 
+	public SQLiteDatabase sqLiteDatabase;
+
 	public Retrofit retrofit;
 
 	/**************************
@@ -75,6 +80,7 @@ public class HotNewsAty extends SwipeBackAty implements HotNewsAtyRecvAdp.HotNew
 		initProgressDialog();
 
 		iniHandler();
+		initSQLiteDatabase();
 
 		initComponent();
 		initToolbarSetting();
@@ -90,6 +96,9 @@ public class HotNewsAty extends SwipeBackAty implements HotNewsAtyRecvAdp.HotNew
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		if (sqLiteDatabase.isOpen()) {
+			sqLiteDatabase.close();
+		}
 		hotNewsHandler.removeCallbacksAndMessages(null);
 	}
 
@@ -105,13 +114,47 @@ public class HotNewsAty extends SwipeBackAty implements HotNewsAtyRecvAdp.HotNew
 
 	@Override
 	public void onItemClick(int position) {
-		Intent intent = new Intent();
-		intent.setAction(IntentActionUtility.INTENT_TO_NEWS_KEY);
-		Bundle bundle = new Bundle();
-		bundle.putSerializable(ConstantUtility.SER_KEY_HOTNEWS, hotNewsAtyRecvAdp.getZhiHuNewsItemHot(position));
-		intent.putExtras(bundle);
-		startActivityInTransition(intent, getTranstitionOptions(getTransitionPairs()).toBundle(),
-				true);
+		if (ConstantUtility.userIsLogin) {
+			ZhiHuNewsItemHot zhiHuNewsItemHot = hotNewsAtyRecvAdp.getZhiHuNewsItemHot(position);
+			sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_HISTORY_TABLE);
+			try {
+				sqLiteDatabase.beginTransaction();
+				sqLiteDatabase.delete("my_history", "ItemId like ?", new
+						String[]{String.valueOf(zhiHuNewsItemHot.news_id)});
+				sqLiteDatabase.setTransactionSuccessful();
+			} catch (Exception e) {
+				Log.i("ZRH", e.getStackTrace().toString());
+				Log.i("ZRH", e.getMessage());
+				Log.i("ZRH", e.toString());
+			} finally {
+				sqLiteDatabase.endTransaction();
+			}
+
+			ContentValues contentValues = new ContentValues();
+			contentValues.put("ItemId", zhiHuNewsItemHot.news_id);
+			contentValues.put("ItemImage", zhiHuNewsItemHot.thumbnail);
+			contentValues.put("ItemTitle", zhiHuNewsItemHot.title);
+			contentValues.put("ItemSeriType", ConstantUtility.SER_KEY_HOTNEWS);
+			try {
+				sqLiteDatabase.beginTransaction();
+				sqLiteDatabase.insert("my_history", null, contentValues);
+				sqLiteDatabase.setTransactionSuccessful();
+			} catch (Exception e) {
+				Log.i("ZRH", e.getStackTrace().toString());
+				Log.i("ZRH", e.getMessage());
+				Log.i("ZRH", e.toString());
+			} finally {
+				sqLiteDatabase.endTransaction();
+			}
+			Intent intent = new Intent();
+			intent.setAction(IntentActionUtility.INTENT_TO_NEWS_KEY);
+			Bundle bundle = new Bundle();
+			bundle.putSerializable(ConstantUtility.SER_KEY_HOTNEWS, zhiHuNewsItemHot);
+			intent.putExtras(bundle);
+			startActivityInTransition(intent, getTranstitionOptions(getTransitionPairs()).toBundle(),
+					true);
+		}
+
 	}
 
 	@Override
@@ -137,6 +180,16 @@ public class HotNewsAty extends SwipeBackAty implements HotNewsAtyRecvAdp.HotNew
 		layoutParams.setMargins(0, LengthConverterUtility.dip2px(BaseApplication
 				.getBaseApplicationContext(), 24), 0, 0);
 		toolbar.setLayoutParams(layoutParams);
+	}
+
+	private void initSQLiteDatabase() {
+		try {
+			sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(BaseApplication.getDATABASE_PATH() +
+					"/myInfo.db3", null);
+		} catch (Exception e) {
+			Log.i("ZRH", e.getMessage());
+			Log.i("ZRH", e.toString());
+		}
 	}
 
 	private void initProgressDialog() {

@@ -127,6 +127,7 @@ public class HomeActivityViewPagerAdapter extends PagerAdapter {
 								.image);
 					}
 					contentValues.put("ItemTitle", zhiHuNewsTopItemInfoList.get(position - 1).title);
+					contentValues.put("ItemSeriType", ConstantUtility.SER_KEY);
 					sqLiteDatabase.insert("my_history", null, contentValues);
 					sqLiteDatabase.close();
 

@@ -513,6 +513,7 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 							contentValues.put("ItemImage", temp_zhiHuNewsItemInfo.image);
 						}
 						contentValues.put("ItemTitle", temp_zhiHuNewsItemInfo.title);
+						contentValues.put("ItemSeriType", ConstantUtility.SER_KEY);
 						try {
 							sqLiteDatabase.beginTransaction();
 							sqLiteDatabase.insert("my_history", null, contentValues);
@@ -576,7 +577,6 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 			Log.i("ZRH", e.getMessage());
 			Log.i("ZRH", e.toString());
 		}
-
 	}
 
 	public void closeSQLiteDatabase() {

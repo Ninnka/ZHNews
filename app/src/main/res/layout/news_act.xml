@@ -83,19 +83,18 @@
         android:scrollbars="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
-            android:id="@+id/newsActivity_WebView_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#FFFFFF"
-            android:orientation="vertical">
+        <!--<LinearLayout-->
+            <!--android:id="@+id/newsActivity_WebView_container"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:background="#FFFFFF"-->
+            <!--android:orientation="vertical">-->
 
             <WebView
                 android:id="@+id/newsActivity_WebView"
+                android:layout_marginTop="-200dp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="80dp"
-                android:layout_marginTop="-200dp">
+                android:layout_height="match_parent">
 
             </WebView>
 
@@ -104,7 +103,7 @@
             <!--android:layout_width="match_parent"-->
             <!--android:layout_height="wrap_content"/>-->
 
-        </LinearLayout>
+        <!--</LinearLayout>-->
 
     </android.support.v4.widget.NestedScrollView>
 

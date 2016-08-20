@@ -17,6 +17,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -25,21 +26,22 @@ import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
-import com.rainnka.ZHNews.Utility.APIUtility;
-import com.rainnka.ZHNews.Utility.IntentActionUtility;
-import com.rainnka.ZHNews.ViewLayer.Activity.Base.SwipeBackAty;
 import com.rainnka.ZHNews.Application.BaseApplication;
 import com.rainnka.ZHNews.Bean.ZhiHuNewsItemHot;
 import com.rainnka.ZHNews.Bean.ZhiHuNewsItemInfo;
+import com.rainnka.ZHNews.Bean.ZhiHuNewsItemThemeStories;
 import com.rainnka.ZHNews.R;
+import com.rainnka.ZHNews.Utility.APIUtility;
 import com.rainnka.ZHNews.Utility.ConstantUtility;
+import com.rainnka.ZHNews.Utility.IntentActionUtility;
+import com.rainnka.ZHNews.Utility.LengthConverterUtility;
 import com.rainnka.ZHNews.Utility.SQLiteCreateTableHelper;
 import com.rainnka.ZHNews.Utility.SnackbarUtility;
 import com.rainnka.ZHNews.Utility.TransitionHelper;
+import com.rainnka.ZHNews.ViewLayer.Activity.Base.SwipeBackAty;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -66,7 +68,8 @@ public class NewsAty extends SwipeBackAty implements AppBarLayout.OnOffsetChange
 	protected ImageView imageView_praise;
 	protected ImageView imageView_star;
 	protected ImageView imageView_comments;
-	protected LinearLayout linearLayout_webViewContainer;
+	public NestedScrollView nestedScrollView;
+	//	protected LinearLayout linearLayout_webViewContainer;
 
 	public OkHttpClient okHttpClient;
 	public Request request;
@@ -139,7 +142,6 @@ public class NewsAty extends SwipeBackAty implements AppBarLayout.OnOffsetChange
 		initHandler();
 
 		initSQLiteDatabase();
-
 		/*
 		* 添加点赞点击事件
 		* */
@@ -179,6 +181,17 @@ public class NewsAty extends SwipeBackAty implements AppBarLayout.OnOffsetChange
 		* appbar滚动监听
 		* */
 		addAppBarOffsetChangedListener();
+
+		/*
+		* 调整视图
+		* */
+		if (getIntent().hasExtra(ConstantUtility.SER_KEY_THEME)) {
+			NestedScrollView.LayoutParams layoutParams = (NestedScrollView.LayoutParams) webView.getLayoutParams();
+			layoutParams.setMargins(0, LengthConverterUtility.dip2px(BaseApplication
+					.getBaseApplicationContext(), 0), 0, LengthConverterUtility.dip2px
+					(BaseApplication.getBaseApplicationContext(), 0));
+			webView.setLayoutParams(layoutParams);
+		}
 
 		/*
 		*
@@ -229,6 +242,8 @@ public class NewsAty extends SwipeBackAty implements AppBarLayout.OnOffsetChange
 											contentValues.put("ItemImage", zhiHuNewsItemInfoFromHome.image);
 										}
 										contentValues.put("ItemTitle", zhiHuNewsItemInfoFromHome.title);
+										contentValues.put("ItemSeriType",
+												zhiHuNewsItemInfoFromHome.ItemSeriType);
 										sqLiteDatabase.beginTransaction();
 										sqLiteDatabase.insert("my_star", null, contentValues);
 										sqLiteDatabase.setTransactionSuccessful();
@@ -243,17 +258,6 @@ public class NewsAty extends SwipeBackAty implements AppBarLayout.OnOffsetChange
 							}
 						}
 					}).start();
-
-					//测试用
-					//				Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM my_star", null);
-					//				if (cursor != null) {
-					//					if (cursor.moveToFirst()) {
-					//						Log.i("ZRH", "ItemId: " + cursor.getString(1));
-					//						Log.i("ZRH", "ItemImage: " + cursor.getString(2));
-					//						Log.i("ZRH", "ItemTitle: " + cursor.getString(3));
-					//					}
-					//				}
-					//				cursor.close();
 				} else {
 					SnackbarUtility.getSnackbarDefault(coordinatorLayout, "登录后可使用收藏功能", Snackbar
 							.LENGTH_SHORT).show();
@@ -292,6 +296,8 @@ public class NewsAty extends SwipeBackAty implements AppBarLayout.OnOffsetChange
 											contentValues.put("ItemImage", zhiHuNewsItemInfoFromHome.image);
 										}
 										contentValues.put("ItemTitle", zhiHuNewsItemInfoFromHome.title);
+										contentValues.put("ItemSeriType",
+												zhiHuNewsItemInfoFromHome.ItemSeriType);
 										sqLiteDatabase.beginTransaction();
 										sqLiteDatabase.insert("my_praise", null, contentValues);
 										sqLiteDatabase.setTransactionSuccessful();
@@ -335,8 +341,9 @@ public class NewsAty extends SwipeBackAty implements AppBarLayout.OnOffsetChange
 		imageView_praise = (ImageView) findViewById(R.id.newsActivity_praise_ImageView);
 		imageView_star = (ImageView) findViewById(R.id.newsActivity_star_ImageView);
 		imageView_comments = (ImageView) findViewById(R.id.newsActivity_comments_ImageView);
-		linearLayout_webViewContainer = (LinearLayout) findViewById(R.id
-				.newsActivity_WebView_container);
+		nestedScrollView = (NestedScrollView) findViewById(R.id.newsActivity_NestedScrollView);
+		//		linearLayout_webViewContainer = (LinearLayout) findViewById(R.id
+		//				.newsActivity_WebView_container);
 	}
 
 	private void initWebView() {
@@ -360,14 +367,26 @@ public class NewsAty extends SwipeBackAty implements AppBarLayout.OnOffsetChange
 
 	private void bindIntentInfo() {
 		Intent intent = getIntent();
-		zhiHuNewsItemInfoFromHome = (ZhiHuNewsItemInfo) intent.getSerializableExtra(ConstantUtility.SER_KEY);
-		if(zhiHuNewsItemInfoFromHome == null){
+		if (intent.hasExtra(ConstantUtility.SER_KEY)) {
+			zhiHuNewsItemInfoFromHome = (ZhiHuNewsItemInfo) intent.getSerializableExtra(ConstantUtility.SER_KEY);
+			zhiHuNewsItemInfoFromHome.ItemSeriType = ConstantUtility.SER_KEY;
+		}
+		if (intent.hasExtra(ConstantUtility.SER_KEY_HOTNEWS)) {
 			ZhiHuNewsItemHot zhiHuNewsItemHot = (ZhiHuNewsItemHot) intent.getSerializableExtra(ConstantUtility
 					.SER_KEY_HOTNEWS);
 			zhiHuNewsItemInfoFromHome = new ZhiHuNewsItemInfo();
 			zhiHuNewsItemInfoFromHome.id = zhiHuNewsItemHot.news_id;
 			zhiHuNewsItemInfoFromHome.title = zhiHuNewsItemHot.title;
-			zhiHuNewsItemInfoFromHome.url_hot = zhiHuNewsItemHot.url;
+			zhiHuNewsItemInfoFromHome.ItemSeriType = ConstantUtility.SER_KEY_HOTNEWS;
+			//			zhiHuNewsItemInfoFromHome.url_hot = zhiHuNewsItemHot.url;
+		}
+		if (intent.hasExtra(ConstantUtility.SER_KEY_THEME)) {
+			ZhiHuNewsItemThemeStories zhiHuNewsItemThemeStories = (ZhiHuNewsItemThemeStories)
+					intent.getSerializableExtra(ConstantUtility.SER_KEY_THEME);
+			zhiHuNewsItemInfoFromHome = new ZhiHuNewsItemInfo();
+			zhiHuNewsItemInfoFromHome.id = zhiHuNewsItemThemeStories.id;
+			zhiHuNewsItemInfoFromHome.title = zhiHuNewsItemThemeStories.title;
+			zhiHuNewsItemInfoFromHome.ItemSeriType = ConstantUtility.SER_KEY_THEME;
 		}
 	}
 
@@ -382,9 +401,15 @@ public class NewsAty extends SwipeBackAty implements AppBarLayout.OnOffsetChange
 	*
 	* */
 	private void loadCollapsingToolbarContentPic() {
-		Glide.with(NewsAty.this)
-				.load(zhiHuNewsItemInfo.image)
-				.into(imageView);
+		if (zhiHuNewsItemInfo.image == null) {
+			Glide.with(NewsAty.this)
+					.load(zhiHuNewsItemInfo.images.get(0))
+					.into(imageView);
+		} else {
+			Glide.with(NewsAty.this)
+					.load(zhiHuNewsItemInfo.image)
+					.into(imageView);
+		}
 	}
 
 	/*
@@ -397,9 +422,9 @@ public class NewsAty extends SwipeBackAty implements AppBarLayout.OnOffsetChange
 				.readTimeout(10, TimeUnit.SECONDS)
 				.build();
 		String getInfoUrl = "";
-		if(zhiHuNewsItemInfoFromHome.url_hot == null){
+		if (zhiHuNewsItemInfoFromHome.url_hot == null) {
 			getInfoUrl = APIUtility.getInfoByAPI + zhiHuNewsItemInfoFromHome.id;
-		}else {
+		} else {
 			getInfoUrl = zhiHuNewsItemInfoFromHome.url_hot;
 		}
 		request = new Request.Builder()
@@ -607,7 +632,8 @@ public class NewsAty extends SwipeBackAty implements AppBarLayout.OnOffsetChange
 			sqLiteDatabase.close();
 			sqLiteDatabase = null;
 		}
-		linearLayout_webViewContainer.removeAllViews();
+		//		linearLayout_webViewContainer.removeAllViews();
+		nestedScrollView.removeAllViews();
 		if (webView != null) {
 			webView.clearHistory();
 			webView.clearCache(true);

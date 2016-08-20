@@ -30,6 +30,7 @@ public class ConstantUtility {
 
 	public final static String SER_KEY = "SER";
 	public final static String SER_KEY_HOTNEWS = "SER_HOTNEWS";
+	public final static String SER_KEY_THEME = "SER_THEME";
 
 	public final static int NEWS_TO_UNSTARED = 0x4693;
 	public final static int NEWS_TO_STARED = 0x4692;

@@ -119,6 +119,12 @@ public class NewsCategoryFrgm extends Fragment {
 		} else {
 
 		}
+//		if (!isVisibleToUser && newsCategoryRecvAdp != null) {
+//			if (newsCategoryRecvAdp.sqLiteDatabase != null && newsCategoryRecvAdp.sqLiteDatabase
+//					.isOpen()) {
+//				newsCategoryRecvAdp.sqLiteDatabase.close();
+//			}
+//		}
 	}
 
 	@Override
@@ -180,6 +186,12 @@ public class NewsCategoryFrgm extends Fragment {
 	}
 
 	public void onCreateViewLazy() {
+//		if(newsCategoryRecvAdp != null){
+//			if(newsCategoryRecvAdp.sqLiteDatabase != null && !newsCategoryRecvAdp.sqLiteDatabase
+//					.isOpen()){
+//				newsCategoryRecvAdp.initSQLiteDatabase();
+//			}
+//		}
 		retrofit = new Retrofit.Builder()
 				.baseUrl("http://news-at.zhihu.com")
 				.addConverterFactory(GsonConverterFactory.create())

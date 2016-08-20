@@ -1,5 +1,6 @@
 package com.rainnka.ZHNews.ViewLayer.Activity;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
@@ -8,9 +9,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.rainnka.ZHNews.Application.BaseApplication;
 import com.rainnka.ZHNews.R;
 import com.rainnka.ZHNews.ViewLayer.Activity.Base.BaseAty;
 import com.rainnka.ZHNews.ViewLayer.Adapter.NewsCategoryFrgmAdapter;
@@ -39,6 +42,8 @@ public class NewsCategoryAty extends BaseAty {
 
 	public NewsCategoryFrgmAdapter newsCategoryFrgmAdapter;
 
+	public SQLiteDatabase sqLiteDatabase;
+
 	public final static String[] STRINGS = new String[]{"开始游戏", "电影日报", "设计日报", "大公司日报", "财经日报"};
 
 	/**
@@ -49,7 +54,7 @@ public class NewsCategoryAty extends BaseAty {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.newscategory_aty);
 		setFullScreen();
-
+		initSQLiteDatabase();
 		initComponent();
 		initToolSetting();
 
@@ -72,6 +77,9 @@ public class NewsCategoryAty extends BaseAty {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		if(sqLiteDatabase.isOpen()){
+			sqLiteDatabase.close();
+		}
 	}
 
 	@Override
@@ -110,6 +118,16 @@ public class NewsCategoryAty extends BaseAty {
 		for (int i = 0; i < 5; i++) {
 			tabLayout.addTab(tabLayout.newTab());
 			tabLayout.getTabAt(i).setText(STRINGS[i]);
+		}
+	}
+
+	public void initSQLiteDatabase() {
+		try {
+			sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(BaseApplication.getDATABASE_PATH() +
+					"/myInfo.db3", null);
+		} catch (Exception e) {
+			Log.i("ZRH", e.getMessage());
+			Log.i("ZRH", e.toString());
 		}
 	}
 

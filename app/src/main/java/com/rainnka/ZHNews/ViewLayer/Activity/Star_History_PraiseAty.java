@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,6 +14,8 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.view.ActionMode;
@@ -31,7 +34,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.rainnka.ZHNews.Bean.ZhiHuNewsItemHot;
+import com.rainnka.ZHNews.Bean.ZhiHuNewsItemThemeStories;
 import com.rainnka.ZHNews.Utility.IntentActionUtility;
+import com.rainnka.ZHNews.Utility.TransitionHelper;
 import com.rainnka.ZHNews.ViewLayer.Activity.Base.SwipeBackAty;
 import com.rainnka.ZHNews.ViewLayer.Adapter.Star_History_PraiseActivityRecyclerViewAdapter;
 import com.rainnka.ZHNews.Application.BaseApplication;
@@ -98,14 +104,14 @@ public class Star_History_PraiseAty extends SwipeBackAty {
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
-//			Window window = getWindow();
-//			// Translucent status bar
-//			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager
-//					.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//			//			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager
-//			//					.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-//		}
+		//		if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
+		//			Window window = getWindow();
+		//			// Translucent status bar
+		//			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager
+		//					.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+		//			//			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager
+		//			//					.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+		//		}
 
 		setContentView(R.layout.star_history_praise_aty);
 		setupWindowAnimations();
@@ -493,30 +499,6 @@ public class Star_History_PraiseAty extends SwipeBackAty {
 		recyclerView.addOnItemTouchListener(new onSHPActRecyclerItemClickListener(recyclerView) {
 			@Override
 			public void onItemClick(RecyclerView.ViewHolder viewHolder) {
-				if (sqLiteDatabase == null) {
-					sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(BaseApplication.getDATABASE_PATH() +
-									"/myInfo.db3",
-							null);
-				}
-				sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_HISTORY_TABLE);
-				sqLiteDatabase.delete("my_history", "ItemId like ?", new
-						String[]{String.valueOf(zhiHuNewsItemInfoList.get(viewHolder
-						.getAdapterPosition()).id)});
-
-				ContentValues contentValues = new ContentValues();
-				contentValues.put("ItemId", zhiHuNewsItemInfoList.get(viewHolder
-						.getAdapterPosition()).id);
-				try {
-					contentValues.put("ItemImage", zhiHuNewsItemInfoList.get(viewHolder
-							.getAdapterPosition()).images.get(0));
-				} catch (Exception e) {
-					contentValues.put("ItemImage", zhiHuNewsItemInfoList.get(viewHolder
-							.getAdapterPosition()).image);
-				}
-				contentValues.put("ItemTitle", zhiHuNewsItemInfoList.get(viewHolder
-						.getAdapterPosition()).title);
-				sqLiteDatabase.insert("my_history", null, contentValues);
-
 				if (star_history_praiseActivityRecyclerViewAdapter.getSelectable()) {
 
 					if (star_history_praiseActivityRecyclerViewAdapter.getItemChecked(viewHolder
@@ -534,14 +516,55 @@ public class Star_History_PraiseAty extends SwipeBackAty {
 					setActionModeTitle();
 
 				} else {
+					if (sqLiteDatabase == null) {
+						sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(BaseApplication.getDATABASE_PATH() +
+										"/myInfo.db3",
+								null);
+					}
+					ZhiHuNewsItemInfo zhiHuNewsItemInfo =
+							star_history_praiseActivityRecyclerViewAdapter.zhiHuNewsItemInfoList.get
+									(viewHolder.getAdapterPosition());
+					sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_HISTORY_TABLE);
+					sqLiteDatabase.delete("my_history", "ItemId like ?", new
+							String[]{String.valueOf(zhiHuNewsItemInfoList.get(viewHolder
+							.getAdapterPosition()).id)});
+
+					ContentValues contentValues = new ContentValues();
+					contentValues.put("ItemId", zhiHuNewsItemInfoList.get(viewHolder
+							.getAdapterPosition()).id);
+					try {
+						contentValues.put("ItemImage", zhiHuNewsItemInfoList.get(viewHolder
+								.getAdapterPosition()).images.get(0));
+					} catch (Exception e) {
+						contentValues.put("ItemImage", zhiHuNewsItemInfoList.get(viewHolder
+								.getAdapterPosition()).image);
+					}
+					contentValues.put("ItemTitle", zhiHuNewsItemInfoList.get(viewHolder
+							.getAdapterPosition()).title);
+					contentValues.put("ItemSeriType", zhiHuNewsItemInfo.ItemSeriType);
+					sqLiteDatabase.insert("my_history", null, contentValues);
 					Intent intent = new Intent();
 					intent.setAction(IntentActionUtility.INTENT_TO_NEWS_KEY);
 					Bundle bundle = new Bundle();
-					bundle.putSerializable(ConstantUtility.SER_KEY,
-							star_history_praiseActivityRecyclerViewAdapter.zhiHuNewsItemInfoList.get
-									(viewHolder.getAdapterPosition()));
+					if (zhiHuNewsItemInfo.ItemSeriType.equals(ConstantUtility.SER_KEY_HOTNEWS)) {
+						ZhiHuNewsItemHot zhiHuNewsItemHot = new ZhiHuNewsItemHot();
+						zhiHuNewsItemHot.news_id = zhiHuNewsItemInfo.id;
+						//						zhiHuNewsItemHot.thumbnail = zhiHuNewsItemInfo.images.get(0);
+						zhiHuNewsItemHot.title = zhiHuNewsItemInfo.title;
+						bundle.putSerializable(zhiHuNewsItemInfo.ItemSeriType, zhiHuNewsItemHot);
+					} else if (zhiHuNewsItemInfo.ItemSeriType.equals(ConstantUtility.SER_KEY_THEME)) {
+						ZhiHuNewsItemThemeStories zhiHuNewsItemThemeStories = new
+								ZhiHuNewsItemThemeStories();
+						zhiHuNewsItemThemeStories.id = zhiHuNewsItemInfo.id;
+						//						zhiHuNewsItemThemeStories.images.add(0,zhiHuNewsItemInfo.images.get(0));
+						zhiHuNewsItemThemeStories.title = zhiHuNewsItemInfo.title;
+						bundle.putSerializable(zhiHuNewsItemInfo.ItemSeriType, zhiHuNewsItemThemeStories);
+					} else {
+						bundle.putSerializable(zhiHuNewsItemInfo.ItemSeriType, zhiHuNewsItemInfo);
+					}
 					intent.putExtras(bundle);
-					startActivity(intent);
+					startActivityInTransition(intent, getTranstitionOptions(getTransitionPairs())
+							.toBundle(), true);
 				}
 
 			}
@@ -986,7 +1009,7 @@ public class Star_History_PraiseAty extends SwipeBackAty {
 					zhiHuNewsItemInfo.id = Integer.parseInt(cursor.getString(1));
 					zhiHuNewsItemInfo.images.add(0, cursor.getString(2));
 					zhiHuNewsItemInfo.title = cursor.getString(3);
-
+					zhiHuNewsItemInfo.ItemSeriType = cursor.getString(4);
 					tempList.add(zhiHuNewsItemInfo);
 				} while (cursor.moveToPrevious());
 			}
@@ -1029,7 +1052,7 @@ public class Star_History_PraiseAty extends SwipeBackAty {
 					zhiHuNewsItemInfo.id = Integer.parseInt(cursor.getString(1));
 					zhiHuNewsItemInfo.images.add(0, cursor.getString(2));
 					zhiHuNewsItemInfo.title = cursor.getString(3);
-
+					zhiHuNewsItemInfo.ItemSeriType = cursor.getString(4);
 					tempList.add(zhiHuNewsItemInfo);
 				} while (cursor.moveToPrevious());
 			}
@@ -1080,7 +1103,7 @@ public class Star_History_PraiseAty extends SwipeBackAty {
 					zhiHuNewsItemInfo.id = Integer.parseInt(cursor.getString(1));
 					zhiHuNewsItemInfo.images.add(0, cursor.getString(2));
 					zhiHuNewsItemInfo.title = cursor.getString(3);
-
+					zhiHuNewsItemInfo.ItemSeriType = cursor.getString(4);
 					tempList.add(zhiHuNewsItemInfo);
 				} while (cursor.moveToPrevious());
 			}
@@ -1185,6 +1208,39 @@ public class Star_History_PraiseAty extends SwipeBackAty {
 		actionMode.setTitle("已选: " + star_history_praiseActivityRecyclerViewAdapter
 				.mSelectedPositions.size() + "/" + star_history_praiseActivityRecyclerViewAdapter
 				.getItemCount());
+	}
+
+	public Pair<View, String>[] getTransitionPairs() {
+		Pair<View, String>[] pairs = TransitionHelper.createSafeTransitionParticipants
+				(this, false);
+		return pairs;
+	}
+
+	public ActivityOptionsCompat getTranstitionOptions(Pair<View, String>[] pairs) {
+		ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat
+				.makeSceneTransitionAnimation(this, pairs);
+		return activityOptionsCompat;
+	}
+
+	public void startActivityInTransition(Intent intent, Bundle bundle, boolean transitionFlag) {
+		if (transitionFlag) {
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+				startActivity(intent, bundle);
+			} else {
+				startActivity(intent);
+			}
+		} else {
+			startActivity(intent);
+		}
+
+	}
+
+	public void startActivityInTransitionForResult(Intent intent, int code, Bundle bundle, boolean transitionFlag) {
+		if (transitionFlag) {
+			startActivityForResult(intent, code, bundle);
+		} else {
+			startActivityForResult(intent, code);
+		}
 	}
 
 	/*

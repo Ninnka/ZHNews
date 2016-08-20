@@ -40,4 +40,6 @@ public class ZhiHuNewsItemInfo implements Serializable {
 
 	public String url_hot;
 
+	public String ItemSeriType;
+
 }
