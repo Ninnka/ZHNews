@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.rainnka.ZHNews.Bean.CategoryTheme;
 import com.rainnka.ZHNews.Bean.ZhiHuNewsItemThemeStories;
+import com.rainnka.ZHNews.Bean.ZhiHuNewsItemThemeStoriesHeader;
 import com.rainnka.ZHNews.CustomView.RecvDividerItemDecoration;
 import com.rainnka.ZHNews.R;
 import com.rainnka.ZHNews.Utility.ConstantUtility;
@@ -119,12 +120,12 @@ public class NewsCategoryFrgm extends Fragment {
 		} else {
 
 		}
-//		if (!isVisibleToUser && newsCategoryRecvAdp != null) {
-//			if (newsCategoryRecvAdp.sqLiteDatabase != null && newsCategoryRecvAdp.sqLiteDatabase
-//					.isOpen()) {
-//				newsCategoryRecvAdp.sqLiteDatabase.close();
-//			}
-//		}
+		//		if (!isVisibleToUser && newsCategoryRecvAdp != null) {
+		//			if (newsCategoryRecvAdp.sqLiteDatabase != null && newsCategoryRecvAdp.sqLiteDatabase
+		//					.isOpen()) {
+		//				newsCategoryRecvAdp.sqLiteDatabase.close();
+		//			}
+		//		}
 	}
 
 	@Override
@@ -186,12 +187,12 @@ public class NewsCategoryFrgm extends Fragment {
 	}
 
 	public void onCreateViewLazy() {
-//		if(newsCategoryRecvAdp != null){
-//			if(newsCategoryRecvAdp.sqLiteDatabase != null && !newsCategoryRecvAdp.sqLiteDatabase
-//					.isOpen()){
-//				newsCategoryRecvAdp.initSQLiteDatabase();
-//			}
-//		}
+		//		if(newsCategoryRecvAdp != null){
+		//			if(newsCategoryRecvAdp.sqLiteDatabase != null && !newsCategoryRecvAdp.sqLiteDatabase
+		//					.isOpen()){
+		//				newsCategoryRecvAdp.initSQLiteDatabase();
+		//			}
+		//		}
 		retrofit = new Retrofit.Builder()
 				.baseUrl("http://news-at.zhihu.com")
 				.addConverterFactory(GsonConverterFactory.create())
@@ -204,6 +205,18 @@ public class NewsCategoryFrgm extends Fragment {
 			public void onResponse(Call<CategoryTheme> call, Response<CategoryTheme> response) {
 				if (response.isSuccessful()) {
 					newsCategoryRecvAdp.addZhiHuNewsItemInfoList(response.body().stories);
+					for (int i = 0; i < newsCategoryRecvAdp.getItemCount(); i++) {
+						newsCategoryRecvAdp.zhiHuNewsItemThemeStoriesList.get(i).item_layout =
+								ConstantUtility.NEWSCATEGORY_RECVITEM_CONTENT;
+					}
+					ZhiHuNewsItemThemeStoriesHeader zhiHuNewsItemThemeStoriesHeader = new
+							ZhiHuNewsItemThemeStoriesHeader();
+					zhiHuNewsItemThemeStoriesHeader.description = response.body().description;
+					zhiHuNewsItemThemeStoriesHeader.image = response.body().image;
+					zhiHuNewsItemThemeStoriesHeader.name = response.body().name;
+					zhiHuNewsItemThemeStoriesHeader.item_layout = ConstantUtility
+							.NEWSCATEGORY_RECVITEM_HEADER;
+					newsCategoryRecvAdp.addHeaderViewItem(zhiHuNewsItemThemeStoriesHeader);
 					newsCategoryHandler.sendEmptyMessage(0x2367865);
 				}
 			}

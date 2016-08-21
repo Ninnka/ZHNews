@@ -26,6 +26,7 @@ import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
@@ -186,7 +187,8 @@ public class NewsAty extends SwipeBackAty implements AppBarLayout.OnOffsetChange
 		* 调整视图
 		* */
 		if (getIntent().hasExtra(ConstantUtility.SER_KEY_THEME)) {
-			NestedScrollView.LayoutParams layoutParams = (NestedScrollView.LayoutParams) webView.getLayoutParams();
+			LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) webView
+					.getLayoutParams();
 			layoutParams.setMargins(0, LengthConverterUtility.dip2px(BaseApplication
 					.getBaseApplicationContext(), 0), 0, LengthConverterUtility.dip2px
 					(BaseApplication.getBaseApplicationContext(), 0));

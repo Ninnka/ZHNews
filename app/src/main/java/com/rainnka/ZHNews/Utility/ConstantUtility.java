@@ -54,6 +54,9 @@ public class ConstantUtility {
 	public final static int HORIZONTAL_LIST = LinearLayoutManager.HORIZONTAL;
 	public final static int VERTICAL_LIST = LinearLayoutManager.VERTICAL;
 
+	public final static int NEWSCATEGORY_RECVITEM_HEADER = 0;
+	public final static int NEWSCATEGORY_RECVITEM_CONTENT = 1;
+
 
 	public static AnimatorSet getAnimatorDelegate(){
 		return new AnimatorSet();

@@ -18,4 +18,5 @@ public class ZhiHuNewsItemThemeStories implements Serializable {
 
 	public String title;
 
+	public int item_layout;
 }

@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.rainnka.ZHNews.Application.BaseApplication;
 import com.rainnka.ZHNews.R;
@@ -35,6 +36,7 @@ public class NewsCategoryAty extends BaseAty {
 	protected Toolbar toolbar;
 	protected TabLayout tabLayout;
 	protected ViewPager viewPager;
+	ImageView imageView_sortcategorytheme;
 
 	public List<Fragment> fragmentList;
 
@@ -65,6 +67,7 @@ public class NewsCategoryAty extends BaseAty {
 
 		bindViewPagerTabLayout();
 
+		addSortCategoryThemeOnClickListener();
 		getWindow().getDecorView().setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
 			@Override
 			public void onSystemUiVisibilityChange(int visibility) {
@@ -101,6 +104,8 @@ public class NewsCategoryAty extends BaseAty {
 		toolbar = (Toolbar) findViewById(R.id.newscategory_aty_Toolbar);
 		tabLayout = (TabLayout) findViewById(R.id.newscategory_aty_TabLayout);
 		viewPager = (ViewPager) findViewById(R.id.newscategory_aty_ViewPager);
+		imageView_sortcategorytheme = (ImageView) findViewById(R.id
+				.newscategory_aty_sortcategorytheme_ImageView);
 	}
 
 	private void initToolSetting() {
@@ -142,7 +147,7 @@ public class NewsCategoryAty extends BaseAty {
 		newsCategoryFrgmAdapter.setFragmentList(fragmentList);
 		viewPager.setAdapter(newsCategoryFrgmAdapter);
 		viewPager.setOffscreenPageLimit(4);
-		viewPager.setCurrentItem(0, false);
+		viewPager.setCurrentItem(3, false);
 	}
 
 	private void initFragmentManager() {
@@ -164,6 +169,15 @@ public class NewsCategoryAty extends BaseAty {
 
 			@Override
 			public void onTabReselected(TabLayout.Tab tab) {
+
+			}
+		});
+	}
+
+	private void addSortCategoryThemeOnClickListener() {
+		imageView_sortcategorytheme.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
 
 			}
 		});
