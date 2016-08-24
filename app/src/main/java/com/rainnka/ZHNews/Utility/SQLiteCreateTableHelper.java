@@ -15,4 +15,7 @@ public class SQLiteCreateTableHelper {
 	public final static String CREATE_STAR_TABLE = "create table if not exists my_star (Id " +
 			"integer primary key, ItemId text, ItemImage text, ItemTitle text, ItemSeriType text)";
 
+	public final static String CREATE_LOCATEITEMINFO_TABLE = "create table if not exists " +
+			"my_locateItemInfo (Id integer primary key, ItemInfoList text)";
+
 }

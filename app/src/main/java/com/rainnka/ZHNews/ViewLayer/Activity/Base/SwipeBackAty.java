@@ -3,8 +3,6 @@ package com.rainnka.ZHNews.ViewLayer.Activity.Base;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
-import android.transition.Slide;
-import android.view.Gravity;
 import android.view.View;
 
 import me.imid.swipebacklayout.lib.SwipeBackLayout;
@@ -19,20 +17,6 @@ import me.imid.swipebacklayout.lib.app.SwipeBackActivityHelper;
 public class SwipeBackAty extends BaseAty implements SwipeBackActivityBase {
 
 	private SwipeBackActivityHelper swipeBackActivityHelper;
-
-	public void setupWindowAnimations() {
-		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-			//			Fade fade = new Fade();
-			//			fade.setDuration(500);
-			//			Explode explode = new Explode();
-			//			explode.setDuration(300);
-			Slide slide = new Slide();
-			slide.setSlideEdge(Gravity.RIGHT);
-			slide.setDuration(150);
-			getWindow().setEnterTransition(slide);
-			//			getWindow().setReturnTransition(slide);
-		}
-	}
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {

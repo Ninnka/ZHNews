@@ -3,6 +3,19 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 24
     buildToolsVersion '24.0.1'
+
+    signingConfigs {
+        debug{
+            storeFile file("D:/Android/.android/debug.keystore")
+        }
+        release {
+            keyAlias "rainnka"
+            keyPassword "665396"
+            storeFile file("D:/Android/.android/rainnka.jks")
+            storePassword "665396"
+        }
+    }
+
     defaultConfig {
         applicationId "com.rainnka.zhnews"
         minSdkVersion 14
@@ -10,10 +23,16 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
     buildTypes {
-        release {
+        debug{
             minifyEnabled false
+            signingConfig signingConfigs.debug
+        }
+        release {
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release // 签名配置
         }
     }
     productFlavors {

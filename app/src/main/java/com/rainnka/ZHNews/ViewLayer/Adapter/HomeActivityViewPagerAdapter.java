@@ -2,7 +2,6 @@ package com.rainnka.ZHNews.ViewLayer.Adapter;
 
 import android.content.ContentValues;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
@@ -15,12 +14,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.rainnka.ZHNews.Utility.IntentActionUtility;
-import com.rainnka.ZHNews.ViewLayer.Activity.HomeAty;
 import com.rainnka.ZHNews.Bean.ZhiHuNewsItemInfo;
 import com.rainnka.ZHNews.R;
 import com.rainnka.ZHNews.Utility.ConstantUtility;
+import com.rainnka.ZHNews.Utility.IntentActionUtility;
 import com.rainnka.ZHNews.Utility.SQLiteCreateTableHelper;
+import com.rainnka.ZHNews.ViewLayer.Activity.HomeAty;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -35,7 +34,7 @@ public class HomeActivityViewPagerAdapter extends PagerAdapter {
 	List<ZhiHuNewsItemInfo> zhiHuNewsTopItemInfoList;
 	public WeakReference<AppCompatActivity> appCompatActivityWeakReference;
 	public AppCompatActivity appCompatActivity;
-	public SQLiteDatabase sqLiteDatabase;
+//	public SQLiteDatabase sqLiteDatabase;
 
 	public HomeActivityViewPagerAdapter(AppCompatActivity appCompatActivity, List<View> viewList) {
 		this.appCompatActivityWeakReference = new WeakReference<>(appCompatActivity);
@@ -107,30 +106,43 @@ public class HomeActivityViewPagerAdapter extends PagerAdapter {
 		view.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (((HomeAty) appCompatActivity).sqLiteDatabase.isOpen()) {
-					((HomeAty) appCompatActivity).closeSQLiteDatabase();
-				}
 				if (ConstantUtility.userIsLogin) {
-					sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(appCompatActivity
-							.getFilesDir().toString() + "/myInfo.db3", null);
-					sqLiteDatabase.execSQL(SQLiteCreateTableHelper.CREATE_HISTORY_TABLE);
-					sqLiteDatabase.delete("my_history", "ItemId like ?", new
-							String[]{String.valueOf(zhiHuNewsTopItemInfoList.get(position - 1).id)});
+					((HomeAty) appCompatActivity).sqLiteDatabase.execSQL(SQLiteCreateTableHelper
+							.CREATE_HISTORY_TABLE);
+					try {
+						((HomeAty) appCompatActivity).sqLiteDatabase.beginTransaction();
+						((HomeAty) appCompatActivity).sqLiteDatabase.delete("my_history", "ItemId like ?", new
+								String[]{String.valueOf(zhiHuNewsTopItemInfoList.get(position - 1).id)});
+						((HomeAty) appCompatActivity).sqLiteDatabase.setTransactionSuccessful();
+					} catch (Exception e) {
+						Log.i("ZRH", e.getStackTrace().toString());
+						Log.i("ZRH", e.getMessage());
+						Log.i("ZRH", e.toString());
+					} finally {
+						((HomeAty) appCompatActivity).sqLiteDatabase.endTransaction();
+					}
+
 					ContentValues contentValues = new ContentValues();
 					contentValues.put("ItemId", zhiHuNewsTopItemInfoList.get(position - 1).id);
 					try {
 						contentValues.put("ItemImage", zhiHuNewsTopItemInfoList.get(position - 1)
-								.images
-								.get(0));
+								.images.get(0));
 					} catch (Exception e) {
-						contentValues.put("ItemImage", zhiHuNewsTopItemInfoList.get(position - 1)
-								.image);
+						contentValues.put("ItemImage", zhiHuNewsTopItemInfoList.get(position - 1).image);
 					}
 					contentValues.put("ItemTitle", zhiHuNewsTopItemInfoList.get(position - 1).title);
 					contentValues.put("ItemSeriType", ConstantUtility.SER_KEY);
-					sqLiteDatabase.insert("my_history", null, contentValues);
-					sqLiteDatabase.close();
-
+					try {
+						((HomeAty) appCompatActivity).sqLiteDatabase.beginTransaction();
+						((HomeAty) appCompatActivity).sqLiteDatabase.insert("my_history", null, contentValues);
+						((HomeAty) appCompatActivity).sqLiteDatabase.setTransactionSuccessful();
+					} catch (Exception e) {
+						Log.i("ZRH", e.getStackTrace().toString());
+						Log.i("ZRH", e.getMessage());
+						Log.i("ZRH", e.toString());
+					} finally {
+						((HomeAty) appCompatActivity).sqLiteDatabase.endTransaction();
+					}
 				}
 				Intent intent = new Intent();
 				intent.setAction(IntentActionUtility.INTENT_TO_NEWS_KEY);
@@ -139,10 +151,10 @@ public class HomeActivityViewPagerAdapter extends PagerAdapter {
 					bundle.putSerializable(ConstantUtility.SER_KEY, zhiHuNewsTopItemInfoList.get
 							(position - 1));
 					intent.putExtras(bundle);
-					Pair<View, String>[] pairs = ((HomeAty)appCompatActivity).getTransitionPairs();
-					ActivityOptionsCompat activityOptionsCompat = ((HomeAty)appCompatActivity)
+					Pair<View, String>[] pairs = ((HomeAty) appCompatActivity).getTransitionPairs();
+					ActivityOptionsCompat activityOptionsCompat = ((HomeAty) appCompatActivity)
 							.getTranstitionOptions(pairs);
-					((HomeAty)appCompatActivity).startActivityInTransition(intent,
+					((HomeAty) appCompatActivity).startActivityInTransition(intent,
 							activityOptionsCompat.toBundle(), true);
 				} catch (Exception e) {
 					Log.i("ZRH", e.toString());

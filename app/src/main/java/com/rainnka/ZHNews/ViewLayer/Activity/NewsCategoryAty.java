@@ -55,6 +55,7 @@ public class NewsCategoryAty extends BaseAty {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.newscategory_aty);
+		setupWindowAnimations();
 		setFullScreen();
 		initSQLiteDatabase();
 		initComponent();
@@ -72,7 +73,7 @@ public class NewsCategoryAty extends BaseAty {
 			@Override
 			public void onSystemUiVisibilityChange(int visibility) {
 				setFullScreen();
-//				Log.i("ZRH", "visibility: " + visibility);
+				//				Log.i("ZRH", "visibility: " + visibility);
 			}
 		});
 	}
@@ -80,7 +81,7 @@ public class NewsCategoryAty extends BaseAty {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		if(sqLiteDatabase.isOpen()){
+		if (sqLiteDatabase.isOpen()) {
 			sqLiteDatabase.close();
 		}
 	}
@@ -147,7 +148,7 @@ public class NewsCategoryAty extends BaseAty {
 		newsCategoryFrgmAdapter.setFragmentList(fragmentList);
 		viewPager.setAdapter(newsCategoryFrgmAdapter);
 		viewPager.setOffscreenPageLimit(4);
-		viewPager.setCurrentItem(3, false);
+		viewPager.setCurrentItem(0, false);
 	}
 
 	private void initFragmentManager() {

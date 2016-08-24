@@ -19,6 +19,7 @@ public class ConstantUtility {
 	public final static int RECYCLER_REFRESH_OLD = 0x222222;
 	public final static int RECYCLER_REFRESH_OLD_FAILURE = 0x222333;
 	public final static int RECYCLER_REFRESH_LATEST = 0x333333;
+	public final static int RECYCLER_REFRESH_LOCATE = 0x5872165;
 
 	public final static int COMMENTSLIST_CHANGED = 0x1293;
 
