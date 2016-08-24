@@ -373,6 +373,9 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 		if (sqLiteDatabase != null) {
 			sqLiteDatabase.close();
 		}
+		if(sqLiteDatabase_locate !=null){
+			sqLiteDatabase_locate.close();
+		}
 		mhandler.removeCallbacks(mRunnableBackPressStatus);
 		bannerHandler.removeMessages(ConstantUtility.BANNER_SCROLL_KEY);
 		recyclerRefreshHandler.removeCallbacksAndMessages(null);
@@ -1372,6 +1375,7 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 				if (isFirstLoadingContent) {
 					initZhiHuContent();
 				} else {
+					recyclerView.scrollToPosition(0);
 					onRefresh();
 				}
 				break;
