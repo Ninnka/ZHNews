@@ -4,6 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.rainnka.ZHNews.ViewLayer.Fragment.NewsCategoryFrgm;
+
 import java.util.List;
 
 /**
@@ -22,8 +24,17 @@ public class NewsCategoryFrgmAdapter extends FragmentStatePagerAdapter {
 		this.fragmentList = fragmentList;
 	}
 
-	public void replaceFragmentInList(List<Fragment> fragmentList) {
+	public List<Fragment> getFragmentList() {
+		return fragmentList;
+	}
 
+	public void replace(NewsCategoryFrgm newsCategoryFrgm, int position) {
+		fragmentList.remove(position);
+		fragmentList.add(position, newsCategoryFrgm);
+	}
+
+	public void clear(){
+		fragmentList.clear();
 	}
 
 	@Override

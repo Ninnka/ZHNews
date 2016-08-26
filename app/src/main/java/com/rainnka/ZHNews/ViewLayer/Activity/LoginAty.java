@@ -12,17 +12,18 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.rainnka.ZHNews.ViewLayer.Activity.Base.SwipeBackAty;
 import com.rainnka.ZHNews.Application.BaseApplication;
 import com.rainnka.ZHNews.R;
 import com.rainnka.ZHNews.Utility.ConstantUtility;
 import com.rainnka.ZHNews.Utility.LengthConverterUtility;
 import com.rainnka.ZHNews.Utility.SnackbarUtility;
+import com.rainnka.ZHNews.ViewLayer.Activity.Base.SwipeBackAty;
 
 /**
  * Created by rainnka on 2016/6/26 21:52
@@ -45,14 +46,14 @@ public class LoginAty extends SwipeBackAty {
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
-//			Window window = getWindow();
-//			// Translucent status bar
-//			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager
-//					.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-////			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager
-////					.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-//		}
+		//		if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
+		//			Window window = getWindow();
+		//			// Translucent status bar
+		//			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager
+		//					.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+		////			window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager
+		////					.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+		//		}
 		setContentView(R.layout.login_aty);
 		setupWindowAnimations();
 
@@ -67,14 +68,17 @@ public class LoginAty extends SwipeBackAty {
 		//设置toolbar
 		initToolbarSetting();
 
-		//设置输入框中的左图像
-		initDrawableTextInputEditText();
-
 		//设置登录点击事件
 		setSignInClickListener();
 
 		//设置editText的监听事件
 		setEditTextChangedListener();
+	}
+
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {
+		//设置输入框中的左图像
+		initDrawableTextInputEditText();
 	}
 
 	private void setEditTextChangedListener() {
@@ -160,20 +164,16 @@ public class LoginAty extends SwipeBackAty {
 	}
 
 	private void initDrawableTextInputEditText() {
-		Drawable[] drawableUsernames = usernameTextInputEditText.getCompoundDrawables();
-		drawableUsernames[0].setBounds(0, 0, 70, 70);
-		usernameTextInputEditText.setCompoundDrawables(drawableUsernames[0], null, null, null);
-		//		drawableUsername.setBounds(LengthTransitionUtility.dip2px(getApplicationContext(), 5),
-		//				LengthTransitionUtility.dip2px(getApplicationContext(), 5), LengthTransitionUtility
-		//						.dip2px(getApplicationContext(), 5), LengthTransitionUtility.dip2px
-		//						(getApplicationContext(), 5));
-		//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-		//			passwordTextInputEditText.setCompoundDrawablesRelativeWithIntrinsicBounds
-		//					(drawableUsername, null, null, null);
-		//		}
-		Drawable[] drawablePasswords = passwordTextInputEditText.getCompoundDrawables();
-		drawablePasswords[0].setBounds(0, 0, 60, 60);
-		passwordTextInputEditText.setCompoundDrawables(drawablePasswords[0], null, null, null);
+		try{
+			Drawable[] drawableUsernames = usernameTextInputEditText.getCompoundDrawables();
+			drawableUsernames[0].setBounds(0, 0, 70, 70);
+			usernameTextInputEditText.setCompoundDrawables(drawableUsernames[0], null, null, null);
+			Drawable[] drawablePasswords = passwordTextInputEditText.getCompoundDrawables();
+			drawablePasswords[0].setBounds(0, 0, 60, 60);
+			passwordTextInputEditText.setCompoundDrawables(drawablePasswords[0], null, null, null);
+		}catch (Exception e){
+			Log.i("ZRH",e.toString());
+		}
 	}
 
 	private void initToolbarSetting() {

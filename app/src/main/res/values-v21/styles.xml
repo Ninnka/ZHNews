@@ -48,6 +48,7 @@
     <style name="HomeTheme" parent="AppTheme">
 
         <!--状态栏透明-->
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowIsTranslucent">true</item>
 
@@ -58,7 +59,7 @@
     </style>
 
     <style name="NewsTheme" parent="AppTheme">
-
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowIsTranslucent">true</item>
 

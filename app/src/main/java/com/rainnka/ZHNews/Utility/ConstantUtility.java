@@ -58,6 +58,8 @@ public class ConstantUtility {
 	public final static int NEWSCATEGORY_RECVITEM_HEADER = 0;
 	public final static int NEWSCATEGORY_RECVITEM_CONTENT = 1;
 
+	public final static String[] NEWS_THEME_NAMES= new String[]{"开始游戏","电影日报","设计日报","大公司日报",
+			"财经日报","音乐日报","体育日报","动漫日报","互联网安全","不许无聊","用户推荐日报","日常心理学"};
 
 	public static AnimatorSet getAnimatorDelegate(){
 		return new AnimatorSet();

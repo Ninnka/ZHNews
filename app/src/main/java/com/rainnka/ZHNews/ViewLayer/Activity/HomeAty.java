@@ -373,7 +373,7 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 		if (sqLiteDatabase != null) {
 			sqLiteDatabase.close();
 		}
-		if(sqLiteDatabase_locate !=null){
+		if (sqLiteDatabase_locate != null) {
 			sqLiteDatabase_locate.close();
 		}
 		mhandler.removeCallbacks(mRunnableBackPressStatus);
@@ -1270,6 +1270,7 @@ public class HomeAty extends BaseAty implements ViewPager.OnPageChangeListener,
 		homeActivityRecyclerViewAdapter.setZhiHuNewsItemInfoList
 				(zhiHuNewsLatestItemInfo.stories);
 		recyclerView.setAdapter(homeActivityRecyclerViewAdapter);
+		linearLayoutManager.setAutoMeasureEnabled(true);
 		recyclerView.setLayoutManager(linearLayoutManager);
 
 		swipeRefreshLayout.setEnabled(true);

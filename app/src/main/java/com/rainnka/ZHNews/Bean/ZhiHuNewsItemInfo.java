@@ -42,4 +42,6 @@ public class ZhiHuNewsItemInfo implements Serializable {
 
 	public String ItemSeriType;
 
+	public Theme theme;
+
 }

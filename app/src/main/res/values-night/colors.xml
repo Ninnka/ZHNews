@@ -61,4 +61,7 @@
     <color name="newscategory_frgm_text_loading">#FAFAFA</color>
     <color name="newscategory_frgm_textbackground">#2E2E2E</color>
 
+    <color name="newscategory_bottomsheet_item_text">#EAEAEA</color>
+    <color name="newscategory_bottomsheet_background">#363636</color>
+
 </resources>

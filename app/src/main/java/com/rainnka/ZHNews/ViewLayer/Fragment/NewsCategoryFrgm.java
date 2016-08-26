@@ -51,8 +51,8 @@ public class NewsCategoryFrgm extends Fragment {
 
 	public List<ZhiHuNewsItemThemeStories> stories;
 
-	public boolean isLazyModel = true;
-	public boolean isInit = false;
+	public boolean isLazyModel;
+	public boolean isInit;
 
 	public int categoryId;
 
@@ -77,6 +77,8 @@ public class NewsCategoryFrgm extends Fragment {
 		//			isLazyModel = getArguments().getBoolean("lazyFlag");
 		//			Log.i("ZRH", "isLazyModel: " + isLazyModel);
 		//		}
+		isLazyModel = true;
+		isInit = false;
 	}
 
 	@Override

@@ -82,7 +82,7 @@ public class NewsCategoryRecvAdp extends RecyclerView.Adapter<RecyclerView.ViewH
 	public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
 		if (holder instanceof NewsCategoryViewHolder) {
 			final ZhiHuNewsItemThemeStories zhiHuNewsItemThemeStories = zhiHuNewsItemThemeStoriesList
-					.get(position);
+					.get(position - zhiHuNewsItemThemeStoriesHeaderList.size());
 			if (zhiHuNewsItemThemeStories.images.size() > 0) {
 				Glide.with(BaseApplication.getBaseApplicationContext())
 						.load(zhiHuNewsItemThemeStories.images.get(0))
@@ -99,8 +99,8 @@ public class NewsCategoryRecvAdp extends RecyclerView.Adapter<RecyclerView.ViewH
 				@Override
 				public void onClick(View v) {
 					if (ConstantUtility.userIsLogin) {
-//						ZhiHuNewsItemThemeStories zhiHuNewsItemThemeStories = zhiHuNewsItemThemeStoriesList.get
-//								(position);
+						//						ZhiHuNewsItemThemeStories zhiHuNewsItemThemeStories = zhiHuNewsItemThemeStoriesList.get
+						//								(position);
 						newsCategoryAty.sqLiteDatabase.execSQL(SQLiteCreateTableHelper
 								.CREATE_HISTORY_TABLE);
 						try {
@@ -118,7 +118,11 @@ public class NewsCategoryRecvAdp extends RecyclerView.Adapter<RecyclerView.ViewH
 
 						ContentValues contentValues = new ContentValues();
 						contentValues.put("ItemId", zhiHuNewsItemThemeStories.id);
-						contentValues.put("ItemImage", zhiHuNewsItemThemeStories.images.get(0));
+						try{
+							contentValues.put("ItemImage", zhiHuNewsItemThemeStories.images.get(0));
+						}catch (Exception e){
+							contentValues.put("ItemImage", "");
+						}
 						contentValues.put("ItemTitle", zhiHuNewsItemThemeStories.title);
 						contentValues.put("ItemSeriType", ConstantUtility.SER_KEY_THEME);
 						try {
@@ -136,8 +140,7 @@ public class NewsCategoryRecvAdp extends RecyclerView.Adapter<RecyclerView.ViewH
 						Intent intent = new Intent();
 						intent.setAction(IntentActionUtility.INTENT_TO_NEWS_KEY);
 						Bundle bundle = new Bundle();
-						bundle.putSerializable(ConstantUtility.SER_KEY_THEME, zhiHuNewsItemThemeStoriesList
-								.get(position));
+						bundle.putSerializable(ConstantUtility.SER_KEY_THEME, zhiHuNewsItemThemeStories);
 						intent.putExtras(bundle);
 						startActivityInTransition(intent, getTranstitionOptions(getTransitionPairs())
 								.toBundle(), true);
@@ -168,8 +171,8 @@ public class NewsCategoryRecvAdp extends RecyclerView.Adapter<RecyclerView.ViewH
 	@Override
 	public int getItemViewType(int position) {
 		int type = -1;
-		if (zhiHuNewsItemThemeStoriesHeaderList.size() > 0) {
-			int headerListSize = zhiHuNewsItemThemeStoriesHeaderList.size();
+		int headerListSize = zhiHuNewsItemThemeStoriesHeaderList.size();
+		if (headerListSize > 0) {
 			if (position >= headerListSize) {
 				type = zhiHuNewsItemThemeStoriesList.get(position - headerListSize).item_layout;
 			} else {
@@ -178,7 +181,6 @@ public class NewsCategoryRecvAdp extends RecyclerView.Adapter<RecyclerView.ViewH
 		} else {
 			type = zhiHuNewsItemThemeStoriesList.get(position).item_layout;
 		}
-		//		if ()
 		if (type == -1) {
 			return super.getItemViewType(position);
 		} else {

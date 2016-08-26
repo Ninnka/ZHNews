@@ -27,6 +27,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
@@ -403,14 +404,24 @@ public class NewsAty extends SwipeBackAty implements AppBarLayout.OnOffsetChange
 	*
 	* */
 	private void loadCollapsingToolbarContentPic() {
-		if (zhiHuNewsItemInfo.image == null) {
-			Glide.with(NewsAty.this)
-					.load(zhiHuNewsItemInfo.images.get(0))
-					.into(imageView);
-		} else {
-			Glide.with(NewsAty.this)
-					.load(zhiHuNewsItemInfo.image)
-					.into(imageView);
+		if (zhiHuNewsItemInfo.images != null) {
+			try{
+				Glide.with(NewsAty.this)
+						.load(zhiHuNewsItemInfo.images.get(0))
+						.into(imageView);
+			}catch (Exception e){
+
+			}
+		} else if (zhiHuNewsItemInfo.image != null) {
+			try{
+				Glide.with(NewsAty.this)
+						.load(zhiHuNewsItemInfo.image)
+						.into(imageView);
+			}catch (Exception e){
+
+			}
+		}else {
+			Toast.makeText(BaseApplication.getBaseApplicationContext(),"无大图",Toast.LENGTH_SHORT).show();
 		}
 	}
 
