@@ -404,24 +404,25 @@ public class NewsAty extends SwipeBackAty implements AppBarLayout.OnOffsetChange
 	*
 	* */
 	private void loadCollapsingToolbarContentPic() {
-		if (zhiHuNewsItemInfo.images != null) {
-			try{
-				Glide.with(NewsAty.this)
-						.load(zhiHuNewsItemInfo.images.get(0))
-						.into(imageView);
-			}catch (Exception e){
+		if (zhiHuNewsItemInfo.image != null) {
 
-			}
-		} else if (zhiHuNewsItemInfo.image != null) {
-			try{
+			try {
 				Glide.with(NewsAty.this)
 						.load(zhiHuNewsItemInfo.image)
 						.into(imageView);
-			}catch (Exception e){
+			} catch (Exception e) {
 
 			}
-		}else {
-			Toast.makeText(BaseApplication.getBaseApplicationContext(),"无大图",Toast.LENGTH_SHORT).show();
+		} else if (zhiHuNewsItemInfo.images != null) {
+			try {
+				Glide.with(NewsAty.this)
+						.load(zhiHuNewsItemInfo.images.get(0))
+						.into(imageView);
+			} catch (Exception e) {
+
+			}
+		} else {
+			Toast.makeText(BaseApplication.getBaseApplicationContext(), "无大图", Toast.LENGTH_SHORT).show();
 		}
 	}
 
