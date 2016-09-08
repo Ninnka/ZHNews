@@ -380,6 +380,7 @@ public class NewsAty extends SwipeBackAty implements AppBarLayout.OnOffsetChange
 			zhiHuNewsItemInfoFromHome = new ZhiHuNewsItemInfo();
 			zhiHuNewsItemInfoFromHome.id = zhiHuNewsItemHot.news_id;
 			zhiHuNewsItemInfoFromHome.title = zhiHuNewsItemHot.title;
+			zhiHuNewsItemInfoFromHome.images.add(zhiHuNewsItemHot.thumbnail);
 			zhiHuNewsItemInfoFromHome.ItemSeriType = ConstantUtility.SER_KEY_HOTNEWS;
 			//			zhiHuNewsItemInfoFromHome.url_hot = zhiHuNewsItemHot.url;
 		}
@@ -389,6 +390,7 @@ public class NewsAty extends SwipeBackAty implements AppBarLayout.OnOffsetChange
 			zhiHuNewsItemInfoFromHome = new ZhiHuNewsItemInfo();
 			zhiHuNewsItemInfoFromHome.id = zhiHuNewsItemThemeStories.id;
 			zhiHuNewsItemInfoFromHome.title = zhiHuNewsItemThemeStories.title;
+			zhiHuNewsItemInfoFromHome.images.add(zhiHuNewsItemThemeStories.images.get(0));
 			zhiHuNewsItemInfoFromHome.ItemSeriType = ConstantUtility.SER_KEY_THEME;
 		}
 	}

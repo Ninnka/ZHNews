@@ -10,10 +10,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.rainnka.ZHNews.ViewLayer.Activity.Base.SwipeBackAty;
 import com.rainnka.ZHNews.Application.BaseApplication;
 import com.rainnka.ZHNews.R;
 import com.rainnka.ZHNews.Utility.LengthConverterUtility;
+import com.rainnka.ZHNews.ViewLayer.Activity.Base.SwipeBackAty;
 
 /**
  * Created by rainnka on 2016/7/23 13:46
