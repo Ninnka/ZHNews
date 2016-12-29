@@ -69,11 +69,18 @@ public class Star_History_PraiseActivityRecyclerViewAdapter extends RecyclerView
 			} else {
 				recyclerViewContentViewHolder.check_tv.setVisibility(View.GONE);
 			}
-			Glide.with(appCompatActivity)
-					.load(zhiHuNewsItemInfo.images.get(0))
-					.crossFade(0)
-					.skipMemoryCache(true)
-					.into(recyclerViewContentViewHolder.image_iv);
+			if(zhiHuNewsItemInfo.images.get(0).equals("")){
+				Glide.with(appCompatActivity)
+						.load(R.drawable.drawer_header_bg)
+						.crossFade(0)
+						.into(recyclerViewContentViewHolder.image_iv);
+			}else {
+				Glide.with(appCompatActivity)
+						.load(zhiHuNewsItemInfo.images.get(0))
+						.crossFade(0)
+						.skipMemoryCache(true)
+						.into(recyclerViewContentViewHolder.image_iv);
+			}
 		}
 	}
 
